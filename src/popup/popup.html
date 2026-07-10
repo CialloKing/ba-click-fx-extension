@@ -1,0 +1,128 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BA Click FX</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="panel">
+    <header class="hero">
+      <div class="brand-mark" aria-hidden="true">
+        <span></span>
+      </div>
+      <div class="hero-copy">
+        <h1>BA Click FX</h1>
+        <p>蔚蓝档案风格鼠标特效</p>
+      </div>
+      <label class="switch power-switch" title="全局启用">
+        <input id="enabled" type="checkbox">
+        <span class="switch-track"></span>
+        <span class="sr-only">全局启用</span>
+      </label>
+    </header>
+
+    <section class="site-card" aria-labelledby="site-title">
+      <div class="site-copy">
+        <strong id="site-title">当前网站</strong>
+        <span id="site-name">正在读取…</span>
+      </div>
+      <label class="switch">
+        <input id="site-enabled" type="checkbox">
+        <span class="switch-track"></span>
+        <span class="sr-only">在当前网站启用</span>
+      </label>
+    </section>
+
+    <form id="settings-form">
+      <section class="settings-card" aria-labelledby="effects-title">
+        <h2 id="effects-title">效果</h2>
+
+        <label class="setting-row toggle-row">
+          <span>
+            <strong>点击特效</strong>
+            <small>点击时显示圆环与碎片</small>
+          </span>
+          <span class="switch">
+            <input id="click-enabled" type="checkbox">
+            <span class="switch-track"></span>
+          </span>
+        </label>
+
+        <label class="setting-row toggle-row">
+          <span>
+            <strong>光标拖尾</strong>
+            <small>移动或拖动时显示蓝色光轨</small>
+          </span>
+          <span class="switch">
+            <input id="trail-enabled" type="checkbox">
+            <span class="switch-track"></span>
+          </span>
+        </label>
+
+        <label class="setting-row toggle-row nested-row">
+          <span>
+            <strong>移动时始终显示</strong>
+            <small>关闭后仅按住鼠标时显示拖尾</small>
+          </span>
+          <span class="switch">
+            <input id="trail-always" type="checkbox">
+            <span class="switch-track"></span>
+          </span>
+        </label>
+      </section>
+
+      <section class="settings-card" aria-labelledby="appearance-title">
+        <h2 id="appearance-title">外观与性能</h2>
+
+        <label class="setting-row compact-row" for="color">
+          <span>
+            <strong>主题颜色</strong>
+            <small id="color-value">#69a1ff</small>
+          </span>
+          <input id="color" class="color-input" type="color" value="#69a1ff">
+        </label>
+
+        <label class="range-row" for="opacity">
+          <span class="range-label">
+            <strong>不透明度</strong>
+            <output id="opacity-value" for="opacity">50%</output>
+          </span>
+          <input id="opacity" type="range" min="0.1" max="1" step="0.05">
+        </label>
+
+        <label class="range-row" for="scale">
+          <span class="range-label">
+            <strong>特效大小</strong>
+            <output id="scale-value" for="scale">1.10×</output>
+          </span>
+          <input id="scale" type="range" min="0.5" max="2" step="0.05">
+        </label>
+
+        <label class="setting-row select-row" for="quality">
+          <span>
+            <strong>画质</strong>
+            <small>高画质会使用更高设备像素比</small>
+          </span>
+          <select id="quality">
+            <option value="performance">省电</option>
+            <option value="balanced">均衡</option>
+            <option value="high">高画质</option>
+          </select>
+        </label>
+      </section>
+
+      <div class="actions">
+        <button id="preview" class="primary-button" type="button">预览点击特效</button>
+        <button id="reset" class="ghost-button" type="button">恢复默认</button>
+      </div>
+    </form>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <footer>设置会自动同步到同一浏览器账号</footer>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

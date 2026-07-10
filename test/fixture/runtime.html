@@ -1,0 +1,102 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BA Click FX Runtime Fixture</title>
+  <style>
+    html,
+    body
+    {
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body
+    {
+      display: grid;
+      place-items: center;
+      color: #eaf8ff;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 50% 45%, #173f68, transparent 38%),
+        linear-gradient(145deg, #0a1728, #07101d);
+    }
+
+    main
+    {
+      max-width: 560px;
+      padding: 48px;
+      border: 1px solid rgba(126, 221, 255, 0.25);
+      border-radius: 24px;
+      background: rgba(12, 31, 52, 0.76);
+      text-align: center;
+    }
+
+    h1
+    {
+      margin-top: 0;
+    }
+
+    button
+    {
+      padding: 12px 22px;
+      border: 1px solid #70d8ff;
+      border-radius: 12px;
+      color: #f4fdff;
+      background: rgba(43, 158, 226, 0.55);
+      cursor: pointer;
+    }
+
+    #sparkCanvas
+    {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sparkCanvas" width="2" height="2" data-owner="fixture"></canvas>
+  <main>
+    <h1>BA Click FX 运行时测试</h1>
+    <p>页面故意包含一个同名 <code>#sparkCanvas</code>，用于验证插件不会复用宿主 Canvas。</p>
+    <button type="button">点击这里测试</button>
+  </main>
+
+  <script>
+    // 浏览器夹具只模拟扩展 API；正式构建仍由真实 chrome.storage 提供设置。
+    globalThis.chrome =
+    {
+      storage:
+      {
+        sync:
+        {
+          get(defaults, callback)
+          {
+            callback(defaults);
+          },
+        },
+        onChanged:
+        {
+          addListener()
+          {
+          },
+        },
+      },
+      runtime:
+      {
+        lastError: null,
+        onMessage:
+        {
+          addListener()
+          {
+          },
+        },
+      },
+    };
+  </script>
+  <script src="../../dist/content.js"></script>
+</body>
+</html>
