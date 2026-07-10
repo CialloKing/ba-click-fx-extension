@@ -161,8 +161,8 @@
       shardFlickerMinAlpha: 0.35,
       shardFlickerSizePulse: 0.16,
       moveSparkChance: 0,
-      glowRadiusMul: 16,
-      glowIntensity: 0.17
+      glowRadiusMul: 25,
+      glowIntensity: 0.13
     },
     glow: {
       enabled: true,
@@ -421,7 +421,7 @@
       this.running || (this.running = true, this.lastTime = performance.now(), this._rafId = requestAnimationFrame(this._animationLoopBound));
     }
     _drawCircle(e2, t2, n2, r2, i2, a2, o2 = 0, s2 = true) {
-      a2 <= 0 || r2 <= 0 || (e2.save(), s2 && this.config.glow.fake && this.config.glow.enabled && o2 > 0 && (e2.fillStyle = c(i2, a2 * 0.12), e2.beginPath(), e2.arc(t2, n2, r2 + o2 * 1.2, 0, Math.PI * 2), e2.fill(), e2.fillStyle = c(i2, a2 * 0.16), e2.beginPath(), e2.arc(t2, n2, r2 + o2 * 0.55, 0, Math.PI * 2), e2.fill()), this.config.glow.enabled && o2 > 0 && (e2.shadowColor = c(i2, a2), e2.shadowBlur = o2 * 1), e2.fillStyle = c(i2, a2), e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore());
+      a2 <= 0 || r2 <= 0 || (e2.save(), s2 && this.config.glow.fake && this.config.glow.enabled && o2 > 0 && (e2.fillStyle = c(i2, a2 * 0.12), e2.beginPath(), e2.arc(t2, n2, r2 + o2 * 1.2, 0, Math.PI * 2), e2.fill(), e2.fillStyle = c(i2, a2 * 0.16), e2.beginPath(), e2.arc(t2, n2, r2 + o2 * 0.55, 0, Math.PI * 2), e2.fill()), e2.fillStyle = c(i2, a2), e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore());
     }
     _drawTriangle(e2, t2, n2, r2, i2, a2, o2) {
       o2 <= 0 || (e2.save(), e2.translate(t2, n2), e2.rotate(i2), e2.fillStyle = c(a2, o2), ((t3) => {
@@ -435,7 +435,7 @@
       o2.addColorStop(0, c(i2, a2 * 0.68)), o2.addColorStop(0.2, c(i2, a2 * 0.48)), o2.addColorStop(0.52, c(i2, a2 * 0.2)), o2.addColorStop(0.82, c(i2, a2 * 0.055)), o2.addColorStop(1, c(i2, 0)), e2.save(), e2.globalCompositeOperation = "lighter", e2.fillStyle = o2, e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore();
     }
     _drawClickDisk(e2, t2, n2, r2, i2, a2) {
-      a2 <= 0 || r2 <= 0 || (e2.save(), this.config.glow.enabled && (e2.shadowColor = c(i2, a2), e2.shadowBlur = r2 * 2.5), e2.fillStyle = c(i2, a2), e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore());
+      a2 <= 0 || r2 <= 0 || (e2.save(), e2.fillStyle = c(i2, a2), e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore());
     }
     _drawDiskEdgeGlow(e2, t2, n2, r2, i2, a2, o2) {
       if (o2 <= 0 || i2 <= r2) return;
@@ -445,15 +445,15 @@
     _drawClickArcRibbon(e2, t2, n2, i2, o2, s2, l2, u2, d2, f2) {
       let p2 = Math.abs(s2 - o2);
       if (f2 <= 0 || i2 <= 0 || u2 <= 0 || p2 < 1e-3) return;
-      let h2 = Math.max(10, Math.min(96, Math.ceil(p2 / 0.07)));
-      e2.save(), this.config.glow.enabled && (e2.shadowColor = c(d2, f2), e2.shadowBlur = 35 * m(this.config)), e2.fillStyle = c(d2, f2), e2.beginPath();
-      for (let c2 = 0; c2 <= h2; c2++) {
-        let d3 = c2 / h2, f3 = a(o2, s2, d3), p3 = i2 + a(l2, u2, r(0, 1, Math.sin(Math.PI * d3))) * 0.5, m2 = t2 + Math.cos(f3) * p3, g2 = n2 + Math.sin(f3) * p3;
-        c2 === 0 ? e2.moveTo(m2, g2) : e2.lineTo(m2, g2);
+      let m2 = Math.max(10, Math.min(96, Math.ceil(p2 / 0.07)));
+      e2.save(), e2.fillStyle = c(d2, f2), e2.beginPath();
+      for (let c2 = 0; c2 <= m2; c2++) {
+        let d3 = c2 / m2, f3 = a(o2, s2, d3), p3 = i2 + a(l2, u2, r(0, 1, Math.sin(Math.PI * d3))) * 0.5, h2 = t2 + Math.cos(f3) * p3, g2 = n2 + Math.sin(f3) * p3;
+        c2 === 0 ? e2.moveTo(h2, g2) : e2.lineTo(h2, g2);
       }
-      for (let c2 = h2; c2 >= 0; c2--) {
-        let d3 = c2 / h2, f3 = a(o2, s2, d3), p3 = a(l2, u2, r(0, 1, Math.sin(Math.PI * d3))), m2 = Math.max(0.1, i2 - p3 * 0.5);
-        e2.lineTo(t2 + Math.cos(f3) * m2, n2 + Math.sin(f3) * m2);
+      for (let c2 = m2; c2 >= 0; c2--) {
+        let d3 = c2 / m2, f3 = a(o2, s2, d3), p3 = a(l2, u2, r(0, 1, Math.sin(Math.PI * d3))), h2 = Math.max(0.1, i2 - p3 * 0.5);
+        e2.lineTo(t2 + Math.cos(f3) * h2, n2 + Math.sin(f3) * h2);
       }
       e2.closePath(), e2.fill(), e2.restore();
     }
@@ -1203,11 +1203,11 @@
     setTrailRibbon(e2 = 0, t2 = 0) {
       this.config.trail.ribbonWidthMul = Math.max(0, Math.min(5, Number(e2) ?? 0)), this.config.trail.ribbonAlpha = Math.max(0, Math.min(1, Number(t2) ?? 0)), this._requestRender();
     }
-    setTrailGlowRadius(e2 = 16) {
-      this.config.trail.glowRadiusMul = Math.max(4, Math.min(30, Number(e2) ?? 16)), this._requestRender();
+    setTrailGlowRadius(e2 = 25) {
+      this.config.trail.glowRadiusMul = Math.max(4, Math.min(30, Number(e2) ?? 25)), this._requestRender();
     }
-    setTrailGlowIntensity(e2 = 0.17) {
-      this.config.trail.glowIntensity = Math.max(0.02, Math.min(0.5, Number(e2) ?? 0.17)), this._requestRender();
+    setTrailGlowIntensity(e2 = 0.13) {
+      this.config.trail.glowIntensity = Math.max(0.02, Math.min(0.5, Number(e2) ?? 0.13)), this._requestRender();
     }
     clearTrail() {
       this._resetTrailAll(), this._requestRender();
