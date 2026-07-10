@@ -1,0 +1,43 @@
+﻿name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 构建并检查
+        run: npm test
+
+      - name: 确认构建产物已同步
+        run: |
+          if [ -n "$(git status --porcelain -- dist)" ]; then
+            git status --short -- dist
+            exit 1
+          fi
+
+      - name: 上传插件构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: ba-click-fx-extension
+          path: dist/
+          if-no-files-found: error

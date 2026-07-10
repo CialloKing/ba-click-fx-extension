@@ -1,0 +1,27 @@
+﻿{
+  "name": "ba-click-fx-extension",
+  "version": "1.0.0",
+  "description": "BA Click FX 的 Manifest V3 浏览器插件。",
+  "private": true,
+  "type": "module",
+  "engines":
+  {
+    "node": ">=18"
+  },
+  "scripts":
+  {
+    "build": "node scripts/build.mjs",
+    "check": "node --test && node scripts/validate-build.mjs && node scripts/encoding.mjs",
+    "check:encoding": "node scripts/encoding.mjs",
+    "format:encoding": "node scripts/encoding.mjs --write",
+    "test": "npm run build && npm run check"
+  },
+  "dependencies":
+  {
+    "ba-click-fx": "1.1.4"
+  },
+  "devDependencies":
+  {
+    "esbuild": "0.28.1"
+  }
+}
