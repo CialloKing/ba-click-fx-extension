@@ -1,6 +1,6 @@
 ﻿{
   "name": "ba-click-fx-extension",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "BA Click FX 的 Manifest V3 浏览器插件。",
   "private": true,
   "type": "module",

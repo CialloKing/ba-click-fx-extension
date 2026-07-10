@@ -1,7 +1,7 @@
 ﻿{
   "manifest_version": 3,
   "name": "BA Click FX",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minimum_chrome_version": "102",
   "description": "为网页添加蔚蓝档案风格的鼠标点击特效与光标拖尾。",
   "permissions":
