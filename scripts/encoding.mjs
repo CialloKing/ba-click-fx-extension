@@ -12,6 +12,7 @@ const UTF8_BOM = Buffer.from([0xef, 0xbb, 0xbf]);
 const decoder = new TextDecoder('utf-8', { fatal: true });
 const IGNORED_DIRECTORIES = new Set([
   '.git',
+  '.reasonix',
   'node_modules',
   'release',
 ]);
