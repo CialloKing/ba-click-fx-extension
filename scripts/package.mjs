@@ -24,8 +24,18 @@ function readJson(path)
 function collectFiles(directory)
 {
   const files = {};
+  const entries = readdirSync(directory, { withFileTypes: true })
+    .sort((left, right) =>
+    {
+      if (left.name === right.name)
+      {
+        return 0;
+      }
 
-  for (const entry of readdirSync(directory, { withFileTypes: true }))
+      return left.name < right.name ? -1 : 1;
+    });
+
+  for (const entry of entries)
   {
     const path = join(directory, entry.name);
 
