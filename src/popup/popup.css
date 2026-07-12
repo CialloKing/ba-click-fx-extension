@@ -165,6 +165,14 @@ input:focus-visible
   padding: 12px 13px;
 }
 
+.site-note
+{
+  margin: -4px 4px 10px;
+  color: #647f95;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
 .site-copy
 {
   display: flex;
@@ -514,9 +522,28 @@ button:disabled
 
 footer
 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
   color: #516a7e;
   font-size: 9px;
   text-align: center;
+}
+
+footer a
+{
+  color: #6f9ebc;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+footer a:hover,
+footer a:focus-visible
+{
+  color: #8edcff;
+  text-decoration: underline;
 }
 
 .sr-only

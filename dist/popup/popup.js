@@ -87,9 +87,346 @@
     return null;
   }
 
+  // _locales/en/messages.json
+  var messages_default = {
+    extensionName: {
+      message: "BA Click FX",
+      description: "Extension name"
+    },
+    extensionShortName: {
+      message: "BA Click FX",
+      description: "Short extension name"
+    },
+    extensionDescription: {
+      message: "Add game-inspired click rings, particles, and cursor trails to ordinary websites.",
+      description: "Manifest and store short description"
+    },
+    actionTitle: {
+      message: "BA Click FX settings"
+    },
+    popupTagline: {
+      message: "Game-inspired pointer effects"
+    },
+    globalEnable: {
+      message: "Enable globally"
+    },
+    currentSite: {
+      message: "Current website"
+    },
+    loading: {
+      message: "Loading…"
+    },
+    siteEnable: {
+      message: "Enable on the current website"
+    },
+    siteStorageNotice: {
+      message: "Disabling a website stores only its origin in browser sync settings."
+    },
+    effectsTitle: {
+      message: "Effects"
+    },
+    clickEffect: {
+      message: "Click effect"
+    },
+    clickEffectDescription: {
+      message: "Show rings and particles when clicking"
+    },
+    cursorTrail: {
+      message: "Cursor trail"
+    },
+    cursorTrailDescription: {
+      message: "Show a blue light trail while moving or dragging"
+    },
+    trailAlways: {
+      message: "Always show while moving"
+    },
+    trailAlwaysDescription: {
+      message: "When off, show the trail only while pressing the pointer"
+    },
+    appearanceTitle: {
+      message: "Appearance & performance"
+    },
+    themeColor: {
+      message: "Theme color"
+    },
+    opacity: {
+      message: "Opacity"
+    },
+    effectSize: {
+      message: "Effect size"
+    },
+    quality: {
+      message: "Quality"
+    },
+    qualityDescription: {
+      message: "High quality uses a higher device pixel ratio"
+    },
+    qualityPerformance: {
+      message: "Power saving"
+    },
+    qualityBalanced: {
+      message: "Balanced"
+    },
+    qualityHigh: {
+      message: "High"
+    },
+    previewEffect: {
+      message: "Preview click effect"
+    },
+    resetDefaults: {
+      message: "Reset"
+    },
+    syncNotice: {
+      message: "Settings sync through your browser account"
+    },
+    projectRepository: {
+      message: "Project repository"
+    },
+    localFile: {
+      message: "Local file"
+    },
+    pageUnavailable: {
+      message: "Page unavailable"
+    },
+    statusSaved: {
+      message: "Settings saved"
+    },
+    statusSaveFailed: {
+      message: "Could not save settings: $ERROR$",
+      placeholders: {
+        error: {
+          content: "$1"
+        }
+      }
+    },
+    statusPreviewUnsupported: {
+      message: "Preview is unavailable on this page"
+    },
+    statusPreviewTriggered: {
+      message: "Preview triggered in the center of the page"
+    },
+    statusEnableClick: {
+      message: "Enable the click effect first"
+    },
+    statusRefreshForPreview: {
+      message: "Refresh the current page, then try again"
+    },
+    statusReset: {
+      message: "Default settings restored"
+    },
+    statusInternalPage: {
+      message: "Browser internal pages do not allow effects"
+    },
+    statusPageNotLoaded: {
+      message: "The extension is not loaded on this page; refresh an ordinary webpage"
+    },
+    statusInitFailed: {
+      message: "Could not initialize: $ERROR$",
+      placeholders: {
+        error: {
+          content: "$1"
+        }
+      }
+    }
+  };
+
+  // _locales/zh_CN/messages.json
+  var messages_default2 = {
+    extensionName: {
+      message: "BA Click FX",
+      description: "插件名称"
+    },
+    extensionShortName: {
+      message: "BA Click FX",
+      description: "插件短名称"
+    },
+    extensionDescription: {
+      message: "为普通网页添加游戏风格的点击圆环、粒子碎片和鼠标光标拖尾。",
+      description: "Manifest 与商店短描述"
+    },
+    actionTitle: {
+      message: "BA Click FX 设置"
+    },
+    popupTagline: {
+      message: "游戏风格鼠标特效"
+    },
+    globalEnable: {
+      message: "全局启用"
+    },
+    currentSite: {
+      message: "当前网站"
+    },
+    loading: {
+      message: "正在读取…"
+    },
+    siteEnable: {
+      message: "在当前网站启用"
+    },
+    siteStorageNotice: {
+      message: "关闭当前网站时，仅会把该网站的 origin 保存到浏览器同步设置。"
+    },
+    effectsTitle: {
+      message: "效果"
+    },
+    clickEffect: {
+      message: "点击特效"
+    },
+    clickEffectDescription: {
+      message: "点击时显示圆环与碎片"
+    },
+    cursorTrail: {
+      message: "光标拖尾"
+    },
+    cursorTrailDescription: {
+      message: "移动或拖动时显示蓝色光轨"
+    },
+    trailAlways: {
+      message: "移动时始终显示"
+    },
+    trailAlwaysDescription: {
+      message: "关闭后仅按住鼠标时显示拖尾"
+    },
+    appearanceTitle: {
+      message: "外观与性能"
+    },
+    themeColor: {
+      message: "主题颜色"
+    },
+    opacity: {
+      message: "不透明度"
+    },
+    effectSize: {
+      message: "特效大小"
+    },
+    quality: {
+      message: "画质"
+    },
+    qualityDescription: {
+      message: "高画质会使用更高设备像素比"
+    },
+    qualityPerformance: {
+      message: "省电"
+    },
+    qualityBalanced: {
+      message: "均衡"
+    },
+    qualityHigh: {
+      message: "高画质"
+    },
+    previewEffect: {
+      message: "预览点击特效"
+    },
+    resetDefaults: {
+      message: "恢复默认"
+    },
+    syncNotice: {
+      message: "设置会自动同步到同一浏览器账号"
+    },
+    projectRepository: {
+      message: "项目仓库"
+    },
+    localFile: {
+      message: "本地文件"
+    },
+    pageUnavailable: {
+      message: "此页面不可用"
+    },
+    statusSaved: {
+      message: "设置已保存"
+    },
+    statusSaveFailed: {
+      message: "保存失败：$ERROR$",
+      placeholders: {
+        error: {
+          content: "$1"
+        }
+      }
+    },
+    statusPreviewUnsupported: {
+      message: "当前页面不支持预览"
+    },
+    statusPreviewTriggered: {
+      message: "已在页面中央触发预览"
+    },
+    statusEnableClick: {
+      message: "请先启用点击特效"
+    },
+    statusRefreshForPreview: {
+      message: "请刷新当前网页后再预览"
+    },
+    statusReset: {
+      message: "已恢复默认设置"
+    },
+    statusInternalPage: {
+      message: "浏览器内部页面不支持注入特效"
+    },
+    statusPageNotLoaded: {
+      message: "此页面尚未加载插件；普通网页请刷新后重试"
+    },
+    statusInitFailed: {
+      message: "初始化失败：$ERROR$",
+      placeholders: {
+        error: {
+          content: "$1"
+        }
+      }
+    }
+  };
+
+  // src/popup/locale.js
+  var DEFAULT_LOCALE = "zh_CN";
+  var ENGLISH_LOCALE = "en";
+  function readBrowserLanguage(chromeApi, navigatorApi) {
+    try {
+      const uiLanguage = chromeApi?.i18n?.getUILanguage?.();
+      if (typeof uiLanguage === "string" && uiLanguage.trim()) {
+        return uiLanguage;
+      }
+    } catch {
+    }
+    try {
+      const languages = Array.isArray(navigatorApi?.languages) ? navigatorApi.languages : [];
+      const language = languages.find((item) => typeof item === "string" && item.trim()) || navigatorApi?.language;
+      if (typeof language === "string" && language.trim()) {
+        return language;
+      }
+    } catch {
+    }
+    return "";
+  }
+  function selectLocale(language) {
+    if (typeof language !== "string" || !language.trim()) {
+      return DEFAULT_LOCALE;
+    }
+    return /^zh(?:[-_]|$)/i.test(language.trim()) ? DEFAULT_LOCALE : ENGLISH_LOCALE;
+  }
+  function detectLocale(chromeApi = globalThis.chrome, navigatorApi = globalThis.navigator) {
+    return selectLocale(readBrowserLanguage(chromeApi, navigatorApi));
+  }
+
   // src/popup/popup.js
   var MESSAGE_PREVIEW = "BA_CLICK_FX_PREVIEW";
   var MESSAGE_GET_STATUS = "BA_CLICK_FX_GET_STATUS";
+  var activeLocale = detectLocale();
+  var MESSAGE_CATALOGS = {
+    en: messages_default,
+    zh_CN: messages_default2
+  };
+  var activeMessages = MESSAGE_CATALOGS[activeLocale] || MESSAGE_CATALOGS[DEFAULT_LOCALE];
+  var FALLBACK_MESSAGES = {
+    localFile: "本地文件",
+    pageUnavailable: "此页面不可用",
+    statusSaved: "设置已保存",
+    statusSaveFailed: "保存失败：$1",
+    statusPreviewUnsupported: "当前页面不支持预览",
+    statusPreviewTriggered: "已在页面中央触发预览",
+    statusEnableClick: "请先启用点击特效",
+    statusRefreshForPreview: "请刷新当前网页后再预览",
+    statusReset: "已恢复默认设置",
+    statusInternalPage: "浏览器内部页面不支持注入特效",
+    statusPageNotLoaded: "此页面尚未加载插件；普通网页请刷新后重试",
+    statusInitFailed: "初始化失败：$1"
+  };
   var elements = {
     enabled: document.querySelector("#enabled"),
     siteEnabled: document.querySelector("#site-enabled"),
@@ -115,6 +452,42 @@
   var statusTimer = 0;
   var updateRevision = 0;
   var writeQueue = Promise.resolve();
+  function getMessage(key, substitutions = []) {
+    const values = Array.isArray(substitutions) ? substitutions : [substitutions];
+    const definition = activeMessages[key];
+    if (definition?.message) {
+      let localized = definition.message;
+      for (const [name, placeholder] of Object.entries(definition.placeholders || {})) {
+        const index = Number(placeholder.content.slice(1)) - 1;
+        localized = localized.replaceAll(
+          `$${name.toUpperCase()}$`,
+          String(values[index] ?? "")
+        );
+      }
+      return localized;
+    }
+    let fallback = FALLBACK_MESSAGES[key] || key;
+    values.forEach((value, index) => {
+      fallback = fallback.replaceAll(`$${index + 1}`, String(value));
+    });
+    return fallback;
+  }
+  function localizeDocument() {
+    document.documentElement.lang = activeLocale === DEFAULT_LOCALE ? "zh-CN" : "en";
+    for (const element of document.querySelectorAll("[data-i18n]")) {
+      const localized = getMessage(element.dataset.i18n);
+      if (localized !== element.dataset.i18n) {
+        element.textContent = localized;
+      }
+    }
+    for (const element of document.querySelectorAll("[data-i18n-title]")) {
+      const localized = getMessage(element.dataset.i18nTitle);
+      if (localized !== element.dataset.i18nTitle) {
+        element.title = localized;
+      }
+    }
+    document.title = getMessage("extensionName");
+  }
   function readSettings() {
     return new Promise((resolve, reject) => {
       chrome.storage.sync.get(DEFAULT_SETTINGS, (stored) => {
@@ -163,11 +536,11 @@
       });
     });
   }
-  function showStatus(message, tone = "normal") {
+  function showStatus(messageKey, tone = "normal", substitutions = []) {
     window.clearTimeout(statusTimer);
-    elements.status.textContent = message;
+    elements.status.textContent = messageKey ? getMessage(messageKey, substitutions) : "";
     elements.status.dataset.tone = tone;
-    if (message) {
+    if (messageKey) {
       statusTimer = window.setTimeout(() => {
         elements.status.textContent = "";
         delete elements.status.dataset.tone;
@@ -176,16 +549,16 @@
   }
   function getSiteLabel(tab) {
     if (!tab?.url) {
-      return "此页面不可用";
+      return getMessage("pageUnavailable");
     }
     try {
       const url = new URL(tab.url);
       if (url.protocol === "file:") {
-        return "本地文件";
+        return getMessage("localFile");
       }
-      return url.hostname || "此页面不可用";
+      return url.hostname || getMessage("pageUnavailable");
     } catch {
-      return "此页面不可用";
+      return getMessage("pageUnavailable");
     }
   }
   function render() {
@@ -208,7 +581,7 @@
     elements.siteEnabled.disabled = !siteSupported;
     elements.preview.disabled = !(activeTab?.id && contentAvailable && settings.enabled && siteEnabled && settings.clickEnabled);
   }
-  async function updateSettings(patch, successMessage = "设置已保存") {
+  async function updateSettings(patch, successMessageKey = "statusSaved") {
     const revision = ++updateRevision;
     settings = normalizeSettings({ ...settings, ...patch });
     const snapshot = settings;
@@ -219,7 +592,7 @@
     try {
       await writeOperation;
       if (revision === updateRevision) {
-        showStatus(successMessage, "success");
+        showStatus(successMessageKey, "success");
       }
     } catch (error) {
       if (revision === updateRevision) {
@@ -232,7 +605,7 @@
         } catch {
         }
         if (revision === updateRevision) {
-          showStatus(`保存失败：${error.message}`, "error");
+          showStatus("statusSaveFailed", "error", [error.message]);
         }
       }
     }
@@ -282,25 +655,26 @@
     });
     elements.preview.addEventListener("click", async () => {
       if (!activeTab?.id) {
-        showStatus("当前页面不支持预览", "error");
+        showStatus("statusPreviewUnsupported", "error");
         return;
       }
       try {
         const response = await sendTabMessage(activeTab.id, MESSAGE_PREVIEW);
         if (response?.ok) {
-          showStatus("已在页面中央触发预览", "success");
+          showStatus("statusPreviewTriggered", "success");
         } else {
-          showStatus("请先启用点击特效", "error");
+          showStatus("statusEnableClick", "error");
         }
       } catch {
-        showStatus("请刷新当前网页后再预览", "error");
+        showStatus("statusRefreshForPreview", "error");
       }
     });
     elements.reset.addEventListener("click", () => {
-      void updateSettings({ ...DEFAULT_SETTINGS }, "已恢复默认设置");
+      void updateSettings({ ...DEFAULT_SETTINGS }, "statusReset");
     });
   }
   async function initialize() {
+    localizeDocument();
     bindEvents();
     try {
       [settings, activeTab] = await Promise.all([
@@ -318,13 +692,13 @@
       }
       render();
       if (!activeSiteKey) {
-        showStatus("浏览器内部页面不支持注入特效");
+        showStatus("statusInternalPage");
       } else if (!contentAvailable) {
-        showStatus("此页面尚未加载插件；普通网页请刷新后重试");
+        showStatus("statusPageNotLoaded");
       }
     } catch (error) {
       render();
-      showStatus(`初始化失败：${error.message}`, "error");
+      showStatus("statusInitFailed", "error", [error.message]);
     }
   }
   void initialize();

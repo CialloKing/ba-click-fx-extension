@@ -1,0 +1,37 @@
+﻿{
+  "extensionVersion": "1.0.2",
+  "corePackage": "ba-click-fx",
+  "coreVersion": "1.1.6",
+  "chromiumPackage": "release/ba-click-fx-extension-v1.0.2-chromium.zip",
+  "homepageUrl": "https://cialloking.github.io/ba-click-fx-extension/",
+  "privacyPolicyUrl": "https://cialloking.github.io/ba-click-fx-extension/privacy-policy/",
+  "edgePrivacyPolicyUrl": "https://cialloking.github.io/ba-click-fx-extension/privacy-policy/edge/",
+  "supportUrl": "https://cialloking.github.io/ba-click-fx-extension/support/",
+  "repositoryUrl": "https://github.com/CialloKing/ba-click-fx-extension",
+  "issueTrackerUrl": "https://github.com/CialloKing/ba-click-fx-extension/issues",
+  "locales":
+  [
+    "zh_CN",
+    "en"
+  ],
+  "assets":
+  {
+    "logo": "store-assets/common/logo-300.png",
+    "smallPromo": "store-assets/common/promo-small-440x280.png",
+    "marqueePromo": "store-assets/common/promo-marquee-1400x560.png",
+    "englishScreenshots":
+    [
+      "store-assets/en/screenshot-1-effects-1280x800.png",
+      "store-assets/en/screenshot-2-popup-1280x800.png",
+      "store-assets/en/screenshot-3-site-control-1280x800.png",
+      "store-assets/en/screenshot-4-appearance-1280x800.png"
+    ],
+    "chineseScreenshots":
+    [
+      "store-assets/zh_CN/screenshot-1-effects-1280x800.png",
+      "store-assets/zh_CN/screenshot-2-popup-1280x800.png",
+      "store-assets/zh_CN/screenshot-3-site-control-1280x800.png",
+      "store-assets/zh_CN/screenshot-4-appearance-1280x800.png"
+    ]
+  }
+}

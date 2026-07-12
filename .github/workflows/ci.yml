@@ -28,6 +28,9 @@ jobs:
       - name: 构建并检查
         run: npm test
 
+      - name: 生成商店提交包
+        run: npm run package
+
       - name: 确认构建产物已同步
         run: |
           if [ -n "$(git status --porcelain -- dist)" ]; then
@@ -39,5 +42,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ba-click-fx-extension
-          path: dist/
+          path: |
+            dist/
+            release/*.zip
+            store-assets/
           if-no-files-found: error
