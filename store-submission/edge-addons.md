@@ -3,9 +3,9 @@
 ## Package and URLs
 
 - Package: `release/ba-click-fx-extension-v1.0.2-chromium.zip`
-- Website: https://cialloking.github.io/ba-click-fx-extension/
-- Microsoft Edge privacy policy: https://cialloking.github.io/ba-click-fx-extension/privacy-policy/edge/
-- Support: https://cialloking.github.io/ba-click-fx-extension/support/
+- Website: https://cialloking.com/ba-click-fx-extension/
+- Microsoft Edge privacy policy: https://cialloking.com/ba-click-fx-extension/privacy-policy/edge/
+- Support: https://cialloking.com/ba-click-fx-extension/support/
 - Suggested category: `Personalization` or the closest current category available in Partner Center
 - Visibility: `Public`
 - Markets: all markets
