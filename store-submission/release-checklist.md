@@ -4,9 +4,7 @@
 
 - [ ] Review all changes in the working tree.
 - [ ] Commit with a Chinese commit message and push `main`.
-- [ ] In GitHub repository Settings → Pages, set the source to **GitHub Actions**.
-- [ ] Confirm the Pages workflow succeeds.
-- [ ] Open and verify the homepage, Chrome privacy policy, Edge privacy policy, and support URL without authentication.
+- [ ] Open and verify the independent demo homepage, GitHub privacy policy, and Issues support URL without authentication.
 - [ ] Confirm all public URLs use HTTPS and return no 404/redirect loop.
 
 ## 2. Build and local verification

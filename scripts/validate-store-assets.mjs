@@ -79,10 +79,6 @@ for (const urlKey of [
 }
 
 for (const path of [
-  'docs/index.html',
-  'docs/privacy-policy/index.html',
-  'docs/privacy-policy/edge/index.html',
-  'docs/support/index.html',
   'PRIVACY.md',
   'SECURITY.md',
   'CHANGELOG.md',

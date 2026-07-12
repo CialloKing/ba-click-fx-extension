@@ -58,7 +58,6 @@ npm test
 | [`store-submission/`](./store-submission/) | 中英文商店文案、隐私表单答案、权限理由、审核员测试步骤和发布清单 |
 | [`store-assets/`](./store-assets/) | 300×300 图标、440×280 小宣传图、1400×560 横幅，以及中英文各 4 张 1280×800 截图 |
 | [`PRIVACY.md`](./PRIVACY.md) | 中英文隐私政策源码 |
-| [`docs/`](./docs/) | 可由 GitHub Pages 发布的主页、Chrome/Edge 隐私政策页和支持页 |
 | [`store-submission/LOCAL_TEST_CHECKLIST.md`](./store-submission/LOCAL_TEST_CHECKLIST.md) | Chrome/Edge 手工加载与回归检查步骤 |
 
 执行以下命令即可生成待上传的 Chromium ZIP：
@@ -75,7 +74,7 @@ npm run package
 
 隐私披露采用保守口径：扩展只在本地处理指针事件和当前网站 origin，并使用 `storage.sync` 保存视觉设置及用户明确禁用的网站 origin；不读取网页正文、表单、密码、Cookie，不上传数据，也不含遥测、广告或远程代码。详细勾选项和填写文本见 [`store-submission/chrome-web-store.md`](./store-submission/chrome-web-store.md) 与 [`store-submission/edge-addons.md`](./store-submission/edge-addons.md)。
 
-首次发布前仍需在仓库 Settings 中启用 GitHub Pages 的 GitHub Actions 来源，使隐私政策和支持 URL 可公开访问；随后按照 [`store-submission/release-checklist.md`](./store-submission/release-checklist.md) 完成浏览器实机回归、商店账号填写和人工提交。Firefox 的 Manifest 与商店要求单独记录在 [`store-submission/firefox-follow-up.md`](./store-submission/firefox-follow-up.md)，不混入当前 Chromium 包。
+项目主页使用独立演示站 `https://ba-click-fx.cialloking.top/`，隐私政策和支持入口使用公开 GitHub 仓库，不启用 GitHub Pages。随后按照 [`store-submission/release-checklist.md`](./store-submission/release-checklist.md) 完成浏览器实机回归、商店账号填写和人工提交。Firefox 的 Manifest 与商店要求单独记录在 [`store-submission/firefox-follow-up.md`](./store-submission/firefox-follow-up.md)，不混入当前 Chromium 包。
 
 ## 核心依赖与更新
 
@@ -93,7 +92,6 @@ npm test
 ```text
 assets/                 图标的 SVG 设计源文件
 _locales/               Manifest 与弹窗的中英文文案
-docs/                   GitHub Pages 隐私政策、支持页和项目主页
 icons/                  Manifest 使用的 PNG 图标
 release/                npm run package 生成的商店 ZIP（不提交）
 scripts/                构建、Manifest 与 UTF-8 BOM 校验脚本
