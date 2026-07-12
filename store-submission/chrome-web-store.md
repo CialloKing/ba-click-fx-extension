@@ -1,19 +1,38 @@
 ﻿# Chrome Web Store Submission
 
+## Submitted release
+
+- Extension version: `1.0.2`
+- Core dependency: `ba-click-fx 1.1.6`
+- Manifest version: `3`
+- Submission status: Submitted for review
+- Visibility: `Public`
+- Remote code: `No`
+- Disclosed data types:
+  - `Web history`
+  - `User activity`
+- Package: `ba-click-fx-extension-v1.0.2-chromium.zip`
+- SHA-256: `1692087AD7FC985607525344C16CC2886CB66F28C1A01311628F363A963A2423`
+
+This section records the actual `v1.0.2` submission. Append later review results or version submissions here instead of rewriting the historical record.
+
 ## Product details
 
 - Name from Manifest: `BA Click FX`
-- Suggested category: `Fun` or the closest current visual-customization category available in the dashboard
+- Submitted category: `Functionality & UI` / `功能与界面`
 - Default locale: Simplified Chinese (`zh_CN`)
 - Additional locale: English
-- Homepage: https://ba-click-fx.cialloking.top/
+- Verified official website: https://ba-click-fx.cialloking.top/
+- Homepage URL: https://github.com/CialloKing/ba-click-fx-extension
 - Support URL: https://github.com/CialloKing/ba-click-fx-extension/issues
-- Privacy policy: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
-- Visibility for first public release: `Public`
+- Privacy policy URL: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
+- Visibility: `Public`
 
 The Manifest name cannot be overridden in the dashboard. Keep the listing name exactly `BA Click FX`.
 
-## English detailed description
+## English detailed description — submitted
+
+The following code block is the product description submitted for `v1.0.2`. If the dashboard text is edited during review, copy the final dashboard version back here verbatim.
 
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
@@ -24,9 +43,15 @@ Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
 • Adjust theme color, opacity, effect size, and quality
-• Synchronize visual and site preferences through browser extension storage
+• Save visual preferences and per-site rules using browser-provided extension storage
 • Release Canvas resources while a tab is in the background
 • Work offline with no developer server or remotely hosted code
+
+How to use:
+1. Install the extension and open or refresh an ordinary HTTP/HTTPS webpage.
+2. Click the webpage to display rings and particle fragments.
+3. Move or drag the pointer to display the cursor trail.
+4. Open the toolbar popup to adjust effects or disable the current website.
 
 Privacy and local processing:
 • Pointer coordinates and click/move events are processed temporarily in memory only to draw visible effects
@@ -43,10 +68,12 @@ Known limitations:
 BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or the Blue Archive project. No official game logos, characters, screenshots, or assets are included.
 ```
 
-## 简体中文详细描述
+## 简体中文详细描述——实际提交版本
+
+以下代码块记录 `v1.0.2` 提交的商品说明。如果审核期间在后台修改了文字，应把最终后台版本原样同步回此处。
 
 ```text
-BA Click FX 是一个非官方的网页视觉特效插件。
+BA Click FX 是一个非官方的网页视觉特效扩展。
 
 安装后，普通网页会显示蓝色游戏风格的鼠标点击圆环、粒子碎片和光标拖尾。所有特效均使用 Canvas 2D 在本地渲染，可通过工具栏弹窗调整。
 
@@ -54,9 +81,15 @@ BA Click FX 是一个非官方的网页视觉特效插件。
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
 • 可调整主题颜色、不透明度、特效大小和画质
-• 视觉设置与站点规则通过浏览器扩展存储同步
+• 通过浏览器提供的扩展存储保存视觉设置与站点规则
 • 标签页进入后台时会释放 Canvas 资源
 • 无需开发者服务器或远程代码，离线也能运行
+
+使用方法：
+1. 安装扩展，然后打开或刷新普通 HTTP/HTTPS 网页。
+2. 点击网页，显示圆环和粒子碎片。
+3. 移动或拖动鼠标，显示光标拖尾。
+4. 打开工具栏弹窗，调整特效或为当前网站关闭扩展。
 
 隐私与本地处理：
 • 鼠标坐标和点击/移动事件只在内存中临时处理，用于绘制用户可见的特效
@@ -67,10 +100,10 @@ BA Click FX 是一个非官方的网页视觉特效插件。
 
 已知限制：
 • 浏览器内部页面、扩展商店和部分内置查看器禁止内容脚本运行
-• 插件只注入顶层文档，部分 iframe 内的鼠标事件不会显示特效
+• 扩展只注入顶层文档，部分 iframe 内的鼠标事件不会显示特效
 • 本地文件页面需要用户在扩展设置中主动开启文件网址访问权限
 
-BA Click FX 是非官方粉丝项目，与 Nexon、NEXON Games、Yostar 或《蔚蓝档案》官方不存在隶属、合作或认可关系。插件不包含官方游戏 Logo、角色、截图或素材。
+BA Click FX 是非官方粉丝项目，与 Nexon、NEXON Games、Yostar 或《蔚蓝档案》官方不存在隶属、合作或认可关系。扩展不包含官方游戏 Logo、角色、截图或素材。
 ```
 
 ## Privacy fields
@@ -94,7 +127,7 @@ Display configurable pointer click animations and cursor trails on ordinary webp
 `storage`:
 
 ```text
-Stores global effect settings, visual parameters, quality selection, and origins that the user explicitly disables. Values are kept in the browser-provided sync storage. The developer has no server and cannot access them.
+Stores global effect settings, visual parameters, quality selection, and website origins that the user explicitly disables. Values are saved using the browser-provided sync storage API. If browser synchronization is enabled, the browser provider may synchronize these values between the user's signed-in browser instances. The developer has no server and cannot access them.
 ```
 
 `activeTab`:
@@ -165,7 +198,7 @@ The disclosed values are processed locally or stored through chrome.storage.sync
 
 ## Store assets
 
-- Logo: `store-assets/common/logo-300.png`
+- Chrome Web Store icon: `icons/icon-128.png`
 - Small promo: `store-assets/common/promo-small-440x280.png`
 - Optional marquee: `store-assets/common/promo-marquee-1400x560.png`
 - English screenshots: upload all four files from `store-assets/en/`
@@ -185,3 +218,14 @@ Screenshot order:
 - Pricing: free
 - In-app purchases: none
 - Mature content: no
+
+## Next update template
+
+For the next Chrome Web Store version:
+
+1. Add a new entry under **Submitted release** with the version, core dependency, status, package name, and final SHA-256.
+2. Record the category, visibility, verified website, homepage, support, and privacy fields exactly as submitted.
+3. Replace the description code blocks with the final text actually saved in the dashboard; do not retain an earlier draft.
+4. Keep terminology consistent: use “extension” / “扩展”, retain the unofficial disclaimer, and mention CDN only when answering the remote-code question.
+5. Reconfirm permission justifications, remote-code status, disclosed data types, image paths, and reviewer notes against the submitted package.
+6. Append the review result—approved, rejected, or changes requested—without altering the `v1.0.2` historical record.
