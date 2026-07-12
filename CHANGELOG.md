@@ -10,7 +10,7 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 - English and Simplified Chinese extension localization.
 - Store submission copy, reviewer notes, privacy disclosures, and release checklist.
-- Public GitHub Pages privacy, Edge privacy, support, and project pages.
+- Public privacy policy, support links, and store URL inventory.
 - Chrome/Edge promotional assets and localized screenshots.
 - Cross-platform Chromium ZIP packaging and store-asset validation.
 
