@@ -4,10 +4,10 @@ This directory contains the copy-and-paste metadata, privacy answers, reviewer i
 
 ## Canonical public URLs
 
-- Homepage: https://cialloking.github.io/ba-click-fx-extension/
-- Chrome privacy policy: https://cialloking.github.io/ba-click-fx-extension/privacy-policy/
-- Microsoft Edge privacy policy: https://cialloking.github.io/ba-click-fx-extension/privacy-policy/edge/
-- Support: https://cialloking.github.io/ba-click-fx-extension/support/
+- Homepage: https://cialloking.com/ba-click-fx-extension/
+- Chrome privacy policy: https://cialloking.com/ba-click-fx-extension/privacy-policy/
+- Microsoft Edge privacy policy: https://cialloking.com/ba-click-fx-extension/privacy-policy/edge/
+- Support: https://cialloking.com/ba-click-fx-extension/support/
 - Source and issues: https://github.com/CialloKing/ba-click-fx-extension
 
 GitHub Pages must be enabled with **GitHub Actions** as the publishing source before store submission. The included `pages.yml` workflow deploys the `docs` directory.

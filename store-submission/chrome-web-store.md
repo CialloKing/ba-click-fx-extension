@@ -6,9 +6,9 @@
 - Suggested category: `Fun` or the closest current visual-customization category available in the dashboard
 - Default locale: Simplified Chinese (`zh_CN`)
 - Additional locale: English
-- Homepage: https://cialloking.github.io/ba-click-fx-extension/
-- Support URL: https://cialloking.github.io/ba-click-fx-extension/support/
-- Privacy policy: https://cialloking.github.io/ba-click-fx-extension/privacy-policy/
+- Homepage: https://cialloking.com/ba-click-fx-extension/
+- Support URL: https://cialloking.com/ba-click-fx-extension/support/
+- Privacy policy: https://cialloking.com/ba-click-fx-extension/privacy-policy/
 - Visibility for first public release: `Public`
 
 The Manifest name cannot be overridden in the dashboard. Keep the listing name exactly `BA Click FX`.
