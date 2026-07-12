@@ -4,8 +4,37 @@
   normalizeSettings,
 } from '../shared/settings.js';
 
+import englishMessages from '../../_locales/en/messages.json';
+import chineseMessages from '../../_locales/zh_CN/messages.json';
+import {
+  DEFAULT_LOCALE,
+  detectLocale,
+} from './locale.js';
+
 const MESSAGE_PREVIEW = 'BA_CLICK_FX_PREVIEW';
 const MESSAGE_GET_STATUS = 'BA_CLICK_FX_GET_STATUS';
+const activeLocale = detectLocale();
+const MESSAGE_CATALOGS =
+{
+  en: englishMessages,
+  zh_CN: chineseMessages,
+};
+const activeMessages = MESSAGE_CATALOGS[activeLocale] || MESSAGE_CATALOGS[DEFAULT_LOCALE];
+const FALLBACK_MESSAGES =
+{
+  localFile: '本地文件',
+  pageUnavailable: '此页面不可用',
+  statusSaved: '设置已保存',
+  statusSaveFailed: '保存失败：$1',
+  statusPreviewUnsupported: '当前页面不支持预览',
+  statusPreviewTriggered: '已在页面中央触发预览',
+  statusEnableClick: '请先启用点击特效',
+  statusRefreshForPreview: '请刷新当前网页后再预览',
+  statusReset: '已恢复默认设置',
+  statusInternalPage: '浏览器内部页面不支持注入特效',
+  statusPageNotLoaded: '此页面尚未加载插件；普通网页请刷新后重试',
+  statusInitFailed: '初始化失败：$1',
+};
 
 const elements = {
   enabled: document.querySelector('#enabled'),
@@ -33,6 +62,65 @@ let contentAvailable = false;
 let statusTimer = 0;
 let updateRevision = 0;
 let writeQueue = Promise.resolve();
+
+function getMessage(key, substitutions = [])
+{
+  const values = Array.isArray(substitutions) ? substitutions : [substitutions];
+  const definition = activeMessages[key];
+
+  if (definition?.message)
+  {
+    let localized = definition.message;
+
+    for (const [name, placeholder] of Object.entries(definition.placeholders || {}))
+    {
+      const index = Number(placeholder.content.slice(1)) - 1;
+
+      localized = localized.replaceAll(
+        `$${name.toUpperCase()}$`,
+        String(values[index] ?? ''),
+      );
+    }
+
+    return localized;
+  }
+
+  let fallback = FALLBACK_MESSAGES[key] || key;
+
+  values.forEach((value, index) =>
+  {
+    fallback = fallback.replaceAll(`$${index + 1}`, String(value));
+  });
+
+  return fallback;
+}
+
+function localizeDocument()
+{
+  document.documentElement.lang = activeLocale === DEFAULT_LOCALE ? 'zh-CN' : 'en';
+
+  for (const element of document.querySelectorAll('[data-i18n]'))
+  {
+    const localized = getMessage(element.dataset.i18n);
+
+    if (localized !== element.dataset.i18n)
+    {
+      element.textContent = localized;
+    }
+  }
+
+  for (const element of document.querySelectorAll('[data-i18n-title]'))
+  {
+    const localized = getMessage(element.dataset.i18nTitle);
+
+    if (localized !== element.dataset.i18nTitle)
+    {
+      element.title = localized;
+    }
+  }
+
+  document.title = getMessage('extensionName');
+}
 
 function readSettings()
 {
@@ -110,13 +198,13 @@ function sendTabMessage(tabId, type)
   });
 }
 
-function showStatus(message, tone = 'normal')
+function showStatus(messageKey, tone = 'normal', substitutions = [])
 {
   window.clearTimeout(statusTimer);
-  elements.status.textContent = message;
+  elements.status.textContent = messageKey ? getMessage(messageKey, substitutions) : '';
   elements.status.dataset.tone = tone;
 
-  if (message)
+  if (messageKey)
   {
     statusTimer = window.setTimeout(() =>
     {
@@ -130,7 +218,7 @@ function getSiteLabel(tab)
 {
   if (!tab?.url)
   {
-    return '此页面不可用';
+    return getMessage('pageUnavailable');
   }
 
   try
@@ -139,14 +227,14 @@ function getSiteLabel(tab)
 
     if (url.protocol === 'file:')
     {
-      return '本地文件';
+      return getMessage('localFile');
     }
 
-    return url.hostname || '此页面不可用';
+    return url.hostname || getMessage('pageUnavailable');
   }
   catch
   {
-    return '此页面不可用';
+    return getMessage('pageUnavailable');
   }
 }
 
@@ -180,7 +268,7 @@ function render()
   );
 }
 
-async function updateSettings(patch, successMessage = '设置已保存')
+async function updateSettings(patch, successMessageKey = 'statusSaved')
 {
   const revision = ++updateRevision;
 
@@ -204,7 +292,7 @@ async function updateSettings(patch, successMessage = '设置已保存')
 
     if (revision === updateRevision)
     {
-      showStatus(successMessage, 'success');
+      showStatus(successMessageKey, 'success');
     }
   }
   catch (error)
@@ -228,7 +316,7 @@ async function updateSettings(patch, successMessage = '设置已保存')
 
       if (revision === updateRevision)
       {
-        showStatus(`保存失败：${error.message}`, 'error');
+        showStatus('statusSaveFailed', 'error', [error.message]);
       }
     }
   }
@@ -306,7 +394,7 @@ function bindEvents()
   {
     if (!activeTab?.id)
     {
-      showStatus('当前页面不支持预览', 'error');
+      showStatus('statusPreviewUnsupported', 'error');
       return;
     }
 
@@ -316,27 +404,28 @@ function bindEvents()
 
       if (response?.ok)
       {
-        showStatus('已在页面中央触发预览', 'success');
+        showStatus('statusPreviewTriggered', 'success');
       }
       else
       {
-        showStatus('请先启用点击特效', 'error');
+        showStatus('statusEnableClick', 'error');
       }
     }
     catch
     {
-      showStatus('请刷新当前网页后再预览', 'error');
+      showStatus('statusRefreshForPreview', 'error');
     }
   });
 
   elements.reset.addEventListener('click', () =>
   {
-    void updateSettings({ ...DEFAULT_SETTINGS }, '已恢复默认设置');
+    void updateSettings({ ...DEFAULT_SETTINGS }, 'statusReset');
   });
 }
 
 async function initialize()
 {
+  localizeDocument();
   bindEvents();
 
   try
@@ -365,17 +454,17 @@ async function initialize()
 
     if (!activeSiteKey)
     {
-      showStatus('浏览器内部页面不支持注入特效');
+      showStatus('statusInternalPage');
     }
     else if (!contentAvailable)
     {
-      showStatus('此页面尚未加载插件；普通网页请刷新后重试');
+      showStatus('statusPageNotLoaded');
     }
   }
   catch (error)
   {
     render();
-    showStatus(`初始化失败：${error.message}`, 'error');
+    showStatus('statusInitFailed', 'error', [error.message]);
   }
 }
 

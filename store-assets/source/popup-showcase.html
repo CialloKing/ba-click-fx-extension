@@ -1,0 +1,112 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BA Click FX Popup Showcase</title>
+  <link rel="stylesheet" href="showcase.css">
+</head>
+<body class="showcase-page">
+  <div class="showcase-shell">
+    <header class="showcase-header">
+      <div class="showcase-brand">
+        <img src="../../icons/icon-128.png" alt="">
+        <span>BA Click FX</span>
+      </div>
+      <span id="fan-label" class="fan-label">Unofficial fan-made extension</span>
+    </header>
+
+    <main class="showcase-main">
+      <section class="showcase-copy">
+        <span id="eyebrow" class="eyebrow">Simple controls</span>
+        <h1 id="title">Make every effect feel like yours.</h1>
+        <p id="description">Control click feedback, cursor trails, color, opacity, size, quality, and individual websites from one focused popup.</p>
+        <div class="feature-row">
+          <span id="feature-1">Instant updates</span>
+          <span id="feature-2">Per-site control</span>
+          <span id="feature-3">Browser sync</span>
+        </div>
+      </section>
+
+      <section class="browser-card">
+        <iframe id="popup-frame" class="popup-frame" title="BA Click FX popup"></iframe>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const locale = params.get('lang') === 'zh_CN' ? 'zh_CN' : 'en';
+    const scene = params.get('scene') || 'popup';
+    const chinese = locale === 'zh_CN';
+    const copy =
+    {
+      en:
+      {
+        popup:
+        {
+          eyebrow: 'Simple controls',
+          title: 'Make every effect feel like yours.',
+          description: 'Control click feedback, cursor trails, color, opacity, size, quality, and individual websites from one focused popup.',
+          features: ['Instant updates', 'Per-site control', 'Browser sync'],
+          state: 'default',
+        },
+        site:
+        {
+          eyebrow: 'Per-site control',
+          title: 'Quiet on one website. Active everywhere else.',
+          description: 'Disable only the current origin. The popup explains exactly what is saved and keeps every other website unchanged.',
+          features: ['Origin-only rule', 'Easy to reverse', 'No page content read'],
+          state: 'site-off',
+        },
+        appearance:
+        {
+          eyebrow: 'Appearance & performance',
+          title: 'Tune the color, intensity, size, and quality.',
+          description: 'Choose a visual style that fits your browser and a quality mode that fits your display.',
+          features: ['Custom color', 'Opacity & scale', 'Three quality modes'],
+          state: 'appearance',
+        },
+      },
+      zh_CN:
+      {
+        popup:
+        {
+          eyebrow: '简洁控制',
+          title: '让每一种特效都更合心意。',
+          description: '在一个专注的弹窗中控制点击反馈、光标拖尾、颜色、不透明度、大小、画质和单独网站。',
+          features: ['即时生效', '按站点控制', '浏览器同步'],
+          state: 'default',
+        },
+        site:
+        {
+          eyebrow: '按站点控制',
+          title: '只关闭一个网站，其他网页照常运行。',
+          description: '仅为当前 origin 保存禁用规则，随时可以重新启用，不读取网页内容。',
+          features: ['仅保存 origin', '随时恢复', '不读取网页正文'],
+          state: 'site-off',
+        },
+        appearance:
+        {
+          eyebrow: '外观与性能',
+          title: '自由调整颜色、强度、大小和画质。',
+          description: '选择适合浏览器主题的视觉风格，并为当前显示设备选择合适的画质。',
+          features: ['自定义颜色', '不透明度与大小', '三档画质'],
+          state: 'appearance',
+        },
+      },
+    }[locale][scene];
+
+    document.documentElement.lang = chinese ? 'zh-CN' : 'en';
+    document.querySelector('#fan-label').textContent = chinese ? '非官方粉丝插件' : 'Unofficial fan-made extension';
+    document.querySelector('#eyebrow').textContent = copy.eyebrow;
+    document.querySelector('#title').textContent = copy.title;
+    document.querySelector('#description').textContent = copy.description;
+    copy.features.forEach((text, index) =>
+    {
+      document.querySelector(`#feature-${index + 1}`).textContent = text;
+    });
+    document.querySelector('#popup-frame').src = `popup-preview.html?lang=${locale}&state=${copy.state}`;
+  </script>
+</body>
+</html>

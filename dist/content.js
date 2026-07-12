@@ -297,22 +297,22 @@
     }
     drawHalo(t2) {
       if (!this._engine.config.glow.clickFake && !this._engine.config.glow.enabled) return;
-      let n2 = e(this.life / this._engine.config.click.totalLife), i2 = e(this.life / this._engine.config.filledCircle.maxLife), o2 = r(0.01, 0.2, n2), s2 = 1 - r(0.84, 1, n2), c2 = l(l(this._engine.config.color, [
-        255,
-        255,
-        255
-      ], 0.95), this._engine.config.color, r(0.08, this._engine.config.filledCircle.colorEnd, i2)), u2 = a(this.getDiskRadius() * 2.1, this._engine.config.click.haloRadius * m(this._engine.config), r(0.04, 0.54, n2)), d2 = 0.12 * this._engine.config.opacity * o2 * s2;
-      this._engine._drawRadialGlow(t2, this.x, this.y, u2, c2, d2);
+      let n2 = e(this.life / this._engine.config.click.totalLife);
+      this.life / this._engine.config.filledCircle.maxLife;
+      let i2 = r(0.01, 0.2, n2), o2 = 1 - r(0.84, 1, n2), s2 = this._engine.config.color, c2 = a(this.getDiskRadius() * 2.1, this._engine.config.click.haloRadius * m(this._engine.config), r(0.04, 0.54, n2)), l2 = 0.06 * this._engine.config.opacity * i2 * o2;
+      this._engine._drawRadialGlow(t2, this.x, this.y, c2, s2, l2);
     }
     drawFilledCircle(t2) {
       let i2 = this._engine.config.filledCircle, a2 = e(this.life / i2.maxLife);
       if (this.r = this.getDiskRadius(), a2 >= 1) return;
-      let o2 = n(e(a2 / i2.expandEnd)), s2 = 1 - r(i2.fadeStart, 1, a2), c2 = r(0.06, i2.colorEnd, a2), u2 = this.r * o2, d2 = l(l(this._engine.config.color, [
+      let o2 = n(e(a2 / i2.expandEnd)), s2 = 1 - r(i2.fadeStart, 1, a2), c2 = this.r * o2, l2 = this._engine.config.color, u2 = this._engine.config.opacity * s2;
+      (this._engine.config.glow.clickFake || this._engine.config.glow.enabled) && this._engine._drawDiskEdgeGlow(t2, this.x, this.y, c2, c2 * i2.glowRadiusMul, l2, u2 * i2.glowAlpha), this._engine._drawClickDisk(t2, this.x, this.y, c2, l2, u2);
+      let d2 = (1 - r(0, 0.15, a2)) * 0.35 * s2;
+      d2 > 0.01 && this._engine._drawClickDisk(t2, this.x, this.y, c2, [
         255,
         255,
         255
-      ], 0.95), this._engine.config.color, c2), f2 = this._engine.config.opacity * s2;
-      (this._engine.config.glow.clickFake || this._engine.config.glow.enabled) && this._engine._drawDiskEdgeGlow(t2, this.x, this.y, u2, u2 * i2.glowRadiusMul, d2, f2 * i2.glowAlpha), this._engine._drawClickDisk(t2, this.x, this.y, u2, d2, f2);
+      ], d2);
     }
     drawRings(t2, n2) {
       let i2 = this._engine.config.rings, o2 = this.life - i2.delay;
@@ -378,11 +378,18 @@
       if (x(this, "_smoothPosCache", {
         x: 0,
         y: 0
-      }), this.config = p(), this._animationLoopBound = this._animationLoop.bind(this), e2.color && this.setColor(...e2.color), e2.scale !== void 0 && this.setScale(e2.scale), e2.opacity !== void 0 && this.setOpacity(e2.opacity), e2.trailAlways !== void 0 && this.setTrailAlways(e2.trailAlways), e2.trailEnabled !== void 0 && this.setTrail(e2.trailEnabled), e2.clickEnabled !== void 0 && this.setClick(e2.clickEnabled), e2.touchAction !== void 0 && this.setTouchAction(e2.touchAction), this._resolveCanvas(e2.target), this.ctx = this.canvas.getContext("2d", {
+      }), this.config = p(), this._animationLoopBound = this._animationLoop.bind(this), e2.color && (this.config.color = [
+        e2.color[0],
+        e2.color[1],
+        e2.color[2]
+      ]), e2.scale !== void 0 && (this.config.scale = Math.max(0.5, Math.min(3, Number(e2.scale) ?? 1.1))), e2.opacity !== void 0 && (this.config.opacity = Math.max(0.1, Math.min(1, Number(e2.opacity) ?? 0.5))), e2.trailAlways !== void 0 && (this.config.trail.always = !!e2.trailAlways), e2.trailEnabled !== void 0 && (this.config.trail.enabled = !!e2.trailEnabled), e2.clickEnabled !== void 0 && (this.config.clickEnabled = !!e2.clickEnabled), e2.touchAction !== void 0 && (this.config.touchAction = e2.touchAction), this._resolveCanvas(e2.target), this.ctx = this.canvas.getContext("2d", {
         alpha: true,
         desynchronized: true
       }), !this.ctx) throw Error("[ba-click-fx] 无法获取 Canvas 2D 上下文");
       this.trailCanvas = document.createElement("canvas"), this.trailCtx = this.trailCanvas.getContext("2d", {
+        alpha: true,
+        desynchronized: true
+      }), this.waveCanvas = document.createElement("canvas"), this.waveCtx = this.waveCanvas.getContext("2d", {
         alpha: true,
         desynchronized: true
       }), this.width = 0, this.height = 0, this.dpr = 1, this.waves = [], this.sparks = [], this.trailStrokes = [], this.currentTrailStroke = null, this.wavePool = [], this.sparkPool = [], this.isDown = false, this.lastTrailPos = null, this.lastTrailEventTime = 0, this.trailSpeedFactor = 0, this.trailShardDistance = 0, this.trailSmoothX = null, this.trailSmoothY = null, this.lastTime = performance.now(), this.running = false, this._resizeTimer = 0, this._renderPointCache = [], this._radialGradCache = /* @__PURE__ */ new Map(), this._onResize = this._debouncedResize.bind(this), window.addEventListener("resize", this._onResize), this._resizeCanvas(), this._setupInput(), this._requestRender();
@@ -406,7 +413,7 @@
     }
     _resizeCanvas() {
       let e2 = this.canvas.getBoundingClientRect();
-      this.width = e2.width || window.innerWidth, this.height = e2.height || window.innerHeight, this.dpr = Math.min(window.devicePixelRatio || 1, this.config.maxDpr), this.canvas.width = Math.floor(this.width * this.dpr), this.canvas.height = Math.floor(this.height * this.dpr), this.canvas.style.width = `${this.width}px`, this.canvas.style.height = `${this.height}px`, this.trailCanvas.width = Math.floor(this.width * this.dpr * this.config.trailRenderScale), this.trailCanvas.height = Math.floor(this.height * this.dpr * this.config.trailRenderScale), this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0), this.trailCtx.setTransform(this.dpr * this.config.trailRenderScale, 0, 0, this.dpr * this.config.trailRenderScale, 0, 0), this._clearCanvas(), this._clearTrailCanvas(), this._requestRender();
+      this.width = e2.width || window.innerWidth, this.height = e2.height || window.innerHeight, this.dpr = Math.min(window.devicePixelRatio || 1, this.config.maxDpr), this.canvas.width = Math.floor(this.width * this.dpr), this.canvas.height = Math.floor(this.height * this.dpr), this.canvas.style.width = `${this.width}px`, this.canvas.style.height = `${this.height}px`, this.trailCanvas.width = Math.floor(this.width * this.dpr * this.config.trailRenderScale), this.trailCanvas.height = Math.floor(this.height * this.dpr * this.config.trailRenderScale), this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0), this.trailCtx.setTransform(this.dpr * this.config.trailRenderScale, 0, 0, this.dpr * this.config.trailRenderScale, 0, 0), this.waveCanvas.width = Math.floor(this.width * this.dpr), this.waveCanvas.height = Math.floor(this.height * this.dpr), this.waveCtx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0), this._clearCanvas(), this._clearTrailCanvas(), this._requestRender();
     }
     _debouncedResize() {
       clearTimeout(this._resizeTimer), this._resizeTimer = setTimeout(() => this._resizeCanvas(), 150);
@@ -432,15 +439,15 @@
     _drawRadialGlow(e2, t2, n2, r2, i2, a2) {
       if (a2 <= 0 || r2 <= 0) return;
       let o2 = e2.createRadialGradient(t2, n2, 0, t2, n2, r2);
-      o2.addColorStop(0, c(i2, a2 * 0.68)), o2.addColorStop(0.2, c(i2, a2 * 0.48)), o2.addColorStop(0.52, c(i2, a2 * 0.2)), o2.addColorStop(0.82, c(i2, a2 * 0.055)), o2.addColorStop(1, c(i2, 0)), e2.save(), e2.globalCompositeOperation = "lighter", e2.fillStyle = o2, e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore();
+      o2.addColorStop(0, c(i2, a2 * 0.68)), o2.addColorStop(0.2, c(i2, a2 * 0.48)), o2.addColorStop(0.52, c(i2, a2 * 0.2)), o2.addColorStop(0.82, c(i2, a2 * 0.055)), o2.addColorStop(1, c(i2, 0)), e2.save(), e2.globalCompositeOperation = "screen", e2.fillStyle = o2, e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore();
     }
     _drawClickDisk(e2, t2, n2, r2, i2, a2) {
       a2 <= 0 || r2 <= 0 || (e2.save(), e2.fillStyle = c(i2, a2), e2.beginPath(), e2.arc(t2, n2, r2, 0, Math.PI * 2), e2.fill(), e2.restore());
     }
     _drawDiskEdgeGlow(e2, t2, n2, r2, i2, a2, o2) {
       if (o2 <= 0 || i2 <= r2) return;
-      let s2 = e2.createRadialGradient(t2, n2, r2, t2, n2, i2);
-      s2.addColorStop(0, c(a2, o2)), s2.addColorStop(0.08, c(a2, o2 * 0.85)), s2.addColorStop(0.2, c(a2, o2 * 0.55)), s2.addColorStop(0.4, c(a2, o2 * 0.25)), s2.addColorStop(0.65, c(a2, o2 * 0.08)), s2.addColorStop(0.85, c(a2, o2 * 0.02)), s2.addColorStop(1, c(a2, 0)), e2.save(), e2.globalCompositeOperation = "lighter", e2.fillStyle = s2, e2.beginPath(), e2.arc(t2, n2, i2, 0, Math.PI * 2), e2.fill(), e2.restore();
+      let s2 = e2.createRadialGradient(t2, n2, 0, t2, n2, i2);
+      s2.addColorStop(0, c(a2, o2)), s2.addColorStop(0.08, c(a2, o2 * 0.85)), s2.addColorStop(0.2, c(a2, o2 * 0.55)), s2.addColorStop(0.4, c(a2, o2 * 0.25)), s2.addColorStop(0.65, c(a2, o2 * 0.08)), s2.addColorStop(0.85, c(a2, o2 * 0.02)), s2.addColorStop(1, c(a2, 0)), e2.save(), e2.globalCompositeOperation = "screen", e2.fillStyle = s2, e2.beginPath(), e2.arc(t2, n2, i2, 0, Math.PI * 2), e2.fill(), e2.restore();
     }
     _drawClickArcRibbon(e2, t2, n2, i2, o2, s2, l2, u2, d2, f2) {
       let p2 = Math.abs(s2 - o2);
@@ -460,11 +467,7 @@
     _drawClickRingGlow(e2, t2, n2, r2, i2, a2) {
       if (a2 <= 0 || r2 <= 0 || !this.config.glow.clickFake && !this.config.glow.enabled) return;
       let o2 = this.config.rings;
-      this._drawRadialGlow(e2, t2, n2, r2 + o2.softGlowRadiusAdd * m(this.config), i2, a2 * o2.softGlowAlpha), this._drawRadialGlow(e2, t2, n2, r2 + o2.glowRadiusAdd * m(this.config), l(i2, [
-        255,
-        255,
-        255
-      ], 0.38), a2 * o2.glowAlpha);
+      this._drawRadialGlow(e2, t2, n2, r2 + o2.softGlowRadiusAdd * m(this.config), this.config.color, a2 * o2.softGlowAlpha), this._drawRadialGlow(e2, t2, n2, r2 + o2.glowRadiusAdd * m(this.config), this.config.color, a2 * o2.glowAlpha);
     }
     _getWave(e2, t2) {
       let n2 = this.wavePool.pop() ?? new w(this);
@@ -874,7 +877,13 @@
       let t2 = Math.min(e2 - this.lastTime, this.config.maxDeltaMs);
       this.lastTime = e2;
       let n2 = t2 / this.config.baseFrameMs, r2 = n2 * this.config.clickSpeed, i2 = n2 * this.config.trailSpeed;
-      this._clearCanvas(), this._updateTrailPoints(i2), this._renderTrailToCanvas(), this.ctx.save(), this.ctx.globalCompositeOperation = "lighter", this.ctx.drawImage(this.trailCanvas, 0, 0, this.width, this.height), this._updateWaves(this.ctx, r2), this._updateSparks(this.ctx, r2, i2), this.ctx.restore(), this._hasActiveEffects() ? this._rafId = requestAnimationFrame(this._animationLoopBound) : (this.running = false, this._clearCanvas(), this._clearTrailCanvas());
+      this._clearCanvas(), this._updateTrailPoints(i2), this._renderTrailToCanvas(), this.ctx.save(), this.ctx.globalCompositeOperation = "source-over", this.ctx.drawImage(this.trailCanvas, 0, 0, this.width, this.height);
+      for (let e3 = 0; e3 < this.waves.length; e3++) {
+        let t3 = this.waves[e3];
+        this.waveCtx.save(), this.waveCtx.setTransform(1, 0, 0, 1, 0, 0), this.waveCtx.clearRect(0, 0, this.waveCanvas.width, this.waveCanvas.height), this.waveCtx.restore(), t3.update(this.waveCtx, r2), this.ctx.drawImage(this.waveCanvas, 0, 0, this.width, this.height);
+      }
+      for (let e3 = this.waves.length - 1; e3 >= 0; e3--) this.waves[e3].dead && (this._releaseWave(this.waves[e3]), this.waves.splice(e3, 1));
+      this._updateSparks(this.ctx, r2, i2), this.ctx.restore(), this._hasActiveEffects() ? this._rafId = requestAnimationFrame(this._animationLoopBound) : (this.running = false, this._clearCanvas(), this._clearTrailCanvas());
     }
     _getPointerPos(e2) {
       let t2 = this.canvas.getBoundingClientRect();
@@ -943,7 +952,7 @@
         e2,
         t2,
         n2
-      ], this._requestRender();
+      ], this.clearTrail(), this._clearCanvas(), this._clearTrailCanvas(), this._requestRender();
     }
     setScale(e2) {
       this.config.scale = Math.max(0.5, Math.min(3, Number(e2) ?? 1.1)), this._requestRender();

@@ -28,13 +28,10 @@ jobs:
         run: npm test
 
       - name: 打包发布 zip
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          cd dist
-          zip -r "../ba-click-fx-extension-${VERSION}.zip" .
+        run: npm run package
 
       - name: 创建 GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ba-click-fx-extension-*.zip
+          files: release/ba-click-fx-extension-*.zip
           generate_release_notes: true

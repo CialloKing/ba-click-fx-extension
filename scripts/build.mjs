@@ -124,7 +124,12 @@ if (existsSync(join(rootDir, 'icons')))
   cpSync(join(rootDir, 'icons'), join(distDir, 'icons'), { recursive: true });
 }
 
-for (const fileName of ['LICENSE', 'THIRD_PARTY_NOTICES.md'])
+if (existsSync(join(rootDir, '_locales')))
+{
+  cpSync(join(rootDir, '_locales'), join(distDir, '_locales'), { recursive: true });
+}
+
+for (const fileName of ['LICENSE', 'PRIVACY.md', 'THIRD_PARTY_NOTICES.md'])
 {
   const source = join(rootDir, fileName);
 

@@ -1,0 +1,106 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BA Click FX Effects Showcase</title>
+  <link rel="stylesheet" href="showcase.css">
+</head>
+<body class="showcase-page">
+  <div class="showcase-shell">
+    <header class="showcase-header">
+      <div class="showcase-brand">
+        <img src="../../icons/icon-128.png" alt="">
+        <span>BA Click FX</span>
+      </div>
+      <span id="fan-label" class="fan-label">Unofficial fan-made extension</span>
+    </header>
+
+    <main class="showcase-main">
+      <section class="showcase-copy">
+        <span id="eyebrow" class="eyebrow">Local Canvas 2D effects</span>
+        <h1 id="title">Click. Move. Leave a trail of light.</h1>
+        <p id="description">Responsive click rings, particle fragments, and a smooth cursor trail—rendered locally on ordinary webpages.</p>
+        <div class="feature-row">
+          <span id="feature-1">Click rings</span>
+          <span id="feature-2">Particles</span>
+          <span id="feature-3">Cursor trail</span>
+          <span id="feature-4">No network requests</span>
+        </div>
+      </section>
+
+      <section class="effect-stage">
+        <button id="effect-target" type="button">Click to preview</button>
+        <small id="hint">Actual extension rendering</small>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const chinese = params.get('lang') === 'zh_CN';
+    const strings = chinese
+      ? {
+        fan: '非官方粉丝插件',
+        eyebrow: '本地 Canvas 2D 特效',
+        title: '点击、移动，留下蓝色光轨。',
+        description: '灵敏的点击圆环、粒子碎片和流畅光标拖尾，全部在普通网页中本地渲染。',
+        features: ['点击圆环', '粒子碎片', '光标拖尾', '无网络请求'],
+        button: '点击预览',
+        hint: '实际插件渲染效果',
+      }
+      : {
+        fan: 'Unofficial fan-made extension',
+        eyebrow: 'Local Canvas 2D effects',
+        title: 'Click. Move. Leave a trail of light.',
+        description: 'Responsive click rings, particle fragments, and a smooth cursor trail—rendered locally on ordinary webpages.',
+        features: ['Click rings', 'Particles', 'Cursor trail', 'No network requests'],
+        button: 'Click to preview',
+        hint: 'Actual extension rendering',
+      };
+
+    document.documentElement.lang = chinese ? 'zh-CN' : 'en';
+    document.querySelector('#fan-label').textContent = strings.fan;
+    document.querySelector('#eyebrow').textContent = strings.eyebrow;
+    document.querySelector('#title').textContent = strings.title;
+    document.querySelector('#description').textContent = strings.description;
+    document.querySelector('#effect-target').textContent = strings.button;
+    document.querySelector('#hint').textContent = strings.hint;
+    strings.features.forEach((text, index) =>
+    {
+      document.querySelector(`#feature-${index + 1}`).textContent = text;
+    });
+
+    globalThis.chrome =
+    {
+      storage:
+      {
+        sync:
+        {
+          get(defaults, callback)
+          {
+            callback(defaults);
+          },
+        },
+        onChanged:
+        {
+          addListener()
+          {
+          },
+        },
+      },
+      runtime:
+      {
+        lastError: null,
+        onMessage:
+        {
+          addListener()
+          {
+          },
+        },
+      },
+    };
+  </script>
+  <script src="../../dist/content.js"></script>
+</body>
+</html>

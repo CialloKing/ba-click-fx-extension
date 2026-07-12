@@ -1,9 +1,11 @@
 ﻿{
   "manifest_version": 3,
-  "name": "BA Click FX",
-  "version": "1.0.1",
+  "name": "__MSG_extensionName__",
+  "short_name": "__MSG_extensionShortName__",
+  "version": "1.0.2",
   "minimum_chrome_version": "102",
-  "description": "为网页添加蔚蓝档案风格的鼠标点击特效与光标拖尾。",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "zh_CN",
   "permissions":
   [
     "activeTab",
@@ -11,7 +13,7 @@
   ],
   "action":
   {
-    "default_title": "BA Click FX 设置",
+    "default_title": "__MSG_actionTitle__",
     "default_popup": "popup/popup.html",
     "default_icon":
     {
