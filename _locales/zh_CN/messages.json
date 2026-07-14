@@ -2,12 +2,12 @@
   "extensionName":
   {
     "message": "BA Click FX",
-    "description": "插件名称"
+    "description": "扩展名称"
   },
   "extensionShortName":
   {
     "message": "BA Click FX",
-    "description": "插件短名称"
+    "description": "扩展短名称"
   },
   "extensionDescription":
   {
@@ -40,7 +40,7 @@
   },
   "siteStorageNotice":
   {
-    "message": "关闭当前网站时，仅会把该网站的 origin 保存到浏览器同步设置。"
+    "message": "关闭当前网站时，仅会把该网站的 origin 保存到本机扩展存储。"
   },
   "effectsTitle":
   {
@@ -60,7 +60,7 @@
   },
   "cursorTrailDescription":
   {
-    "message": "移动或拖动时显示蓝色光轨"
+    "message": "移动或拖动时显示主题色光轨"
   },
   "trailAlways":
   {
@@ -110,13 +110,17 @@
   {
     "message": "预览点击特效"
   },
+  "openSettings":
+  {
+    "message": "完整设置"
+  },
   "resetDefaults":
   {
     "message": "恢复默认"
   },
   "syncNotice":
   {
-    "message": "设置会自动同步到同一浏览器账号"
+    "message": "视觉偏好由浏览器保存；启用同步时可跨设备同步"
   },
   "projectRepository":
   {
@@ -171,7 +175,19 @@
   },
   "statusPageNotLoaded":
   {
-    "message": "此页面尚未加载插件；普通网页请刷新后重试"
+    "message": "此页面尚未加载扩展；普通网页请刷新后重试"
+  },
+  "statusRefreshForUpdate":
+  {
+    "message": "扩展已更新，请刷新当前网页"
+  },
+  "statusContentInitFailed":
+  {
+    "message": "网页特效初始化失败，请刷新页面后重试"
+  },
+  "statusContentLoading":
+  {
+    "message": "网页特效正在初始化"
   },
   "statusInitFailed":
   {
@@ -183,5 +199,161 @@
         "content": "$1"
       }
     }
+  },
+  "optionsEyebrow":
+  {
+    "message": "扩展设置"
+  },
+  "optionsIntroduction":
+  {
+    "message": "管理外观、性能、辅助功能和本机网站规则。"
+  },
+  "appearanceOptionsDescription":
+  {
+    "message": "视觉偏好使用浏览器扩展同步存储保存。"
+  },
+  "resetVisualSettings":
+  {
+    "message": "恢复视觉默认值"
+  },
+  "appearancePreset":
+  {
+    "message": "外观预设"
+  },
+  "presetClassic":
+  {
+    "message": "经典"
+  },
+  "presetSoft":
+  {
+    "message": "柔和"
+  },
+  "presetPerformance":
+  {
+    "message": "省电"
+  },
+  "presetCustom":
+  {
+    "message": "自定义"
+  },
+  "preferencesTitle":
+  {
+    "message": "语言与动态效果"
+  },
+  "preferencesDescription":
+  {
+    "message": "可跟随系统，也可为扩展单独指定。"
+  },
+  "language":
+  {
+    "message": "界面语言"
+  },
+  "followSystem":
+  {
+    "message": "跟随系统"
+  },
+  "motionPreference":
+  {
+    "message": "动态效果偏好"
+  },
+  "motionFull":
+  {
+    "message": "完整动态效果"
+  },
+  "motionReduced":
+  {
+    "message": "减少持续动态"
+  },
+  "motionDescription":
+  {
+    "message": "减少持续动态会保留点击特效，但不再持续显示移动拖尾。"
+  },
+  "disabledSitesTitle":
+  {
+    "message": "已禁用网站"
+  },
+  "disabledSitesCount":
+  {
+    "message": "条本机规则"
+  },
+  "clearSiteRules":
+  {
+    "message": "清空网站规则"
+  },
+  "searchSites":
+  {
+    "message": "搜索网站"
+  },
+  "searchSitesPlaceholder":
+  {
+    "message": "搜索 origin"
+  },
+  "noDisabledSites":
+  {
+    "message": "还没有禁用任何网站。"
+  },
+  "removeSiteRule":
+  {
+    "message": "移除"
+  },
+  "legacyRulesTitle":
+  {
+    "message": "旧版同步规则已安全迁移"
+  },
+  "legacyRulesDescription":
+  {
+    "message": "本机规则已可使用；确认其他设备完成升级后，可删除旧同步副本。"
+  },
+  "removeLegacyRules":
+  {
+    "message": "删除旧同步副本"
+  },
+  "confirmClearSiteRules":
+  {
+    "message": "确定清空全部本机网站规则吗？"
+  },
+  "confirmRemoveLegacyRules":
+  {
+    "message": "确认其他设备已完成升级，并删除旧版同步站点规则副本吗？"
+  },
+  "statusPresetApplied":
+  {
+    "message": "外观预设已应用"
+  },
+  "statusVisualReset":
+  {
+    "message": "视觉设置已恢复默认"
+  },
+  "statusSiteRuleRemoved":
+  {
+    "message": "网站规则已移除"
+  },
+  "statusSiteRulesCleared":
+  {
+    "message": "本机网站规则已清空"
+  },
+  "statusLegacyRulesRemoved":
+  {
+    "message": "旧同步副本已删除"
+  },
+  "aboutTitle":
+  {
+    "message": "关于与支持"
+  },
+  "versionLabel":
+  {
+    "message": "版本"
+  },
+  "onlineDemo":
+  {
+    "message": "在线演示"
+  },
+  "supportAndFeedback":
+  {
+    "message": "支持与反馈"
+  },
+  "privacyPolicy":
+  {
+    "message": "隐私政策"
   }
 }

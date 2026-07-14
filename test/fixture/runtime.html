@@ -73,9 +73,20 @@
       {
         sync:
         {
-          get(defaults, callback)
+          get(_defaults, callback)
           {
-            callback(defaults);
+            callback({});
+          },
+        },
+        local:
+        {
+          get(_defaults, callback)
+          {
+            callback({ storageSchemaVersion: 2 });
+          },
+          set(_settings, callback)
+          {
+            callback();
           },
         },
         onChanged:

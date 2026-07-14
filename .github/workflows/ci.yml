@@ -31,13 +31,6 @@ jobs:
       - name: 生成商店提交包
         run: npm run package
 
-      - name: 确认构建产物已同步
-        run: |
-          if [ -n "$(git status --porcelain -- dist)" ]; then
-            git status --short -- dist
-            exit 1
-          fi
-
       - name: 上传插件构建产物
         uses: actions/upload-artifact@v4
         with:

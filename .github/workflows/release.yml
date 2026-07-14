@@ -30,8 +30,12 @@ jobs:
       - name: 打包发布 zip
         run: npm run package
 
+      - name: 校验发布标签、版本与包哈希
+        run: npm run check:release -- "$GITHUB_REF_NAME"
+
       - name: 创建 GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: release/ba-click-fx-extension-*.zip
           generate_release_notes: true
+          fail_on_unmatched_files: true

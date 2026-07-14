@@ -61,8 +61,11 @@ for (const script of manifest.content_scripts[0].js)
 }
 
 assertFile(manifest.action.default_popup);
+assert(manifest.options_ui?.open_in_tab === true, '设置页必须在独立标签页打开。');
+assertFile(manifest.options_ui.page);
 
 const popupHtml = readUtf8(join(distDir, manifest.action.default_popup));
+const optionsHtml = readUtf8(join(distDir, manifest.options_ui.page));
 const localPopupReferences = [
   ...popupHtml.matchAll(/\bsrc=["']([^"']+)["']/g),
   ...popupHtml.matchAll(/<link\b[^>]*\bhref=["']([^"']+)["']/g),
@@ -72,6 +75,23 @@ for (const reference of localPopupReferences)
 {
   assert(!/^https?:/i.test(reference), `弹窗不允许引用远程资源：${reference}`);
   assertFile(join('popup', reference));
+}
+
+const localOptionsReferences = [
+  ...optionsHtml.matchAll(/\bsrc=["']([^"']+)["']/g),
+  ...optionsHtml.matchAll(/<link\b[^>]*\bhref=["']([^"']+)["']/g),
+].map((match) => match[1]);
+
+for (const reference of localOptionsReferences)
+{
+  if (/^\.\.\//.test(reference))
+  {
+    assertFile(reference.replace(/^\.\.\//, ''));
+    continue;
+  }
+
+  assert(!/^https?:/i.test(reference), `设置页不允许引用远程资源：${reference}`);
+  assertFile(join('options', reference));
 }
 
 assert(
@@ -112,11 +132,18 @@ for (const locale of ['en', 'zh_CN'])
 
 const contentScript = readUtf8(join(distDir, 'content.js'));
 const popupScript = readUtf8(join(distDir, 'popup', 'popup.js'));
-const combinedScripts = `${contentScript}\n${popupScript}`;
+const optionsScript = readUtf8(join(distDir, 'options', 'options.js'));
+const combinedScripts = `${contentScript}\n${popupScript}\n${optionsScript}`;
 const popupMessageKeys = new Set([
   ...[...popupHtml.matchAll(/data-i18n(?:-title)?=["']([^"']+)["']/g)]
     .map((match) => match[1]),
   ...[...popupScript.matchAll(/getMessage\(['"]([^'"]+)['"]/g)]
+    .map((match) => match[1]),
+]);
+const optionsMessageKeys = new Set([
+  ...[...optionsHtml.matchAll(/data-i18n(?:-title|-placeholder)?=["']([^"']+)["']/g)]
+    .map((match) => match[1]),
+  ...[...optionsScript.matchAll(/getMessage\(['"]([^'"]+)['"]/g)]
     .map((match) => match[1]),
 ]);
 const englishMessageKeys = Object.keys(localeMessages.get('en')).sort();
@@ -134,6 +161,11 @@ for (const locale of ['en', 'zh_CN'])
   for (const key of popupMessageKeys)
   {
     assert(messages[key]?.message, `${locale} 缺少弹窗消息：${key}`);
+  }
+
+  for (const key of optionsMessageKeys)
+  {
+    assert(messages[key]?.message, `${locale} 缺少设置页消息：${key}`);
   }
 }
 

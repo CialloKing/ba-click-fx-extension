@@ -2,12 +2,15 @@
 import test from 'node:test';
 
 import {
+  APPEARANCE_PRESETS,
   DEFAULT_SETTINGS,
-  getEffectiveMaxDpr,
+  detectAppearancePreset,
   getQualityProfile,
+  getRenderOptions,
   getSiteKey,
   hexToRgb,
   normalizeSettings,
+  shouldReduceMotion,
 } from '../src/shared/settings.js';
 
 test('缺省设置安装后立即启用点击和移动拖尾', () =>
@@ -18,6 +21,9 @@ test('缺省设置安装后立即启用点击和移动拖尾', () =>
   assert.equal(settings.clickEnabled, true);
   assert.equal(settings.trailEnabled, true);
   assert.equal(settings.trailAlways, true);
+  assert.equal(settings.languageMode, 'system');
+  assert.equal(settings.motionMode, 'system');
+  assert.equal(settings.preset, 'classic');
   assert.deepEqual(settings.disabledSites, {});
 });
 
@@ -30,6 +36,8 @@ test('无效设置会回退或裁剪到安全范围', () =>
     opacity: 99,
     scale: -20,
     quality: 'ultra',
+    languageMode: 'ja',
+    motionMode: 'lots',
   });
 
   assert.equal(settings.enabled, false);
@@ -37,6 +45,8 @@ test('无效设置会回退或裁剪到安全范围', () =>
   assert.equal(settings.opacity, 1);
   assert.equal(settings.scale, 0.5);
   assert.equal(settings.quality, DEFAULT_SETTINGS.quality);
+  assert.equal(settings.languageMode, DEFAULT_SETTINGS.languageMode);
+  assert.equal(settings.motionMode, DEFAULT_SETTINGS.motionMode);
 });
 
 test('站点禁用规则只保留明确的 true 值', () =>
@@ -66,7 +76,7 @@ test('站点键按源隔离，并为本地文件提供稳定键', () =>
   assert.equal(getSiteKey('not a url'), null);
 });
 
-test('画质和颜色转换结果可直接传给核心 API', () =>
+test('画质配置直接使用上游总 backing store 像素预算', () =>
 {
   assert.deepEqual(hexToRgb('#69a1ff'), [105, 161, 255]);
   assert.deepEqual(getQualityProfile('high'),
@@ -75,8 +85,33 @@ test('画质和颜色转换结果可直接传给核心 API', () =>
     trailRenderScale: 1,
   });
   assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('balanced'));
-  assert.equal(getEffectiveMaxDpr('high', 1920, 1080, 1920, 1080), 2);
-  assert.ok(getEffectiveMaxDpr('high', 3840, 2160, 3840, 2160) < 1.2);
-  assert.equal(getEffectiveMaxDpr('balanced', 3840, 2160, 3840, 2160), 1);
-  assert.ok(Number.isFinite(getEffectiveMaxDpr('high', undefined, 0, Number.NaN, -1)));
+  assert.deepEqual(getRenderOptions('high'),
+  {
+    maxDpr: 2,
+    trailRenderScale: 1,
+    minRenderScale: 0.5,
+    maxBackingPixels: 20_000_000,
+  });
+});
+
+test('外观预设可识别，手动外观保持自定义状态', () =>
+{
+  assert.equal(detectAppearancePreset(APPEARANCE_PRESETS.soft), 'soft');
+  assert.equal(detectAppearancePreset(
+  {
+    ...APPEARANCE_PRESETS.classic,
+    opacity: 0.6,
+  }), 'custom');
+  assert.equal(normalizeSettings(
+  {
+    ...APPEARANCE_PRESETS.soft,
+  }).preset, 'soft');
+});
+
+test('减少动态只覆盖持续移动拖尾偏好', () =>
+{
+  assert.equal(shouldReduceMotion({ motionMode: 'reduced' }, false), true);
+  assert.equal(shouldReduceMotion({ motionMode: 'full' }, true), false);
+  assert.equal(shouldReduceMotion({ motionMode: 'system' }, true), true);
+  assert.equal(shouldReduceMotion({ motionMode: 'system' }, false), false);
 });

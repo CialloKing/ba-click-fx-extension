@@ -40,7 +40,7 @@
   },
   "siteStorageNotice":
   {
-    "message": "Disabling a website stores only its origin in browser sync settings."
+    "message": "Disabling a website stores only its origin in local extension storage."
   },
   "effectsTitle":
   {
@@ -60,7 +60,7 @@
   },
   "cursorTrailDescription":
   {
-    "message": "Show a blue light trail while moving or dragging"
+    "message": "Show a theme-colored trail while moving or dragging"
   },
   "trailAlways":
   {
@@ -110,13 +110,17 @@
   {
     "message": "Preview click effect"
   },
+  "openSettings":
+  {
+    "message": "Full settings"
+  },
   "resetDefaults":
   {
     "message": "Reset"
   },
   "syncNotice":
   {
-    "message": "Settings sync through your browser account"
+    "message": "Visual preferences may sync when browser sync is enabled"
   },
   "projectRepository":
   {
@@ -173,6 +177,18 @@
   {
     "message": "The extension is not loaded on this page; refresh an ordinary webpage"
   },
+  "statusRefreshForUpdate":
+  {
+    "message": "The extension was updated; refresh the current webpage"
+  },
+  "statusContentInitFailed":
+  {
+    "message": "Page effects could not initialize; refresh and try again"
+  },
+  "statusContentLoading":
+  {
+    "message": "Page effects are initializing"
+  },
   "statusInitFailed":
   {
     "message": "Could not initialize: $ERROR$",
@@ -183,5 +199,161 @@
         "content": "$1"
       }
     }
+  },
+  "optionsEyebrow":
+  {
+    "message": "Extension settings"
+  },
+  "optionsIntroduction":
+  {
+    "message": "Manage appearance, performance, accessibility, and local website rules."
+  },
+  "appearanceOptionsDescription":
+  {
+    "message": "Visual preferences are saved with browser-provided extension sync storage."
+  },
+  "resetVisualSettings":
+  {
+    "message": "Reset visual settings"
+  },
+  "appearancePreset":
+  {
+    "message": "Appearance preset"
+  },
+  "presetClassic":
+  {
+    "message": "Classic"
+  },
+  "presetSoft":
+  {
+    "message": "Soft"
+  },
+  "presetPerformance":
+  {
+    "message": "Power saving"
+  },
+  "presetCustom":
+  {
+    "message": "Custom"
+  },
+  "preferencesTitle":
+  {
+    "message": "Language & motion"
+  },
+  "preferencesDescription":
+  {
+    "message": "Follow the system or choose an extension-specific preference."
+  },
+  "language":
+  {
+    "message": "Interface language"
+  },
+  "followSystem":
+  {
+    "message": "Follow system"
+  },
+  "motionPreference":
+  {
+    "message": "Motion preference"
+  },
+  "motionFull":
+  {
+    "message": "Full motion"
+  },
+  "motionReduced":
+  {
+    "message": "Reduce continuous motion"
+  },
+  "motionDescription":
+  {
+    "message": "Reduced motion keeps click effects but suppresses the continuous moving trail."
+  },
+  "disabledSitesTitle":
+  {
+    "message": "Disabled websites"
+  },
+  "disabledSitesCount":
+  {
+    "message": "local rules"
+  },
+  "clearSiteRules":
+  {
+    "message": "Clear website rules"
+  },
+  "searchSites":
+  {
+    "message": "Search websites"
+  },
+  "searchSitesPlaceholder":
+  {
+    "message": "Search origins"
+  },
+  "noDisabledSites":
+  {
+    "message": "No websites are disabled."
+  },
+  "removeSiteRule":
+  {
+    "message": "Remove"
+  },
+  "legacyRulesTitle":
+  {
+    "message": "Legacy sync rules were migrated safely"
+  },
+  "legacyRulesDescription":
+  {
+    "message": "Local rules are ready. After other devices update, you may delete the legacy synced copy."
+  },
+  "removeLegacyRules":
+  {
+    "message": "Delete legacy sync copy"
+  },
+  "confirmClearSiteRules":
+  {
+    "message": "Clear every local website rule?"
+  },
+  "confirmRemoveLegacyRules":
+  {
+    "message": "Have your other devices updated, and should the legacy synced website-rule copy be deleted?"
+  },
+  "statusPresetApplied":
+  {
+    "message": "Appearance preset applied"
+  },
+  "statusVisualReset":
+  {
+    "message": "Visual settings reset"
+  },
+  "statusSiteRuleRemoved":
+  {
+    "message": "Website rule removed"
+  },
+  "statusSiteRulesCleared":
+  {
+    "message": "Local website rules cleared"
+  },
+  "statusLegacyRulesRemoved":
+  {
+    "message": "Legacy sync copy deleted"
+  },
+  "aboutTitle":
+  {
+    "message": "About & support"
+  },
+  "versionLabel":
+  {
+    "message": "Version"
+  },
+  "onlineDemo":
+  {
+    "message": "Online demo"
+  },
+  "supportAndFeedback":
+  {
+    "message": "Support & feedback"
+  },
+  "privacyPolicy":
+  {
+    "message": "Privacy policy"
   }
 }

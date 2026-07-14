@@ -1,164 +1,40 @@
-﻿import {
+﻿import { createI18n } from '../shared/i18n.js';
+import {
   DEFAULT_SETTINGS,
   getSiteKey,
   normalizeSettings,
 } from '../shared/settings.js';
-
-import englishMessages from '../../_locales/en/messages.json';
-import chineseMessages from '../../_locales/zh_CN/messages.json';
 import {
-  DEFAULT_LOCALE,
-  detectLocale,
-} from './locale.js';
+  applyStorageChanges,
+  readSettings,
+  writeSettingsPatch,
+} from '../shared/storage.js';
 
 const MESSAGE_PREVIEW = 'BA_CLICK_FX_PREVIEW';
 const MESSAGE_GET_STATUS = 'BA_CLICK_FX_GET_STATUS';
-const activeLocale = detectLocale();
-const MESSAGE_CATALOGS =
-{
-  en: englishMessages,
-  zh_CN: chineseMessages,
-};
-const activeMessages = MESSAGE_CATALOGS[activeLocale] || MESSAGE_CATALOGS[DEFAULT_LOCALE];
-const FALLBACK_MESSAGES =
-{
-  localFile: '本地文件',
-  pageUnavailable: '此页面不可用',
-  statusSaved: '设置已保存',
-  statusSaveFailed: '保存失败：$1',
-  statusPreviewUnsupported: '当前页面不支持预览',
-  statusPreviewTriggered: '已在页面中央触发预览',
-  statusEnableClick: '请先启用点击特效',
-  statusRefreshForPreview: '请刷新当前网页后再预览',
-  statusReset: '已恢复默认设置',
-  statusInternalPage: '浏览器内部页面不支持注入特效',
-  statusPageNotLoaded: '此页面尚未加载插件；普通网页请刷新后重试',
-  statusInitFailed: '初始化失败：$1',
-};
+const MESSAGE_PROTOCOL_VERSION = 2;
 
-const elements = {
+const elements =
+{
   enabled: document.querySelector('#enabled'),
   siteEnabled: document.querySelector('#site-enabled'),
   siteName: document.querySelector('#site-name'),
   clickEnabled: document.querySelector('#click-enabled'),
   trailEnabled: document.querySelector('#trail-enabled'),
   trailAlways: document.querySelector('#trail-always'),
-  color: document.querySelector('#color'),
-  colorValue: document.querySelector('#color-value'),
-  opacity: document.querySelector('#opacity'),
-  opacityValue: document.querySelector('#opacity-value'),
-  scale: document.querySelector('#scale'),
-  scaleValue: document.querySelector('#scale-value'),
-  quality: document.querySelector('#quality'),
   preview: document.querySelector('#preview'),
-  reset: document.querySelector('#reset'),
+  openOptions: document.querySelector('#open-options'),
   status: document.querySelector('#status'),
 };
 
-let settings = normalizeSettings(DEFAULT_SETTINGS);
+let i18n = createI18n(DEFAULT_SETTINGS.languageMode);
+let settings = DEFAULT_SETTINGS;
 let activeTab = null;
 let activeSiteKey = null;
-let contentAvailable = false;
+let contentStatus = null;
 let statusTimer = 0;
 let updateRevision = 0;
 let writeQueue = Promise.resolve();
-
-function getMessage(key, substitutions = [])
-{
-  const values = Array.isArray(substitutions) ? substitutions : [substitutions];
-  const definition = activeMessages[key];
-
-  if (definition?.message)
-  {
-    let localized = definition.message;
-
-    for (const [name, placeholder] of Object.entries(definition.placeholders || {}))
-    {
-      const index = Number(placeholder.content.slice(1)) - 1;
-
-      localized = localized.replaceAll(
-        `$${name.toUpperCase()}$`,
-        String(values[index] ?? ''),
-      );
-    }
-
-    return localized;
-  }
-
-  let fallback = FALLBACK_MESSAGES[key] || key;
-
-  values.forEach((value, index) =>
-  {
-    fallback = fallback.replaceAll(`$${index + 1}`, String(value));
-  });
-
-  return fallback;
-}
-
-function localizeDocument()
-{
-  document.documentElement.lang = activeLocale === DEFAULT_LOCALE ? 'zh-CN' : 'en';
-
-  for (const element of document.querySelectorAll('[data-i18n]'))
-  {
-    const localized = getMessage(element.dataset.i18n);
-
-    if (localized !== element.dataset.i18n)
-    {
-      element.textContent = localized;
-    }
-  }
-
-  for (const element of document.querySelectorAll('[data-i18n-title]'))
-  {
-    const localized = getMessage(element.dataset.i18nTitle);
-
-    if (localized !== element.dataset.i18nTitle)
-    {
-      element.title = localized;
-    }
-  }
-
-  document.title = getMessage('extensionName');
-}
-
-function readSettings()
-{
-  return new Promise((resolve, reject) =>
-  {
-    chrome.storage.sync.get(DEFAULT_SETTINGS, (stored) =>
-    {
-      const error = chrome.runtime.lastError;
-
-      if (error)
-      {
-        reject(new Error(error.message));
-        return;
-      }
-
-      resolve(normalizeSettings(stored));
-    });
-  });
-}
-
-function writeSettings(patch)
-{
-  return new Promise((resolve, reject) =>
-  {
-    chrome.storage.sync.set(patch, () =>
-    {
-      const error = chrome.runtime.lastError;
-
-      if (error)
-      {
-        reject(new Error(error.message));
-        return;
-      }
-
-      resolve();
-    });
-  });
-}
 
 function queryActiveTab()
 {
@@ -201,7 +77,7 @@ function sendTabMessage(tabId, type)
 function showStatus(messageKey, tone = 'normal', substitutions = [])
 {
   window.clearTimeout(statusTimer);
-  elements.status.textContent = messageKey ? getMessage(messageKey, substitutions) : '';
+  elements.status.textContent = messageKey ? i18n.getMessage(messageKey, substitutions) : '';
   elements.status.dataset.tone = tone;
 
   if (messageKey)
@@ -210,7 +86,7 @@ function showStatus(messageKey, tone = 'normal', substitutions = [])
     {
       elements.status.textContent = '';
       delete elements.status.dataset.tone;
-    }, 2600);
+    }, 3200);
   }
 }
 
@@ -218,7 +94,7 @@ function getSiteLabel(tab)
 {
   if (!tab?.url)
   {
-    return getMessage('pageUnavailable');
+    return i18n.getMessage('pageUnavailable');
   }
 
   try
@@ -227,15 +103,24 @@ function getSiteLabel(tab)
 
     if (url.protocol === 'file:')
     {
-      return getMessage('localFile');
+      return i18n.getMessage('localFile');
     }
 
-    return url.hostname || getMessage('pageUnavailable');
+    return url.hostname || i18n.getMessage('pageUnavailable');
   }
   catch
   {
-    return getMessage('pageUnavailable');
+    return i18n.getMessage('pageUnavailable');
   }
+}
+
+function isContentReady()
+{
+  return Boolean(
+    contentStatus?.protocolVersion === MESSAGE_PROTOCOL_VERSION &&
+    contentStatus?.siteKey === activeSiteKey &&
+    contentStatus?.state === 'ready',
+  );
 }
 
 function render()
@@ -245,15 +130,8 @@ function render()
   elements.trailEnabled.checked = settings.trailEnabled;
   elements.trailAlways.checked = settings.trailAlways;
   elements.trailAlways.disabled = !settings.trailEnabled;
-  elements.color.value = settings.color;
-  elements.colorValue.textContent = settings.color;
-  elements.opacity.value = String(settings.opacity);
-  elements.opacityValue.textContent = `${Math.round(settings.opacity * 100)}%`;
-  elements.scale.value = String(settings.scale);
-  elements.scaleValue.textContent = `${settings.scale.toFixed(2)}×`;
-  elements.quality.value = settings.quality;
 
-  const siteSupported = Boolean(activeSiteKey && contentAvailable);
+  const siteSupported = Boolean(activeSiteKey);
   const siteEnabled = siteSupported && settings.disabledSites[activeSiteKey] !== true;
 
   elements.siteName.textContent = getSiteLabel(activeTab);
@@ -261,7 +139,7 @@ function render()
   elements.siteEnabled.disabled = !siteSupported;
   elements.preview.disabled = !(
     activeTab?.id &&
-    contentAvailable &&
+    isContentReady() &&
     settings.enabled &&
     siteEnabled &&
     settings.clickEnabled
@@ -271,18 +149,24 @@ function render()
 async function updateSettings(patch, successMessageKey = 'statusSaved')
 {
   const revision = ++updateRevision;
+  const previousSettings = settings;
 
   settings = normalizeSettings({ ...settings, ...patch });
-  const snapshot = settings;
+  const normalizedPatch = {};
+
+  for (const key of Object.keys(patch))
+  {
+    normalizedPatch[key] = settings[key];
+  }
 
   render();
 
   const writeOperation = writeQueue
     .catch(() =>
     {
-      // 前一次失败不应阻止包含完整快照的后续保存继续执行。
+      // 前一次失败不应阻止后续独立设置继续保存。
     })
-    .then(() => writeSettings(snapshot));
+    .then(() => writeSettingsPatch(normalizedPatch));
 
   writeQueue = writeOperation;
 
@@ -299,25 +183,9 @@ async function updateSettings(patch, successMessageKey = 'statusSaved')
   {
     if (revision === updateRevision)
     {
-      try
-      {
-        const stored = await readSettings();
-
-        if (revision === updateRevision)
-        {
-          settings = stored;
-          render();
-        }
-      }
-      catch
-      {
-        // 保留当前可见值，并通过错误状态提示存储没有成功。
-      }
-
-      if (revision === updateRevision)
-      {
-        showStatus('statusSaveFailed', 'error', [error.message]);
-      }
+      settings = previousSettings;
+      render();
+      showStatus('statusSaveFailed', 'error', [error.message]);
     }
   }
 }
@@ -339,7 +207,7 @@ function bindEvents()
 
   elements.siteEnabled.addEventListener('change', () =>
   {
-    if (!activeSiteKey || !contentAvailable)
+    if (!activeSiteKey)
     {
       return;
     }
@@ -358,41 +226,9 @@ function bindEvents()
     void updateSettings({ disabledSites });
   });
 
-  elements.color.addEventListener('input', () =>
-  {
-    elements.colorValue.textContent = elements.color.value;
-  });
-  elements.color.addEventListener('change', () =>
-  {
-    void updateSettings({ color: elements.color.value });
-  });
-
-  elements.opacity.addEventListener('input', () =>
-  {
-    elements.opacityValue.textContent = `${Math.round(Number(elements.opacity.value) * 100)}%`;
-  });
-  elements.opacity.addEventListener('change', () =>
-  {
-    void updateSettings({ opacity: Number(elements.opacity.value) });
-  });
-
-  elements.scale.addEventListener('input', () =>
-  {
-    elements.scaleValue.textContent = `${Number(elements.scale.value).toFixed(2)}×`;
-  });
-  elements.scale.addEventListener('change', () =>
-  {
-    void updateSettings({ scale: Number(elements.scale.value) });
-  });
-
-  elements.quality.addEventListener('change', () =>
-  {
-    void updateSettings({ quality: elements.quality.value });
-  });
-
   elements.preview.addEventListener('click', async () =>
   {
-    if (!activeTab?.id)
+    if (!activeTab?.id || !isContentReady())
     {
       showStatus('statusPreviewUnsupported', 'error');
       return;
@@ -417,16 +253,35 @@ function bindEvents()
     }
   });
 
-  elements.reset.addEventListener('click', () =>
+  elements.openOptions.addEventListener('click', () =>
   {
-    void updateSettings({ ...DEFAULT_SETTINGS }, 'statusReset');
+    chrome.runtime.openOptionsPage();
+  });
+}
+
+function bindStorageChanges()
+{
+  chrome.storage.onChanged.addListener((changes, areaName) =>
+  {
+    if (areaName !== 'sync' && areaName !== 'local')
+    {
+      return;
+    }
+
+    const nextSettings = applyStorageChanges(settings, changes, areaName);
+
+    if (nextSettings !== settings)
+    {
+      settings = nextSettings;
+      render();
+    }
   });
 }
 
 async function initialize()
 {
-  localizeDocument();
   bindEvents();
+  bindStorageChanges();
 
   try
   {
@@ -434,19 +289,19 @@ async function initialize()
       readSettings(),
       queryActiveTab(),
     ]);
+    i18n = createI18n(settings.languageMode);
+    i18n.localizeDocument();
     activeSiteKey = getSiteKey(activeTab?.url);
 
     if (activeSiteKey && activeTab?.id)
     {
       try
       {
-        const contentStatus = await sendTabMessage(activeTab.id, MESSAGE_GET_STATUS);
-
-        contentAvailable = contentStatus?.siteKey === activeSiteKey;
+        contentStatus = await sendTabMessage(activeTab.id, MESSAGE_GET_STATUS);
       }
       catch
       {
-        contentAvailable = false;
+        contentStatus = null;
       }
     }
 
@@ -456,13 +311,26 @@ async function initialize()
     {
       showStatus('statusInternalPage');
     }
-    else if (!contentAvailable)
+    else if (!contentStatus)
     {
       showStatus('statusPageNotLoaded');
+    }
+    else if (contentStatus.protocolVersion !== MESSAGE_PROTOCOL_VERSION)
+    {
+      showStatus('statusRefreshForUpdate');
+    }
+    else if (contentStatus.state === 'error')
+    {
+      showStatus('statusContentInitFailed', 'error');
+    }
+    else if (contentStatus.state !== 'ready')
+    {
+      showStatus('statusContentLoading');
     }
   }
   catch (error)
   {
+    i18n.localizeDocument();
     render();
     showStatus('statusInitFailed', 'error', [error.message]);
   }

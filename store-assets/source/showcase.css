@@ -180,11 +180,30 @@ body::before
 {
   display: block;
   width: 362px;
-  height: 650px;
+  height: 470px;
   margin: 0 auto;
   border: 1px solid rgba(113, 204, 255, 0.2);
   border-radius: 10px;
   background: #07111f;
+}
+
+.showcase-main.has-options
+{
+  grid-template-columns: 360px 1fr;
+  gap: 28px;
+}
+
+.options-card
+{
+  width: 740px;
+  padding-right: 18px;
+  padding-left: 18px;
+}
+
+.options-frame
+{
+  width: 700px;
+  height: 620px;
 }
 
 .effect-stage

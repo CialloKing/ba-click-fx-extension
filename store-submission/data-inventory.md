@@ -6,8 +6,9 @@ This inventory is the source of truth for privacy-policy and store-dashboard ans
 | --- | --- | --- | --- | --- |
 | Pointer coordinates and pointer events | `ba-click-fx` runtime in `content.js` | Memory only; discarded as effects expire | None | Draw click rings, particles, and cursor trails |
 | Current webpage URL/origin | `getSiteKey(window.location.href)` and popup active-tab lookup | Not persisted by merely visiting/opening the popup | None | Determine and display the current-site enable state |
-| Explicitly disabled website origins | `disabledSites` in shared settings | Browser `storage.sync` until re-enabled/reset/uninstalled | Browser-vendor sync only when enabled | Remember site-specific disable choices |
-| Enabled states, color, opacity, scale, quality | Popup and shared settings | Browser `storage.sync` until changed/reset/uninstalled | Browser-vendor sync only when enabled | Apply the user's visual and performance preferences |
+| Explicitly disabled website origins | `disabledSites` in shared settings | Browser `storage.local` until re-enabled/removed/cleared/uninstalled | None in v1.0.5 | Remember site-specific disable choices on the current browser profile |
+| Legacy explicitly disabled origins | Pre-v1.0.5 `disabledSites` migration | Existing browser `storage.sync` copy is retained until explicit options-page cleanup | Browser-vendor sync only when enabled | Prevent another device that has not updated from losing its existing rules |
+| Enabled states, color, opacity, scale, quality, preset, language, motion | Popup/options/shared settings | Browser `storage.sync` until changed/reset/uninstalled | Browser-vendor sync only when enabled | Apply the user's visual, performance, interface, and accessibility preferences |
 | Webpage text, forms, cookies, passwords, communications, account/payment data | Not used | None | None | Not applicable |
 
 ## Network inventory
@@ -19,7 +20,7 @@ This inventory is the source of truth for privacy-policy and store-dashboard ans
 
 ## Permission mapping
 
-- `storage`: required for visual settings and explicit site rules.
+- `storage`: required for synced visual/interface preferences, local site rules, and the one-time schema migration.
 - `activeTab`: required only when the user opens the popup to identify/message the active tab.
 - HTTP/HTTPS content-script matches: required to render the extension's single purpose on ordinary webpages.
 - `file:///*`: optional user-enabled support for local HTML pages.

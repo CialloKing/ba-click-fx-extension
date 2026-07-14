@@ -47,8 +47,8 @@
         {
           eyebrow: 'Simple controls',
           title: 'Make every effect feel like yours.',
-          description: 'Control click feedback, cursor trails, color, opacity, size, quality, and individual websites from one focused popup.',
-          features: ['Instant updates', 'Per-site control', 'Browser sync'],
+          description: 'Use focused quick controls for click feedback, cursor trails, preview, and the current website.',
+          features: ['Instant updates', 'Per-site control', 'Full settings'],
           state: 'default',
         },
         site:
@@ -65,7 +65,7 @@
           title: 'Tune the color, intensity, size, and quality.',
           description: 'Choose a visual style that fits your browser and a quality mode that fits your display.',
           features: ['Custom color', 'Opacity & scale', 'Three quality modes'],
-          state: 'appearance',
+          state: 'options',
         },
       },
       zh_CN:
@@ -74,8 +74,8 @@
         {
           eyebrow: '简洁控制',
           title: '让每一种特效都更合心意。',
-          description: '在一个专注的弹窗中控制点击反馈、光标拖尾、颜色、不透明度、大小、画质和单独网站。',
-          features: ['即时生效', '按站点控制', '浏览器同步'],
+          description: '使用专注的常用开关控制点击反馈、光标拖尾、预览和当前网站。',
+          features: ['即时生效', '按站点控制', '完整设置'],
           state: 'default',
         },
         site:
@@ -92,13 +92,13 @@
           title: '自由调整颜色、强度、大小和画质。',
           description: '选择适合浏览器主题的视觉风格，并为当前显示设备选择合适的画质。',
           features: ['自定义颜色', '不透明度与大小', '三档画质'],
-          state: 'appearance',
+          state: 'options',
         },
       },
     }[locale][scene];
 
     document.documentElement.lang = chinese ? 'zh-CN' : 'en';
-    document.querySelector('#fan-label').textContent = chinese ? '非官方粉丝插件' : 'Unofficial fan-made extension';
+    document.querySelector('#fan-label').textContent = chinese ? '非官方粉丝扩展' : 'Unofficial fan-made extension';
     document.querySelector('#eyebrow').textContent = copy.eyebrow;
     document.querySelector('#title').textContent = copy.title;
     document.querySelector('#description').textContent = copy.description;
@@ -106,7 +106,22 @@
     {
       document.querySelector(`#feature-${index + 1}`).textContent = text;
     });
-    document.querySelector('#popup-frame').src = `popup-preview.html?lang=${locale}&state=${copy.state}`;
+    const main = document.querySelector('.showcase-main');
+    const card = document.querySelector('.browser-card');
+    const frame = document.querySelector('#popup-frame');
+
+    if (copy.state === 'options')
+    {
+      main.classList.add('has-options');
+      card.classList.add('options-card');
+      frame.classList.add('options-frame');
+      frame.title = 'BA Click FX full settings';
+      frame.src = `options-preview.html?lang=${locale}`;
+    }
+    else
+    {
+      frame.src = `popup-preview.html?lang=${locale}&state=${copy.state}`;
+    }
   </script>
 </body>
 </html>

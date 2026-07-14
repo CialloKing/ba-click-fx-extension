@@ -12,20 +12,23 @@
 - [ ] Run `npm ci`.
 - [ ] Run `npm test`.
 - [ ] Run `npm run package`.
-- [ ] Confirm the ZIP name is `ba-click-fx-extension-v1.0.2-chromium.zip`.
+- [ ] Confirm the ZIP name is `ba-click-fx-extension-v1.0.5-chromium.zip`.
 - [ ] Confirm `manifest.json` is at the ZIP root.
 - [ ] Confirm all source, build, locale, documentation, and store-submission text files pass UTF-8 BOM + LF validation.
 - [ ] Load `dist` in Chrome developer mode and execute [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md).
 - [ ] Load the same `dist` in Edge developer mode and execute the same checklist.
+- [ ] Refresh localized screenshots 2 and 4 from v1.0.5; do not reuse the v1.0.2 popup/appearance screenshots unchanged.
 
 ## 3. GitHub release
 
-- [ ] Confirm `CHANGELOG.md` has no unresolved `Unreleased` entries intended for `1.0.2`.
-- [ ] Commit the version and generated `dist` files.
-- [ ] Create annotated tag `v1.0.2` with a Chinese tag message.
+- [ ] Confirm `CHANGELOG.md` has no unresolved `Unreleased` entries intended for `1.0.5`.
+- [ ] Confirm generated `dist` files are not tracked and CI rebuilds them successfully.
+- [ ] Run `npm run check:release -- v1.0.5`.
+- [ ] Create annotated tag `v1.0.5` with a Chinese tag message. Do not create `v1.0.4`.
 - [ ] Push the tag.
 - [ ] Confirm the release workflow creates a GitHub Release and attaches the Chromium ZIP.
 - [ ] Download the release ZIP and compare its SHA-256 with the locally generated package if reproducibility is required.
+- [ ] Confirm the release contains only the `v1.0.5` Chromium ZIP and that the `v1.0.2` Release remains unchanged.
 
 ## 4. Chrome Web Store
 

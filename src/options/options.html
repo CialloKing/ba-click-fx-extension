@@ -1,0 +1,147 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BA Click FX</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <img src="../icons/icon-128.png" width="64" height="64" alt="">
+      <div>
+        <p class="eyebrow" data-i18n="optionsEyebrow">扩展设置</p>
+        <h1 data-i18n="extensionName">BA Click FX</h1>
+        <p data-i18n="optionsIntroduction">管理外观、性能、辅助功能和本机网站规则。</p>
+      </div>
+    </header>
+
+    <section class="settings-section" aria-labelledby="appearance-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="appearance-title" data-i18n="appearanceTitle">外观与性能</h2>
+          <p data-i18n="appearanceOptionsDescription">视觉偏好使用浏览器扩展同步存储保存。</p>
+        </div>
+        <button id="reset-visual" class="secondary-button" type="button" data-i18n="resetVisualSettings">恢复视觉默认值</button>
+      </div>
+
+      <div class="settings-grid">
+        <label class="field" for="preset">
+          <span data-i18n="appearancePreset">外观预设</span>
+          <select id="preset">
+            <option value="classic" data-i18n="presetClassic">经典</option>
+            <option value="soft" data-i18n="presetSoft">柔和</option>
+            <option value="performance" data-i18n="presetPerformance">省电</option>
+            <option value="custom" data-i18n="presetCustom">自定义</option>
+          </select>
+        </label>
+
+        <label class="field" for="color">
+          <span data-i18n="themeColor">主题颜色</span>
+          <span class="color-control">
+            <input id="color" type="color" value="#69a1ff">
+            <output id="color-value" for="color">#69a1ff</output>
+          </span>
+        </label>
+
+        <label class="field field-wide" for="opacity">
+          <span class="field-label">
+            <span data-i18n="opacity">不透明度</span>
+            <output id="opacity-value" for="opacity">50%</output>
+          </span>
+          <input id="opacity" type="range" min="0.1" max="1" step="0.05">
+        </label>
+
+        <label class="field field-wide" for="scale">
+          <span class="field-label">
+            <span data-i18n="effectSize">特效大小</span>
+            <output id="scale-value" for="scale">1.10×</output>
+          </span>
+          <input id="scale" type="range" min="0.5" max="2" step="0.05">
+        </label>
+
+        <label class="field" for="quality">
+          <span data-i18n="quality">画质</span>
+          <select id="quality">
+            <option value="performance" data-i18n="qualityPerformance">省电</option>
+            <option value="balanced" data-i18n="qualityBalanced">均衡</option>
+            <option value="high" data-i18n="qualityHigh">高画质</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section" aria-labelledby="preferences-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="preferences-title" data-i18n="preferencesTitle">语言与动态效果</h2>
+          <p data-i18n="preferencesDescription">可跟随系统，也可为扩展单独指定。</p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <label class="field" for="language-mode">
+          <span data-i18n="language">界面语言</span>
+          <select id="language-mode">
+            <option value="system" data-i18n="followSystem">跟随系统</option>
+            <option value="zh_CN">简体中文</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+
+        <label class="field" for="motion-mode">
+          <span data-i18n="motionPreference">动态效果偏好</span>
+          <select id="motion-mode">
+            <option value="system" data-i18n="followSystem">跟随系统</option>
+            <option value="full" data-i18n="motionFull">完整动态效果</option>
+            <option value="reduced" data-i18n="motionReduced">减少持续动态</option>
+          </select>
+        </label>
+      </div>
+      <p class="section-note" data-i18n="motionDescription">减少持续动态会保留点击特效，但不再持续显示移动拖尾。</p>
+    </section>
+
+    <section class="settings-section" aria-labelledby="sites-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="sites-title" data-i18n="disabledSitesTitle">已禁用网站</h2>
+          <p><span id="site-count">0</span> <span data-i18n="disabledSitesCount">条本机规则</span></p>
+        </div>
+        <button id="clear-sites" class="danger-button" type="button" data-i18n="clearSiteRules">清空网站规则</button>
+      </div>
+
+      <label class="search-field" for="site-search">
+        <span class="sr-only" data-i18n="searchSites">搜索网站</span>
+        <input id="site-search" type="search" data-i18n-placeholder="searchSitesPlaceholder" placeholder="搜索 origin">
+      </label>
+      <ul id="site-list" class="site-list"></ul>
+      <p id="empty-sites" class="empty-state" data-i18n="noDisabledSites">还没有禁用任何网站。</p>
+
+      <div id="legacy-card" class="legacy-card" hidden>
+        <div>
+          <strong data-i18n="legacyRulesTitle">旧版同步规则已安全迁移</strong>
+          <p data-i18n="legacyRulesDescription">本机规则已可使用；确认其他设备完成升级后，可删除旧同步副本。</p>
+        </div>
+        <button id="remove-legacy" class="secondary-button" type="button" data-i18n="removeLegacyRules">删除旧同步副本</button>
+      </div>
+    </section>
+
+    <section class="settings-section about-section" aria-labelledby="about-title">
+      <div>
+        <h2 id="about-title" data-i18n="aboutTitle">关于与支持</h2>
+        <p><span data-i18n="versionLabel">版本</span> <span id="version"></span></p>
+      </div>
+      <nav aria-label="Project links">
+        <a href="https://ba-click-fx.cialloking.top/" target="_blank" rel="noreferrer" data-i18n="onlineDemo">在线演示</a>
+        <a href="https://github.com/CialloKing/ba-click-fx-extension" target="_blank" rel="noreferrer" data-i18n="projectRepository">项目仓库</a>
+        <a href="https://github.com/CialloKing/ba-click-fx-extension/issues" target="_blank" rel="noreferrer" data-i18n="supportAndFeedback">支持与反馈</a>
+        <a href="https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md" target="_blank" rel="noreferrer" data-i18n="privacyPolicy">隐私政策</a>
+      </nav>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>
