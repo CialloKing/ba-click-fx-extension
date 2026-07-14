@@ -1,6 +1,6 @@
 ﻿# BA Click FX Extension
 
-把 [ba-click-fx](https://github.com/CialloKing/ba-click-fx) 封装为 Manifest V3 浏览器扩展。安装后，普通网页会立即获得蔚蓝档案风格的点击圆环、粒子碎片和鼠标光标拖尾。
+把 [ba-click-fx](https://github.com/CialloKing/ba-click-fx) 封装为 Manifest V3 浏览器扩展。安装后，普通网页会立即获得蔚蓝档案风格的点击圆环、粒子碎片和鼠标光标拖尾。本项目主要通过 AI 生成和迭代完成（**绝无手写代码**）。
 
 ## 功能
 
