@@ -2,7 +2,9 @@
 
 ## Package and URLs
 
-- Package: `release/ba-click-fx-extension-v1.0.5-chromium.zip`
+- Extension version: `1.0.6`
+- Package: `release/ba-click-fx-extension-v1.0.6-chromium.zip`
+- SHA-256: `1F8B43B8F78177866BB4849357AB2E3F13BD84410044FB379E8D9DED3EF088F8`
 - Core dependency: `ba-click-fx 1.1.11`
 - Submission status: Prepared; not yet uploaded
 - Website: https://ba-click-fx.cialloking.top/
@@ -12,6 +14,8 @@
 - Visibility: `Public`
 - Markets: all markets
 - Mature content: no
+
+`v1.0.6` adds the separate Firefox/AMO release pipeline. The Chromium runtime, permissions, and listing description remain unchanged from `v1.0.5`; use the newer deterministic Chromium ZIP if the Edge update has not yet been submitted.
 
 ## English listing (`en-US`)
 

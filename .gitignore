@@ -2,6 +2,7 @@
 node_modules/
 .reasonix/
 dist/
+dist-firefox/
 release/
 *.log
 *.zip

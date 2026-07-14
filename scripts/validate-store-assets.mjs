@@ -60,6 +60,33 @@ assert(
   '商店元数据中的 Chromium ZIP SHA-256 格式无效。',
 );
 assert(
+  metadata.firefoxPackage === `release/ba-click-fx-extension-v${manifest.version}-firefox.zip`,
+  '商店元数据中的 Firefox ZIP 文件名与版本不一致。',
+);
+assert(
+  metadata.firefoxSourcePackage
+    === `release/ba-click-fx-extension-v${manifest.version}-firefox-source.zip`,
+  '商店元数据中的 Firefox 源码包文件名与版本不一致。',
+);
+
+for (const shaField of ['firefoxSha256', 'firefoxSourceSha256'])
+{
+  assert(/^[0-9A-F]{64}$/.test(metadata[shaField]), `${shaField} 格式无效。`);
+}
+
+assert(
+  metadata.firefoxGeckoId === 'ba-click-fx-extension@cialloking.top',
+  '商店元数据中的 Firefox Gecko ID 不一致。',
+);
+assert(metadata.firefoxMinimumVersion === '140.0', 'Firefox 最低版本元数据不一致。');
+assert(
+  metadata.firefoxAndroidMinimumVersion === '142.0',
+  'Firefox Android 最低版本元数据不一致。',
+);
+assert(metadata.firefoxSubmissionPlatform === 'Firefox Desktop', 'Firefox 提交平台不一致。');
+assert(metadata.firefoxCategory === 'Appearance', 'Firefox AMO 分类不一致。');
+assert(metadata.firefoxDistribution === 'On this site', 'Firefox AMO 分发方式不一致。');
+assert(
   metadata.assets.englishScreenshots.length >= 1 &&
   metadata.assets.englishScreenshots.length <= 5,
   'Chrome 英文截图数量必须为 1–5 张。',
@@ -92,7 +119,9 @@ for (const path of [
   'store-submission/data-inventory.md',
   'store-submission/LOCAL_TEST_CHECKLIST.md',
   'store-submission/release-checklist.md',
-  'store-submission/firefox-follow-up.md',
+  'store-submission/firefox-addons.md',
+  'store-submission/FIREFOX_TEST_CHECKLIST.md',
+  'SOURCE_BUILD.md',
   'store-assets/source/options-preview.html',
   'store-assets/source/options-mock.js',
 ])

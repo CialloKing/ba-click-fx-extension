@@ -17,7 +17,7 @@
 
 ## 本地安装
 
-### 使用构建产物
+### Chromium 使用构建产物
 
 1. 下载项目并进入目录。
 2. 执行 `npm install`。
@@ -29,6 +29,15 @@
 浏览器内部页面、扩展商店和部分内置 PDF 页面禁止内容脚本注入，这是浏览器的安全限制。若要在 `file://` 页面使用，还需在扩展详情页开启“允许访问文件网址”。
 
 当前构建面向 Chrome/Edge 102 或更高版本。为避免在广告等多 iframe 页面重复创建 Canvas，扩展只注入顶层文档；嵌入式视频、编辑器或地图的 iframe 内部不会显示特效。后台标签页会释放 Canvas，再次切回时自动恢复；核心会按三个实际 Canvas 的 backing store 总量执行像素预算，避免 2K/4K 屏幕产生过高显存占用。
+
+### Firefox 临时安装
+
+1. 执行 `npm run build:firefox`。
+2. 在 Firefox 140 或更高版本中打开 `about:debugging#/runtime/this-firefox`。
+3. 点击“临时载入附加组件”，选择 `dist-firefox/manifest.json`。
+4. 打开或刷新普通 HTTP/HTTPS 网页。
+
+Firefox 构建使用固定 Gecko ID `ba-click-fx-extension@cialloking.top`，并按 AMO 要求明确声明不收集或传输数据。正式版必须经过 Mozilla 签名；`about:debugging` 仅用于开发和发布前验证。
 
 ## 开发
 
@@ -43,15 +52,20 @@ npm test
 
 | 命令 | 用途 |
 | --- | --- |
-| `npm run build` | 将内容脚本、弹窗和静态资源构建到 `dist` |
-| `npm test` | 构建并执行单元测试、Manifest 校验、商店资源校验和编码校验 |
-| `npm run check:release -- v1.0.5` | 打包后校验标签、版本、Manifest、Changelog 和 ZIP 哈希 |
+| `npm run build` | 将 Chromium 内容脚本、弹窗和静态资源构建到 `dist` |
+| `npm run build:firefox` | 将 Firefox 目标构建到 `dist-firefox` |
+| `npm run build:all` | 构建 Chromium 与 Firefox 两个目标 |
+| `npm test` | 构建双目标并执行单元测试、Manifest、商店资源和编码校验 |
+| `npm run lint:firefox` | 使用 `web-ext` 校验 Firefox 包且将警告视为错误 |
+| `npm run check:release -- v1.0.6` | 打包后校验标签、版本、三个 ZIP 和全部哈希 |
 | `npm run check:store` | 检查版本、商店文案、链接和全部图片尺寸 |
 | `npm run package` | 构建并生成 Manifest 位于 ZIP 根目录的 Chromium 提交包 |
+| `npm run package:firefox` | 构建、lint 并生成 Firefox 提交包 |
+| `npm run package:all` | 生成双浏览器包、Firefox 源码包和 SHA-256 清单 |
 | `npm run check:encoding` | 检查所有文本文件是否为有效 UTF-8 BOM |
 | `npm run format:encoding` | 为缺少 BOM 的文本文件补充 BOM |
 
-## Chrome Web Store 与 Edge Add-ons 上架材料
+## 浏览器商店上架材料
 
 仓库已经包含 Chrome/Edge 首次上架所需的可复用材料：
 
@@ -61,22 +75,33 @@ npm test
 | [`store-assets/`](./store-assets/) | 300×300 图标、440×280 小宣传图、1400×560 横幅，以及中英文各 4 张 1280×800 截图 |
 | [`PRIVACY.md`](./PRIVACY.md) | 中英文隐私政策源码 |
 | [`store-submission/LOCAL_TEST_CHECKLIST.md`](./store-submission/LOCAL_TEST_CHECKLIST.md) | Chrome/Edge 手工加载与回归检查步骤 |
+| [`store-submission/FIREFOX_TEST_CHECKLIST.md`](./store-submission/FIREFOX_TEST_CHECKLIST.md) | Firefox 临时加载与发布前实机检查步骤 |
+| [`store-submission/firefox-addons.md`](./store-submission/firefox-addons.md) | AMO 商品文案、隐私答案、审核说明和人工提交步骤 |
 
-执行以下命令即可生成待上传的 Chromium ZIP：
+执行以下命令即可生成全部候选包：
 
 ```powershell
 npm ci
 npm test
-npm run package
+npm run package:all
 ```
 
-输出文件为 `release/ba-click-fx-extension-v1.0.5-chromium.zip`。Chrome 和 Edge 可复用同一份 ZIP；ZIP 根目录直接包含 `manifest.json`，不能把 `dist` 目录本身再包一层。
+输出文件包括：
+
+```text
+release/ba-click-fx-extension-v1.0.6-chromium.zip
+release/ba-click-fx-extension-v1.0.6-firefox.zip
+release/ba-click-fx-extension-v1.0.6-firefox-source.zip
+release/SHA256SUMS.txt
+```
+
+Chrome 和 Edge 可复用 Chromium ZIP；Firefox 必须使用独立 Firefox ZIP。两个浏览器 ZIP 的根目录均直接包含 `manifest.json`，不能把构建目录本身再包一层。
 
 商店图片由 `store-assets/source/` 中的本地展示页运行当前 `dist/content.js`、`dist/popup/popup.js` 与 `dist/options/options.js` 后生成。它们使用项目自有图标和界面，不包含官方游戏素材，并明确标注为非官方粉丝扩展。
 
 隐私披露采用保守口径：扩展只在本地处理指针事件和当前网站 origin；视觉设置使用 `storage.sync`，用户明确禁用的网站 origin 使用 `storage.local`。扩展不读取网页正文、表单、密码或 Cookie，不上传数据，也不含遥测、广告或远程代码。详细勾选项和填写文本见 [`store-submission/chrome-web-store.md`](./store-submission/chrome-web-store.md) 与 [`store-submission/edge-addons.md`](./store-submission/edge-addons.md)。
 
-项目主页使用独立演示站 `https://ba-click-fx.cialloking.top/`，隐私政策和支持入口使用公开 GitHub 仓库，不启用 GitHub Pages。随后按照 [`store-submission/release-checklist.md`](./store-submission/release-checklist.md) 完成浏览器实机回归、商店账号填写和人工提交。Firefox 的 Manifest 与商店要求单独记录在 [`store-submission/firefox-follow-up.md`](./store-submission/firefox-follow-up.md)，不混入当前 Chromium 包。
+项目主页使用独立演示站 `https://ba-click-fx.cialloking.top/`，隐私政策和支持入口使用公开 GitHub 仓库，不启用 GitHub Pages。按照 [`store-submission/release-checklist.md`](./store-submission/release-checklist.md) 完成浏览器实机回归和发布；Firefox 的实际 AMO 文案、源码说明和人工步骤见 [`store-submission/firefox-addons.md`](./store-submission/firefox-addons.md)。
 
 ## 核心依赖与更新
 
@@ -97,6 +122,7 @@ _locales/               Manifest 与弹窗的中英文文案
 icons/                  Manifest 使用的 PNG 图标
 release/                npm run package 生成的商店 ZIP（不提交）
 scripts/                构建、Manifest 与 UTF-8 BOM 校验脚本
+manifests/              Chromium 与 Firefox 的目标专用 Manifest 覆盖
 src/content.js          网页内容脚本与核心引擎适配层
 src/popup/              扩展弹窗
 src/options/            完整设置页
@@ -105,7 +131,8 @@ store-assets/           商店图片及其可复现的本地展示源
 store-submission/       商店文案、表单答案和发布检查清单
 test/                   核心包和设置单元测试
 dist/                   构建生成、可直接加载且不纳入 Git 的扩展产物
-manifest.json           Manifest V3 源清单
+dist-firefox/           Firefox 构建产物（不纳入 Git）
+manifest.json           两个浏览器共用的 Manifest V3 基础清单
 ```
 
 ## 权限与隐私

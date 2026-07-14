@@ -4,6 +4,27 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.0.6] - 2026-07-14
+
+### Added
+
+- Dedicated Firefox Manifest V3 build with a stable Gecko ID and an explicit no-data-collection declaration for AMO.
+- Deterministic Firefox submission ZIP, reviewer-rebuildable Firefox source ZIP, and combined SHA-256 inventory.
+- `web-ext` lint as a zero-warning Firefox release gate.
+- Firefox runtime checklist, AMO listing copy, privacy answers, permission explanations, reviewer notes, and manual submission instructions.
+- Refreshed English and Simplified Chinese store screenshots for the current popup, site control, and full settings page.
+
+### Changed
+
+- Split the shared Manifest from small Chromium and Firefox target overlays while retaining one content, popup, options, storage, and localization codebase.
+- Extended CI, release validation, and GitHub Release assets to cover Chromium, Firefox, and Firefox source packages.
+- Set Firefox Desktop 140 and Firefox for Android 142 as the declared minimum versions required by Mozilla's built-in data collection permission manifest field. The prepared AMO listing targets Firefox Desktop only.
+
+### Compatibility
+
+- User settings remain on storage schema v2, and the popup/content message protocol remains v2.
+- Chromium permissions, host matches, minimum Chrome/Edge version, bundled core `ba-click-fx 1.1.11`, and visible runtime behavior are unchanged.
+
 ## [1.0.5] - 2026-07-14
 
 ### Added
