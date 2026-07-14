@@ -16,6 +16,108 @@
 
 This section records the actual `v1.0.2` submission. Append later review results or version submissions here instead of rewriting the historical record.
 
+## Prepared update — v1.0.5
+
+- Extension version: `1.0.5`
+- Core dependency: `ba-click-fx 1.1.11`
+- Manifest version: `3`
+- Submission status: Prepared; not yet uploaded to Chrome Web Store
+- Visibility: `Public`
+- Remote code: `No`
+- Disclosed data types remain:
+  - `Web history`
+  - `User activity`
+- Package: `ba-click-fx-extension-v1.0.5-chromium.zip`
+- SHA-256: `83F832DC556C4627C93BFA5827C3EE04857117AC8D4D51C97DD8A39275BFA6E0`
+- Version note: `v1.0.4` is intentionally skipped; all planned v1.0.4 and v1.0.5 changes ship together in v1.0.5.
+
+Update highlights:
+
+- Uses `ba-click-fx 1.1.11` public trail cleanup and backing-store budget APIs; no private core state is accessed.
+- Adds a full options page, three appearance presets, explicit language and motion preferences, and local website-rule management.
+- Migrates site-specific disable rules from sync storage to local storage without deleting the legacy synced copy automatically.
+- Stops tracking generated `dist`; the reviewed ZIP remains fully bundled and contains no remote code.
+
+### v1.0.5 listing-description replacement — prepared, not yet submitted
+
+Use these blocks to replace the v1.0.2 dashboard descriptions when uploading v1.0.5. After submission, relabel them as the actual submitted version and copy back any dashboard edits.
+
+```text
+BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
+
+It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D. Quick controls are available in the toolbar popup, while the full settings page manages appearance, performance, language, motion preferences, and disabled websites.
+
+Features:
+• Enable or disable click effects and cursor trails independently
+• Enable or disable the extension for the current website
+• Choose Classic, Soft, or Power-saving appearance presets
+• Adjust theme color, opacity, effect size, and quality
+• Follow the system language or choose Simplified Chinese or English
+• Follow the system reduced-motion preference or choose full/reduced continuous motion
+• Search, remove, or clear locally saved website rules
+• Release Canvas resources while a tab is in the background
+• Work offline with no developer server or remotely hosted code
+
+How to use:
+1. Install or update the extension and open or refresh an ordinary HTTP/HTTPS webpage.
+2. Click the webpage to display rings and particle fragments.
+3. Move or drag the pointer to display the cursor trail.
+4. Open the toolbar popup for quick controls, or select Full settings for all preferences and website rules.
+
+Privacy and local processing:
+• Pointer coordinates and click/move events are processed temporarily in memory only to draw visible effects
+• The current website origin is processed locally for the per-site switch
+• Website origins explicitly disabled by the user are saved in local extension storage
+• Visual, interface, and motion preferences use browser-provided sync storage and may synchronize only when browser sync is enabled
+• The developer does not receive browsing activity, pointer data, or saved preferences
+• No ads, analytics, telemetry, profiling, page-content collection, or network requests
+
+Known limitations:
+• Browser internal pages, extension stores, and some built-in viewers do not allow content scripts
+• Effects are intentionally limited to top-level documents, so events inside some iframes are not displayed
+• Local file pages require the user to enable file URL access in browser extension settings
+
+BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or the Blue Archive project. No official game logos, characters, screenshots, or assets are included.
+```
+
+```text
+BA Click FX 是一个非官方的网页视觉特效扩展。
+
+安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 在本地渲染。工具栏弹窗提供常用开关，完整设置页可管理外观、性能、语言、动态偏好和已禁用网站。
+
+主要功能：
+• 点击特效与光标拖尾可分别开关
+• 可为当前网站单独启用或禁用
+• 可选择经典、柔和或省电外观预设
+• 可调整主题颜色、不透明度、特效大小和画质
+• 可跟随系统语言，或指定简体中文/英文
+• 可跟随系统减少动态偏好，或指定完整/减少持续动态
+• 可搜索、移除或清空本机网站规则
+• 标签页进入后台时会释放 Canvas 资源
+• 无需开发者服务器或远程代码，离线也能运行
+
+使用方法：
+1. 安装或更新扩展，然后打开或刷新普通 HTTP/HTTPS 网页。
+2. 点击网页，显示圆环和粒子碎片。
+3. 移动或拖动鼠标，显示光标拖尾。
+4. 打开工具栏弹窗使用常用开关，或进入“完整设置”管理全部偏好和网站规则。
+
+隐私与本地处理：
+• 鼠标坐标和点击/移动事件只在内存中临时处理，用于绘制用户可见的特效
+• 当前网站 origin 只在本地用于站点开关
+• 用户主动禁用的网站 origin 保存在本机扩展存储
+• 视觉、界面和动态偏好使用浏览器同步存储；只有启用浏览器同步时才可能跨设备同步
+• 开发者不会收到浏览活动、鼠标数据或保存的设置
+• 不包含广告、分析、遥测、画像、网页内容收集或网络请求
+
+已知限制：
+• 浏览器内部页面、扩展商店和部分内置查看器禁止内容脚本运行
+• 扩展只注入顶层文档，部分 iframe 内的鼠标事件不会显示特效
+• 本地文件页面需要用户在扩展设置中主动开启文件网址访问权限
+
+BA Click FX 是非官方粉丝项目，与 Nexon、NEXON Games、Yostar 或《蔚蓝档案》官方不存在隶属、合作或认可关系。扩展不包含官方游戏 Logo、角色、截图或素材。
+```
+
 ## Product details
 
 - Name from Manifest: `BA Click FX`
@@ -127,7 +229,7 @@ Display configurable pointer click animations and cursor trails on ordinary webp
 `storage`:
 
 ```text
-Stores global effect settings, visual parameters, quality selection, and website origins that the user explicitly disables. Values are saved using the browser-provided sync storage API. If browser synchronization is enabled, the browser provider may synchronize these values between the user's signed-in browser instances. The developer has no server and cannot access them.
+Stores global effect settings, visual parameters, quality, language, and motion preferences using browser-provided sync storage. Website origins that the user explicitly disables are stored in local extension storage. During the v1.0.5 upgrade, existing legacy synced origins are copied to local storage and retained in sync storage until the user explicitly removes that legacy copy. If browser synchronization is enabled, the browser provider may synchronize sync-storage values between signed-in browser instances. The developer has no server and cannot access any stored values.
 ```
 
 `activeTab`:
@@ -159,7 +261,7 @@ No, I am not using remote code.
 Supporting explanation if requested:
 
 ```text
-All executable code, including ba-click-fx, is bundled into content.js and popup.js at build time. The extension makes no network requests and does not use eval, new Function, remote scripts, WebAssembly fetched at runtime, or a CDN.
+All executable code, including ba-click-fx, is bundled into content.js, popup.js, and options.js at build time. The extension makes no network requests and does not use eval, new Function, remote scripts, WebAssembly fetched at runtime, or a CDN.
 ```
 
 ### Data usage
@@ -193,10 +295,12 @@ Certify all applicable Limited Use statements:
 Additional explanation if requested:
 
 ```text
-The disclosed values are processed locally or stored through chrome.storage.sync. BA Click FX has no developer-operated backend, analytics, telemetry, ads, or network requests. The developer cannot access the values.
+The disclosed values are processed locally or stored through chrome.storage.sync for visual/interface preferences and chrome.storage.local for current site rules. BA Click FX has no developer-operated backend, analytics, telemetry, ads, or network requests. The developer cannot access the values.
 ```
 
 ## Store assets
+
+The checked-in PNG files preserve the v1.0.2 submission set. Before uploading v1.0.5, regenerate localized screenshots 2 and 4 so they show the simplified popup and the new full settings page. Screenshots 1 and 3 may be reused only after confirming their visible UI and captions still match v1.0.5.
 
 - Chrome Web Store icon: `icons/icon-128.png`
 - Small promo: `store-assets/common/promo-small-440x280.png`
@@ -207,9 +311,9 @@ The disclosed values are processed locally or stored through chrome.storage.sync
 Screenshot order:
 
 1. Click rings, particles, and cursor trail
-2. Complete popup controls
+2. Quick popup controls
 3. Per-site enable/disable control
-4. Appearance and quality customization
+4. Full settings, appearance, and quality customization
 
 ## Distribution
 

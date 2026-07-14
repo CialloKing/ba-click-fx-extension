@@ -1,15 +1,16 @@
 ﻿# BA Click FX Extension
 
-把 [ba-click-fx](https://github.com/CialloKing/ba-click-fx) 封装为 Manifest V3 浏览器插件。安装后，普通网页会立即获得蔚蓝档案风格的点击圆环、粒子碎片和鼠标光标拖尾。
+把 [ba-click-fx](https://github.com/CialloKing/ba-click-fx) 封装为 Manifest V3 浏览器扩展。安装后，普通网页会立即获得蔚蓝档案风格的点击圆环、粒子碎片和鼠标光标拖尾。
 
 ## 功能
 
 - 安装后默认开启，无需给每个网站添加脚本。
 - 点击特效与光标拖尾可分别开关。
 - 可按网站持久禁用，不影响其他页面。
-- 可调整主题颜色、透明度、特效大小和画质。
-- 设置通过浏览器同步存储保存。
-- 默认使用简体中文；检测到非中文浏览器语言时自动使用英文，检测失败时回退中文。
+- 独立设置页可管理主题颜色、透明度、特效大小、画质和外观预设。
+- 视觉偏好通过浏览器提供的同步存储保存；站点禁用规则仅保存在本机扩展存储。
+- 默认跟随系统语言：中文环境使用简体中文，非中文环境使用英文，检测失败回退中文；也可手动指定。
+- 支持跟随系统的“减少动态效果”偏好，并允许手动选择完整或减少持续动态。
 - 弹窗提供项目仓库入口，方便查看源码、版本和提交问题。
 - 纯本地 Canvas 2D 渲染，不请求远程脚本、图片或接口。
 - Canvas 位于 closed Shadow DOM 内，不占据页面布局，也不会拦截鼠标事件。
@@ -27,11 +28,11 @@
 
 浏览器内部页面、扩展商店和部分内置 PDF 页面禁止内容脚本注入，这是浏览器的安全限制。若要在 `file://` 页面使用，还需在扩展详情页开启“允许访问文件网址”。
 
-当前构建面向 Chrome/Edge 102 或更高版本。为避免在广告等多 iframe 页面重复创建 Canvas，插件只注入顶层文档；嵌入式视频、编辑器或地图的 iframe 内部不会显示特效。后台标签页会释放 Canvas，再次切回时自动恢复；高画质还会按屏幕面积限制实际 DPR，避免 2K/4K 屏幕产生过高显存占用。
+当前构建面向 Chrome/Edge 102 或更高版本。为避免在广告等多 iframe 页面重复创建 Canvas，扩展只注入顶层文档；嵌入式视频、编辑器或地图的 iframe 内部不会显示特效。后台标签页会释放 Canvas，再次切回时自动恢复；核心会按三个实际 Canvas 的 backing store 总量执行像素预算，避免 2K/4K 屏幕产生过高显存占用。
 
 ## 开发
 
-环境要求：Node.js 18 或更高版本。
+环境要求：Node.js 22 或更高版本。
 
 ```powershell
 npm install
@@ -43,7 +44,8 @@ npm test
 | 命令 | 用途 |
 | --- | --- |
 | `npm run build` | 将内容脚本、弹窗和静态资源构建到 `dist` |
-| `npm test` | 构建并执行单元测试、Manifest 校验和编码校验 |
+| `npm test` | 构建并执行单元测试、Manifest 校验、商店资源校验和编码校验 |
+| `npm run check:release -- v1.0.5` | 打包后校验标签、版本、Manifest、Changelog 和 ZIP 哈希 |
 | `npm run check:store` | 检查版本、商店文案、链接和全部图片尺寸 |
 | `npm run package` | 构建并生成 Manifest 位于 ZIP 根目录的 Chromium 提交包 |
 | `npm run check:encoding` | 检查所有文本文件是否为有效 UTF-8 BOM |
@@ -68,11 +70,11 @@ npm test
 npm run package
 ```
 
-输出文件为 `release/ba-click-fx-extension-v1.0.2-chromium.zip`。Chrome 和 Edge 可复用同一份 ZIP；ZIP 根目录直接包含 `manifest.json`，不能把 `dist` 目录本身再包一层。
+输出文件为 `release/ba-click-fx-extension-v1.0.5-chromium.zip`。Chrome 和 Edge 可复用同一份 ZIP；ZIP 根目录直接包含 `manifest.json`，不能把 `dist` 目录本身再包一层。
 
-商店图片由 `store-assets/source/` 中的本地展示页运行当前 `dist/content.js` 与 `dist/popup/popup.js` 后生成。它们使用项目自有图标和界面，不包含官方游戏素材，并明确标注为非官方粉丝插件。
+商店图片由 `store-assets/source/` 中的本地展示页运行当前 `dist/content.js`、`dist/popup/popup.js` 与 `dist/options/options.js` 后生成。它们使用项目自有图标和界面，不包含官方游戏素材，并明确标注为非官方粉丝扩展。
 
-隐私披露采用保守口径：扩展只在本地处理指针事件和当前网站 origin，并使用 `storage.sync` 保存视觉设置及用户明确禁用的网站 origin；不读取网页正文、表单、密码、Cookie，不上传数据，也不含遥测、广告或远程代码。详细勾选项和填写文本见 [`store-submission/chrome-web-store.md`](./store-submission/chrome-web-store.md) 与 [`store-submission/edge-addons.md`](./store-submission/edge-addons.md)。
+隐私披露采用保守口径：扩展只在本地处理指针事件和当前网站 origin；视觉设置使用 `storage.sync`，用户明确禁用的网站 origin 使用 `storage.local`。扩展不读取网页正文、表单、密码或 Cookie，不上传数据，也不含遥测、广告或远程代码。详细勾选项和填写文本见 [`store-submission/chrome-web-store.md`](./store-submission/chrome-web-store.md) 与 [`store-submission/edge-addons.md`](./store-submission/edge-addons.md)。
 
 项目主页使用独立演示站 `https://ba-click-fx.cialloking.top/`，隐私政策和支持入口使用公开 GitHub 仓库，不启用 GitHub Pages。随后按照 [`store-submission/release-checklist.md`](./store-submission/release-checklist.md) 完成浏览器实机回归、商店账号填写和人工提交。Firefox 的 Manifest 与商店要求单独记录在 [`store-submission/firefox-follow-up.md`](./store-submission/firefox-follow-up.md)，不混入当前 Chromium 包。
 
@@ -96,22 +98,23 @@ icons/                  Manifest 使用的 PNG 图标
 release/                npm run package 生成的商店 ZIP（不提交）
 scripts/                构建、Manifest 与 UTF-8 BOM 校验脚本
 src/content.js          网页内容脚本与核心引擎适配层
-src/popup/              插件弹窗
-src/shared/settings.js  两端共用的设置模型
+src/popup/              扩展弹窗
+src/options/            完整设置页
+src/shared/             共用设置、存储迁移和本地化模块
 store-assets/           商店图片及其可复现的本地展示源
 store-submission/       商店文案、表单答案和发布检查清单
 test/                   核心包和设置单元测试
-dist/                   可直接加载的插件构建产物
+dist/                   构建生成、可直接加载且不纳入 Git 的扩展产物
 manifest.json           Manifest V3 源清单
 ```
 
 ## 权限与隐私
 
-- `storage`：保存并同步用户设置及用户明确禁用的网站 origin。
+- `storage`：在同步存储中保存视觉偏好，并在本机存储中保存用户明确禁用的网站 origin。
 - `activeTab`：弹窗打开时识别当前网站，并在当前标签页触发一次预览。
 - `http://*/*`、`https://*/*`、`file:///*` 内容脚本匹配：让特效安装后可在网页中自动运行。
 
-插件只在本地短暂处理鼠标坐标和当前网站 origin，不读取、上传或分析网页正文、表单、密码或 Cookie，也不包含遥测和网络请求。浏览器仍会针对全站内容脚本显示相应的访问权限提示。完整政策见 [`PRIVACY.md`](./PRIVACY.md)。
+扩展只在本地短暂处理鼠标坐标和当前网站 origin，不读取、上传或分析网页正文、表单、密码或 Cookie，也不包含遥测和网络请求。浏览器仍会针对全站内容脚本显示相应的访问权限提示。完整政策见 [`PRIVACY.md`](./PRIVACY.md)。
 
 ## 编码
 

@@ -96,6 +96,7 @@ await build(
   {
     content: join(rootDir, 'src', 'content.js'),
     'popup/popup': join(rootDir, 'src', 'popup', 'popup.js'),
+    'options/options': join(rootDir, 'src', 'options', 'options.js'),
   },
   outdir: distDir,
   bundle: true,
@@ -117,6 +118,14 @@ copyTextAsset(
 copyTextAsset(
   join(rootDir, 'src', 'popup', 'popup.css'),
   join(distDir, 'popup', 'popup.css'),
+);
+copyTextAsset(
+  join(rootDir, 'src', 'options', 'options.html'),
+  join(distDir, 'options', 'options.html'),
+);
+copyTextAsset(
+  join(rootDir, 'src', 'options', 'options.css'),
+  join(distDir, 'options', 'options.css'),
 );
 
 if (existsSync(join(rootDir, 'icons')))

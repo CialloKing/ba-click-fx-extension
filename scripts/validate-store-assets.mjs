@@ -56,6 +56,10 @@ assert(
   '商店元数据中的 Chromium ZIP 文件名与版本不一致。',
 );
 assert(
+  /^[0-9A-F]{64}$/.test(metadata.chromiumSha256),
+  '商店元数据中的 Chromium ZIP SHA-256 格式无效。',
+);
+assert(
   metadata.assets.englishScreenshots.length >= 1 &&
   metadata.assets.englishScreenshots.length <= 5,
   'Chrome 英文截图数量必须为 1–5 张。',
@@ -89,11 +93,14 @@ for (const path of [
   'store-submission/LOCAL_TEST_CHECKLIST.md',
   'store-submission/release-checklist.md',
   'store-submission/firefox-follow-up.md',
+  'store-assets/source/options-preview.html',
+  'store-assets/source/options-mock.js',
 ])
 {
   assertFile(path);
 }
 
+assertPng(metadata.assets.chromeIcon, 128, 128);
 assertPng(metadata.assets.logo, 300, 300);
 assertPng(metadata.assets.smallPromo, 440, 280);
 assertPng(metadata.assets.marqueePromo, 1400, 560);

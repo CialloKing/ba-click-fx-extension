@@ -41,13 +41,13 @@
     const chinese = params.get('lang') === 'zh_CN';
     const strings = chinese
       ? {
-        fan: '非官方粉丝插件',
+        fan: '非官方粉丝扩展',
         eyebrow: '本地 Canvas 2D 特效',
         title: '点击、移动，留下蓝色光轨。',
         description: '灵敏的点击圆环、粒子碎片和流畅光标拖尾，全部在普通网页中本地渲染。',
         features: ['点击圆环', '粒子碎片', '光标拖尾', '无网络请求'],
         button: '点击预览',
-        hint: '实际插件渲染效果',
+        hint: '实际扩展渲染效果',
       }
       : {
         fan: 'Unofficial fan-made extension',
@@ -77,9 +77,20 @@
       {
         sync:
         {
-          get(defaults, callback)
+          get(_defaults, callback)
           {
-            callback(defaults);
+            callback({});
+          },
+        },
+        local:
+        {
+          get(_defaults, callback)
+          {
+            callback({ storageSchemaVersion: 2 });
+          },
+          set(_settings, callback)
+          {
+            callback();
           },
         },
         onChanged:

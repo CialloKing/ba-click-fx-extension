@@ -1,45 +1,33 @@
 ﻿import { BAClickFX } from 'ba-click-fx';
 import {
   DEFAULT_SETTINGS,
-  getEffectiveMaxDpr,
-  getQualityProfile,
+  getRenderOptions,
   getSiteKey,
   hexToRgb,
-  normalizeSettings,
+  shouldReduceMotion,
 } from './shared/settings.js';
+import {
+  applyStorageChanges,
+  readSettings,
+} from './shared/storage.js';
 
 const MESSAGE_GET_STATUS = 'BA_CLICK_FX_GET_STATUS';
 const MESSAGE_PREVIEW = 'BA_CLICK_FX_PREVIEW';
+const MESSAGE_PROTOCOL_VERSION = 2;
 const ROOT_ATTRIBUTE = 'data-ba-click-fx-extension-root';
 const siteKey = getSiteKey(window.location.href);
+const reducedMotionQuery = typeof window.matchMedia === 'function'
+  ? window.matchMedia('(prefers-reduced-motion: reduce)')
+  : null;
 
-let currentSettings = normalizeSettings(DEFAULT_SETTINGS);
+let currentSettings = DEFAULT_SETTINGS;
 let engine = null;
 let surface = null;
 let appliedSettings = null;
-let appliedMaxDpr = null;
-let appliedTrailRenderScale = null;
-let defaultTrailMaxShards = 38;
-let ready = false;
-
-function readSettings()
-{
-  return new Promise((resolve, reject) =>
-  {
-    chrome.storage.sync.get(DEFAULT_SETTINGS, (stored) =>
-    {
-      const error = chrome.runtime.lastError;
-
-      if (error)
-      {
-        reject(new Error(error.message));
-        return;
-      }
-
-      resolve(normalizeSettings(stored));
-    });
-  });
-}
+let appliedQuality = null;
+let appliedTrailAlways = null;
+let initializationState = 'loading';
+let initializationError = '';
 
 function setImportantStyle(element, property, value)
 {
@@ -92,6 +80,15 @@ function createSurface()
   };
 }
 
+function getEffectiveTrailAlways(settings)
+{
+  return Boolean(
+    settings.trailEnabled &&
+    settings.trailAlways &&
+    !shouldReduceMotion(settings, reducedMotionQuery?.matches),
+  );
+}
+
 function applySettings(settings)
 {
   if (!engine)
@@ -99,14 +96,6 @@ function applySettings(settings)
     return;
   }
 
-  const quality = getQualityProfile(settings.quality);
-  const effectiveMaxDpr = getEffectiveMaxDpr(
-    settings.quality,
-    window.innerWidth,
-    window.innerHeight,
-    window.screen?.availWidth || window.innerWidth,
-    window.screen?.availHeight || window.innerHeight,
-  );
   const [red, green, blue] = hexToRgb(settings.color);
 
   if (!appliedSettings || appliedSettings.color !== settings.color)
@@ -131,42 +120,26 @@ function applySettings(settings)
 
   if (!appliedSettings || appliedSettings.trailEnabled !== settings.trailEnabled)
   {
+    // ba-click-fx 1.1.11 会在关闭时完整释放拖尾输入、轨迹和拖尾粒子。
     engine.setTrail(settings.trailEnabled);
-    engine.setMaxShards(settings.trailEnabled ? defaultTrailMaxShards : 0);
-
-    if (!settings.trailEnabled)
-    {
-      // 上游仍会在按住鼠标时采样禁用的拖尾；立即收尾以避免隐藏轨迹占用资源。
-      engine.isDown = false;
-      engine.clearTrail();
-    }
   }
 
-  const trailAlways = settings.trailEnabled && settings.trailAlways;
-  const previousTrailAlways = appliedSettings
-    ? appliedSettings.trailEnabled && appliedSettings.trailAlways
-    : null;
+  const trailAlways = getEffectiveTrailAlways(settings);
 
-  if (previousTrailAlways !== trailAlways)
+  if (appliedTrailAlways !== trailAlways)
   {
-    // 核心的 trailAlways 独立于 trail.enabled，关闭拖尾时必须同步关闭常驻采样。
     engine.setTrailAlways(trailAlways);
+    appliedTrailAlways = trailAlways;
   }
 
-  if (appliedTrailRenderScale !== quality.trailRenderScale)
+  if (appliedQuality !== settings.quality)
   {
-    // 画质 setter 会重分配 Canvas，只在对应参数变化时执行。
-    engine.setTrailRenderScale(quality.trailRenderScale);
-  }
-
-  if (appliedMaxDpr !== effectiveMaxDpr)
-  {
-    engine.setDpr(effectiveMaxDpr);
+    // 交给核心按三个实际 Canvas 的 backing store 总量执行统一预算。
+    engine.setRenderOptions(getRenderOptions(settings.quality));
+    appliedQuality = settings.quality;
   }
 
   appliedSettings = settings;
-  appliedMaxDpr = effectiveMaxDpr;
-  appliedTrailRenderScale = quality.trailRenderScale;
 }
 
 function createEngine()
@@ -181,16 +154,19 @@ function createEngine()
 
   try
   {
-    // 显式传入插件专属 Canvas，避免复用宿主页同名的 #sparkCanvas。
-    engine = new BAClickFX({ target: surface.canvas });
-    const initialConfig = engine.getConfig();
-
-    defaultTrailMaxShards = initialConfig.trail.maxSparkParticles;
-    appliedMaxDpr = initialConfig.maxDpr;
-    appliedTrailRenderScale = initialConfig.trailRenderScale;
+    // 构造时直接传入预算，避免先按默认尺寸分配再二次缩放的瞬时内存峰值。
+    engine = new BAClickFX(
+    {
+      target: surface.canvas,
+      trailEnabled: currentSettings.trailEnabled,
+      trailAlways: getEffectiveTrailAlways(currentSettings),
+      clickEnabled: currentSettings.clickEnabled,
+      render: getRenderOptions(currentSettings.quality),
+    });
+    appliedQuality = currentSettings.quality;
+    appliedTrailAlways = getEffectiveTrailAlways(currentSettings);
+    appliedSettings = null;
     applySettings(currentSettings);
-    // 核心先处理点击以保留圆环，再由适配层阻止禁用状态下继续采样拖尾。
-    window.addEventListener('pointerdown', stopDisabledTrailInput, { passive: true });
   }
   catch (error)
   {
@@ -201,8 +177,8 @@ function createEngine()
     }
 
     appliedSettings = null;
-    appliedMaxDpr = null;
-    appliedTrailRenderScale = null;
+    appliedQuality = null;
+    appliedTrailAlways = null;
 
     surface.host.remove();
     surface = null;
@@ -210,22 +186,8 @@ function createEngine()
   }
 }
 
-function stopDisabledTrailInput()
-{
-  if (!engine || currentSettings.trailEnabled)
-  {
-    return;
-  }
-
-  // ba-click-fx 暂无“关闭输入采样”的公开 API，这里只复位其按压状态并调用公开清理 API。
-  engine.isDown = false;
-  engine.clearTrail();
-}
-
 function destroyEngine()
 {
-  window.removeEventListener('pointerdown', stopDisabledTrailInput);
-
   if (engine)
   {
     engine.destroy();
@@ -233,12 +195,12 @@ function destroyEngine()
   }
 
   appliedSettings = null;
-  appliedMaxDpr = null;
-  appliedTrailRenderScale = null;
+  appliedQuality = null;
+  appliedTrailAlways = null;
 
   if (surface)
   {
-    // target 模式下核心引擎不会删除外部 Canvas，由适配层负责完整清理。
+    // target 模式下核心引擎保留调用方 Canvas，由适配层移除整个隔离宿主。
     surface.host.remove();
     surface = null;
   }
@@ -269,28 +231,27 @@ function reconcile()
 
 function reportError(error)
 {
+  initializationState = 'error';
+  initializationError = error instanceof Error ? error.message : String(error);
   // 控制台信息仅用于定位宿主页 Canvas/权限异常，不包含浏览数据。
   console.warn('[BA Click FX] 初始化失败：', error);
 }
 
 chrome.storage.onChanged.addListener((changes, areaName) =>
 {
-  if (areaName !== 'sync')
+  if (areaName !== 'sync' && areaName !== 'local')
   {
     return;
   }
 
-  const next = { ...currentSettings };
+  const nextSettings = applyStorageChanges(currentSettings, changes, areaName);
 
-  for (const [key, change] of Object.entries(changes))
+  if (nextSettings === currentSettings)
   {
-    if (Object.hasOwn(DEFAULT_SETTINGS, key))
-    {
-      next[key] = change.newValue;
-    }
+    return;
   }
 
-  currentSettings = normalizeSettings(next);
+  currentSettings = nextSettings;
 
   try
   {
@@ -308,7 +269,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) =>
   {
     sendResponse(
     {
-      ready,
+      protocolVersion: MESSAGE_PROTOCOL_VERSION,
+      state: initializationState,
+      error: initializationError,
       active: Boolean(engine),
       siteKey,
     });
@@ -317,14 +280,18 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) =>
 
   if (message?.type === MESSAGE_PREVIEW)
   {
-    if (engine && currentSettings.clickEnabled)
+    if (initializationState !== 'ready')
+    {
+      sendResponse({ ok: false, reason: initializationState });
+    }
+    else if (engine && currentSettings.clickEnabled)
     {
       engine.boom();
       sendResponse({ ok: true });
     }
     else
     {
-      sendResponse({ ok: false });
+      sendResponse({ ok: false, reason: 'click-disabled' });
     }
   }
 });
@@ -333,7 +300,7 @@ document.addEventListener('visibilitychange', () =>
 {
   try
   {
-    // 后台标签页释放双 Canvas；再次可见时按最新设置重建。
+    // 后台标签页释放全部 Canvas；再次可见时按最新设置重建。
     reconcile();
   }
   catch (error)
@@ -355,11 +322,34 @@ window.addEventListener('pageshow', () =>
   }
 });
 
+const handleMotionPreferenceChange = () =>
+{
+  try
+  {
+    applySettings(currentSettings);
+  }
+  catch (error)
+  {
+    reportError(error);
+  }
+};
+
+if (typeof reducedMotionQuery?.addEventListener === 'function')
+{
+  reducedMotionQuery.addEventListener('change', handleMotionPreferenceChange);
+}
+else if (typeof reducedMotionQuery?.addListener === 'function')
+{
+  // Chrome 102 之前的兼容 API 仍可能出现在部分 Chromium 分支中。
+  reducedMotionQuery.addListener(handleMotionPreferenceChange);
+}
+
 readSettings()
   .then((settings) =>
   {
     currentSettings = settings;
     reconcile();
-    ready = true;
+    initializationState = 'ready';
+    initializationError = '';
   })
   .catch(reportError);

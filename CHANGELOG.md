@@ -4,6 +4,34 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-07-14
+
+### Added
+
+- Dedicated options page for appearance presets, quality, language, motion preferences, local website-rule management, privacy, support, and project links.
+- Classic, Soft, and Power-saving appearance presets with an explicit Custom state.
+- System, Simplified Chinese, and English interface-language choices.
+- System, full-motion, and reduced-motion choices; reduced motion preserves click effects while suppressing the continuous moving trail.
+- Storage schema v2 migration, local site-rule search/removal/clear controls, and an explicit legacy synced-rule cleanup action.
+- Version/tag/changelog validation for GitHub releases.
+
+### Changed
+
+- Upgraded `ba-click-fx` from `1.1.6` to `1.1.11`.
+- Replaced private upstream state and trail workarounds with the public trail lifecycle API.
+- Replaced estimated DPR limiting with the core package's total backing-store pixel budget.
+- Moved explicitly disabled website origins from `storage.sync` to `storage.local`; visual preferences remain in browser-provided sync storage.
+- Simplified the popup around global, current-site, click, trail, preview, and full-settings actions.
+- Added structured content-script readiness and update status reporting.
+- Stopped tracking generated `dist` files; CI and Release workflows now build and upload artifacts.
+- Raised the development runtime requirement to Node.js 22.
+
+### Migration
+
+- Existing synced website rules are merged into local storage idempotently on first v1.0.5 use.
+- The old synced copy is retained to protect other devices that have not updated. Users may remove it explicitly from the options page after every device has upgraded.
+- `v1.0.4` was intentionally skipped; its planned reliability and release improvements are included in `v1.0.5`.
+
 ## [1.0.2] - 2026-07-12
 
 ### Added

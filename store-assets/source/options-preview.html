@@ -1,0 +1,28 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BA Click FX Options Preview</title>
+</head>
+<body>
+  <script>
+    fetch('../../dist/options/options.html')
+      .then((response) => response.text())
+      .then((html) =>
+      {
+        const previewHtml = html
+          .replace('href="options.css"', 'href="../../dist/options/options.css"')
+          .replace('src="../icons/icon-128.png"', 'src="../../icons/icon-128.png"')
+          .replace(
+            '<script src="options.js"><\/script>',
+            '<script src="options-mock.js"><\/script><script src="../../dist/options/options.js"><\/script>',
+          );
+
+        document.open();
+        document.write(previewHtml);
+        document.close();
+      });
+  </script>
+</body>
+</html>

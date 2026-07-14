@@ -32,7 +32,7 @@ function readBrowserLanguage(chromeApi, navigatorApi)
   }
   catch
   {
-    // 检测异常必须落回中文，避免初始化失败阻断弹窗。
+    // 检测异常必须落回中文，避免初始化失败阻断扩展页面。
   }
 
   return '';
@@ -56,4 +56,18 @@ export function detectLocale(
 )
 {
   return selectLocale(readBrowserLanguage(chromeApi, navigatorApi));
+}
+
+export function resolveLocale(
+  languageMode,
+  chromeApi = globalThis.chrome,
+  navigatorApi = globalThis.navigator,
+)
+{
+  if (languageMode === DEFAULT_LOCALE || languageMode === ENGLISH_LOCALE)
+  {
+    return languageMode;
+  }
+
+  return detectLocale(chromeApi, navigatorApi);
 }

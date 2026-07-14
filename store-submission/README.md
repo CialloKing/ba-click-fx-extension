@@ -1,6 +1,6 @@
 ﻿# Store Submission Kit
 
-This directory contains the copy-and-paste metadata, privacy answers, reviewer instructions, and final checklist for publishing BA Click FX `1.0.2` to Chrome Web Store and Microsoft Edge Add-ons.
+This directory preserves the actual Chrome Web Store `1.0.2` submission record and contains the updated metadata, privacy answers, reviewer instructions, and final checklist for publishing BA Click FX `1.0.5` to Chrome Web Store and Microsoft Edge Add-ons.
 
 ## Canonical public URLs
 
@@ -25,14 +25,14 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 
 ## Required upload files
 
-- Chromium ZIP: `release/ba-click-fx-extension-v1.0.2-chromium.zip`
+- Chromium ZIP: `release/ba-click-fx-extension-v1.0.5-chromium.zip`
 - Logo: `store-assets/common/logo-300.png`
 - Small promotional tile: `store-assets/common/promo-small-440x280.png`
 - Marquee/large promotional tile: `store-assets/common/promo-marquee-1400x560.png`
 - Four English screenshots: `store-assets/en/`
 - Four Simplified Chinese screenshots: `store-assets/zh_CN/`
 
-The store images use original project artwork and the actual extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets.
+The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. The existing PNG set records the v1.0.2 submission; because v1.0.5 simplifies the popup and adds a full settings page, refresh screenshots 2 and 4 from the final v1.0.5 build before uploading the update.
 
 ## Important disclosure decision
 

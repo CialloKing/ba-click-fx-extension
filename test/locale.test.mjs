@@ -5,8 +5,9 @@ import {
   DEFAULT_LOCALE,
   ENGLISH_LOCALE,
   detectLocale,
+  resolveLocale,
   selectLocale,
-} from '../src/popup/locale.js';
+} from '../src/shared/locale.js';
 
 test('中文语言环境使用中文', () =>
 {
@@ -48,7 +49,7 @@ test('语言检测失败时回退中文', () =>
   assert.equal(detectLocale({}, {}), DEFAULT_LOCALE);
 });
 
-test('优先使用浏览器 UI 语言并在缺失时读取标准语言属性', () =>
+test('优先使用浏览器 UI 语言并允许设置页显式覆盖', () =>
 {
   assert.equal(
     detectLocale({ i18n: { getUILanguage: () => 'ja-JP' } }, { language: 'zh-CN' }),
@@ -58,4 +59,6 @@ test('优先使用浏览器 UI 语言并在缺失时读取标准语言属性', (
     detectLocale({}, { languages: ['zh-CN', 'en-US'] }),
     DEFAULT_LOCALE,
   );
+  assert.equal(resolveLocale('zh_CN', {}, { language: 'en-US' }), DEFAULT_LOCALE);
+  assert.equal(resolveLocale('en', {}, { language: 'zh-CN' }), ENGLISH_LOCALE);
 });
