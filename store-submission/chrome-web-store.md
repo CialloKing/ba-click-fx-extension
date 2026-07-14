@@ -38,6 +38,16 @@ Update highlights:
 - Migrates site-specific disable rules from sync storage to local storage without deleting the legacy synced copy automatically.
 - Stops tracking generated `dist`; the reviewed ZIP remains fully bundled and contains no remote code.
 
+## Chromium package generated with v1.0.6
+
+- Extension version: `1.0.6`
+- Core dependency: `ba-click-fx 1.1.11`
+- Package: `ba-click-fx-extension-v1.0.6-chromium.zip`
+- SHA-256: `1F8B43B8F78177866BB4849357AB2E3F13BD84410044FB379E8D9DED3EF088F8`
+- Chrome Web Store status: Not submitted as part of the Firefox release
+
+`v1.0.6` adds the separate Firefox/AMO build, source package, validation, and submission materials. Chromium permissions, runtime behavior, storage schema, and listing copy are unchanged from `v1.0.5`. If Chrome has not yet received the v1.0.5 update, upload the newer v1.0.6 Chromium package and use the v1.0.5 description below. Do not upload the Firefox ZIP to Chrome Web Store.
+
 ### v1.0.5 listing-description replacement — prepared, not yet submitted
 
 Use these blocks to replace the v1.0.2 dashboard descriptions when uploading v1.0.5. After submission, relabel them as the actual submitted version and copy back any dashboard edits.
@@ -300,7 +310,7 @@ The disclosed values are processed locally or stored through chrome.storage.sync
 
 ## Store assets
 
-The checked-in PNG files preserve the v1.0.2 submission set. Before uploading v1.0.5, regenerate localized screenshots 2 and 4 so they show the simplified popup and the new full settings page. Screenshots 1 and 3 may be reused only after confirming their visible UI and captions still match v1.0.5.
+Screenshot 1 is retained from the v1.0.2 submission because the visible effect runtime is unchanged. Screenshots 2–4 were regenerated from the final v1.0.6 build and show the simplified popup, current-site control, and full settings page. Use this refreshed set for a v1.0.5 or v1.0.6 Chromium update.
 
 - Chrome Web Store icon: `icons/icon-128.png`
 - Small promo: `store-assets/common/promo-small-440x280.png`

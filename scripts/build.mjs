@@ -13,8 +13,15 @@ import {
 import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  mergeObjects,
+  parseTarget,
+  readJson,
+} from './targets.mjs';
+
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const distDir = join(rootDir, 'dist');
+const target = parseTarget(process.argv.slice(2));
+const distDir = join(rootDir, target.distDirectory);
 const UTF8_BOM = Buffer.from([0xef, 0xbb, 0xbf]);
 const TEXT_EXTENSIONS = new Set([
   '.css',
@@ -102,7 +109,7 @@ await build(
   bundle: true,
   format: 'iife',
   platform: 'browser',
-  target: ['chrome102', 'edge102'],
+  target: target.esbuildTargets,
   charset: 'utf8',
   legalComments: 'none',
   minify: false,
@@ -110,7 +117,16 @@ await build(
   logLevel: 'info',
 });
 
-copyTextAsset(join(rootDir, 'manifest.json'), join(distDir, 'manifest.json'));
+const manifest = mergeObjects(
+  readJson(join(rootDir, 'manifest.json')),
+  readJson(join(rootDir, target.manifestOverlay)),
+);
+
+writeFileSync(
+  join(distDir, 'manifest.json'),
+  `${JSON.stringify(manifest, null, 2)}\n`,
+  'utf8',
+);
 copyTextAsset(
   join(rootDir, 'src', 'popup', 'popup.html'),
   join(distDir, 'popup', 'popup.html'),
@@ -150,4 +166,4 @@ for (const fileName of ['LICENSE', 'PRIVACY.md', 'THIRD_PARTY_NOTICES.md'])
 
 ensureDistBom();
 
-console.log(`扩展已构建到 ${distDir}`);
+console.log(`${target.displayName} 扩展已构建到 ${distDir}`);

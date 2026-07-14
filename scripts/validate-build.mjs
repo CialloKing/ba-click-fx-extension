@@ -2,8 +2,11 @@
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { parseTarget } from './targets.mjs';
+
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const distDir = join(rootDir, 'dist');
+const target = parseTarget(process.argv.slice(2));
+const distDir = join(rootDir, target.distDirectory);
 
 function readUtf8(path)
 {
@@ -26,14 +29,37 @@ function assertFile(relativePath)
   assert(statSync(path).isFile(), `${relativePath} 不是普通文件`);
 }
 
-assert(existsSync(distDir), '请先执行 npm run build。');
+assert(existsSync(distDir), `请先构建 ${target.displayName} 扩展。`);
 
 const manifest = JSON.parse(readUtf8(join(distDir, 'manifest.json')));
 const packageJson = JSON.parse(readUtf8(join(rootDir, 'package.json')));
 
 assert(manifest.manifest_version === 3, 'manifest_version 必须为 3。');
 assert(manifest.version === packageJson.version, 'manifest 与 package.json 版本不一致。');
-assert(manifest.minimum_chrome_version === '102', '最低 Chromium 版本必须与构建目标一致。');
+if (target.name === 'chromium')
+{
+  assert(manifest.minimum_chrome_version === '102', '最低 Chromium 版本必须与构建目标一致。');
+  assert(!manifest.browser_specific_settings, 'Chromium Manifest 不应包含 Gecko 专用设置。');
+}
+else
+{
+  const gecko = manifest.browser_specific_settings?.gecko;
+
+  assert(!manifest.minimum_chrome_version, 'Firefox Manifest 不应包含 Chromium 最低版本。');
+  assert(
+    gecko?.id === 'ba-click-fx-extension@cialloking.top',
+    'Firefox Gecko ID 不一致。',
+  );
+  assert(gecko?.strict_min_version === '140.0', 'Firefox 最低版本必须为 140.0。');
+  assert(
+    JSON.stringify(gecko?.data_collection_permissions?.required) === JSON.stringify(['none']),
+    'Firefox 必须明确声明不收集或传输数据。',
+  );
+  assert(
+    manifest.browser_specific_settings?.gecko_android?.strict_min_version === '142.0',
+    'Firefox Android 最低版本声明必须与数据权限支持保持一致。',
+  );
+}
 assert(manifest.default_locale === 'zh_CN', '默认语言必须为 zh_CN。');
 assert(manifest.name === '__MSG_extensionName__', '扩展名称必须使用本地化消息。');
 assert(manifest.description === '__MSG_extensionDescription__', '扩展描述必须使用本地化消息。');
@@ -178,4 +204,4 @@ assert(
 );
 assertFile('PRIVACY.md');
 
-console.log('Manifest V3 构建产物校验通过。');
+console.log(`${target.displayName} Manifest V3 构建产物校验通过。`);

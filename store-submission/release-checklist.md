@@ -1,64 +1,83 @@
-﻿# Release and Store Submission Checklist
+﻿# v1.0.6 Release and Store Submission Checklist
 
 ## 1. Repository and public pages
 
-- [ ] Review all changes in the working tree.
-- [ ] Commit with a Chinese commit message and push `main`.
-- [ ] Open and verify the independent demo homepage, GitHub privacy policy, and Issues support URL without authentication.
-- [ ] Confirm all public URLs use HTTPS and return no 404/redirect loop.
+- [ ] Review all working-tree changes and confirm only `v1.0.6` work is included.
+- [ ] Confirm every repository text file passes UTF-8 BOM＋LF validation.
+- [ ] Verify the demo, repository privacy policy, Issues support URL, and source repository without authentication.
+- [ ] Confirm this repository still has no GitHub Pages deployment or `cialloking.com` configuration.
 
-## 2. Build and local verification
+## 2. Build and automated verification
 
-- [ ] Run `npm ci`.
+- [ ] Run `npm ci` with Node.js 22.
 - [ ] Run `npm test`.
-- [ ] Run `npm run package`.
-- [ ] Confirm the ZIP name is `ba-click-fx-extension-v1.0.5-chromium.zip`.
-- [ ] Confirm `manifest.json` is at the ZIP root.
-- [ ] Confirm all source, build, locale, documentation, and store-submission text files pass UTF-8 BOM + LF validation.
-- [ ] Load `dist` in Chrome developer mode and execute [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md).
-- [ ] Load the same `dist` in Edge developer mode and execute the same checklist.
-- [ ] Refresh localized screenshots 2 and 4 from v1.0.5; do not reuse the v1.0.2 popup/appearance screenshots unchanged.
+- [ ] Run `npm run package:all`.
+- [ ] Run `npm run check:release -- v1.0.6`.
+- [ ] Confirm `web-ext lint` reports zero errors, notices, and warnings.
+- [ ] Confirm these files exist:
+  - `ba-click-fx-extension-v1.0.6-chromium.zip`
+  - `ba-click-fx-extension-v1.0.6-firefox.zip`
+  - `ba-click-fx-extension-v1.0.6-firefox-source.zip`
+  - `SHA256SUMS.txt`
+- [ ] Confirm `manifest.json` is at each browser ZIP root.
+- [ ] Confirm Chromium and Firefox ZIPs do not contain an extra `dist` directory layer.
+- [ ] Re-run `npm run package:all` and confirm the three SHA-256 values remain unchanged.
 
-## 3. GitHub release
+## 3. Browser runtime verification
 
-- [ ] Confirm `CHANGELOG.md` has no unresolved `Unreleased` entries intended for `1.0.5`.
-- [ ] Confirm generated `dist` files are not tracked and CI rebuilds them successfully.
-- [ ] Run `npm run check:release -- v1.0.5`.
-- [ ] Create annotated tag `v1.0.5` with a Chinese tag message. Do not create `v1.0.4`.
-- [ ] Push the tag.
-- [ ] Confirm the release workflow creates a GitHub Release and attaches the Chromium ZIP.
-- [ ] Download the release ZIP and compare its SHA-256 with the locally generated package if reproducibility is required.
-- [ ] Confirm the release contains only the `v1.0.5` Chromium ZIP and that the `v1.0.2` Release remains unchanged.
+- [ ] Load `dist` in Chrome and complete [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md).
+- [ ] Load `dist` in Edge and repeat the Chromium checklist.
+- [ ] Load `dist-firefox/manifest.json` from `about:debugging#/runtime/this-firefox`.
+- [ ] Complete [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md).
+- [ ] Record the tested Firefox version, operating system, date, and result below.
 
-## 4. Chrome Web Store
+Firefox runtime record:
 
-- [ ] Register/verify the developer account and enable two-step verification.
-- [ ] Upload the Chromium ZIP.
-- [ ] Complete English and Simplified Chinese detailed descriptions.
-- [ ] Upload the common 440×280 promo tile.
-- [ ] Upload four 1280×800 screenshots for each locale.
-- [ ] Add homepage, support, and Chrome privacy URLs.
-- [ ] Paste the single-purpose and permission justifications.
-- [ ] Select “No, I am not using remote code.”
-- [ ] Complete the conservative Web history/User activity data disclosures and Limited Use certifications.
-- [ ] Set free pricing, no in-app purchases, no mature content, and intended regions/visibility.
-- [ ] Paste reviewer notes and submit for review.
+```text
+Firefox version:
+Operating system:
+Test date:
+Result:
+Tester:
+```
 
-## 5. Microsoft Edge Add-ons
+Do not create the `v1.0.6` Tag until this Firefox runtime record is complete and the result is Pass.
 
-- [ ] Register/verify the Partner Center extension developer account.
-- [ ] Upload the same Chromium ZIP.
-- [ ] Complete the dedicated Privacy page.
-- [ ] Use the Edge-specific privacy-policy URL.
-- [ ] Complete English and Simplified Chinese descriptions and search terms.
-- [ ] Upload/duplicate the 300×300 logo, 440×280 small tile, 1400×560 large tile, and localized screenshots.
-- [ ] Paste certification notes.
-- [ ] Set Public visibility, selected markets, free pricing, and no mature content.
-- [ ] Submit for certification.
+## 4. Git and GitHub Release
 
-## 6. After submission
+- [ ] Commit implementation and documentation with Chinese commit messages.
+- [ ] Push `main` and confirm the CI workflow passes.
+- [ ] Confirm `CHANGELOG.md` contains the final `1.0.6` record.
+- [ ] Create annotated Tag `v1.0.6` with a Chinese message.
+- [ ] Push the Tag and wait for the Release workflow.
+- [ ] Confirm the GitHub Release is public and not marked as a prerelease.
+- [ ] Confirm the Release attaches all three ZIPs and `SHA256SUMS.txt`.
+- [ ] Download the Release assets and compare their SHA-256 values with `SHA256SUMS.txt`.
+- [ ] Confirm previous Tags, Releases, and ZIPs remain unchanged.
 
-- [ ] Record Chrome and Edge item IDs/URLs in README and `metadata.json` after approval.
-- [ ] Add official store badges only after listings are live.
-- [ ] Monitor reviewer messages and respond without changing the package unless required.
-- [ ] If code or Manifest metadata changes, increment the extension version and rebuild/re-upload.
+## 5. Firefox Add-ons
+
+- [ ] Follow [firefox-addons.md](./firefox-addons.md) and choose **On this site**.
+- [ ] Upload the Firefox ZIP, not the Chromium ZIP.
+- [ ] Select Firefox Desktop as the compatible platform.
+- [ ] Answer Yes to the source-code question and upload the Firefox source ZIP.
+- [ ] Complete English and Simplified Chinese listing fields.
+- [ ] Select Appearance, MIT, non-experimental, free, and no external requirements.
+- [ ] Confirm the built-in data declaration says no collection or transmission.
+- [ ] Add homepage, repository, support, and privacy-policy URLs.
+- [ ] Upload the icon and localized screenshots.
+- [ ] Paste the prepared English Notes for Reviewers.
+- [ ] Submit the version and record the submission time and status.
+
+## 6. Existing Chromium stores
+
+The `v1.0.6` Chromium ZIP is generated to prove that the shared build remains compatible. Firefox support alone does not require an immediate Chrome Web Store or Edge Add-ons update. If a Chromium store update is submitted, use the `v1.0.6` ZIP and update the corresponding historical submission records without rewriting older entries.
+
+## 7. After AMO submission
+
+- [ ] Monitor AMO validation, review messages, and email notifications.
+- [ ] Do not replace or rebuild the submitted `v1.0.6` package.
+- [ ] Apply listing-only corrections in the AMO dashboard without changing the archive.
+- [ ] Use a new extension version for any Manifest or executable-code correction.
+- [ ] After approval, record the AMO item ID/URL and actual submitted text in the repository.
+- [ ] Add the AMO install link to README only after the listing is live.

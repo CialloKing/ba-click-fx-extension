@@ -33,7 +33,7 @@ BA Click FX does not use information for advertising, analytics, profiling, cred
 
 BA Click FX has no developer-operated server and makes no network requests. The developer does not receive or have access to pointer data, browsing activity, or saved preferences.
 
-The browser may synchronize saved visual preferences through the user's signed-in browser account when browser sync is enabled. That synchronization is performed by the browser vendor and is governed by the user's browser and account settings and the vendor's privacy policy. Current site-specific rules use local extension storage and are not written to sync storage by version 1.0.5.
+The browser may synchronize saved visual preferences through the user's signed-in browser account when browser sync is enabled. That synchronization is performed by the browser vendor and is governed by the user's browser and account settings and the vendor's privacy policy. From version 1.0.5 onward, current site-specific rules use local extension storage and are not written to sync storage.
 
 ## Sharing and sale
 
@@ -63,7 +63,7 @@ https://github.com/CialloKing/ba-click-fx-extension/issues
 
 ## 中文摘要
 
-BA Click FX 只为实现可见的点击特效、光标拖尾与站点开关而在本地处理鼠标坐标和当前网页 origin。鼠标坐标只存在于内存中，不会记录或保留。颜色、不透明度、大小、画质、开关、语言和动态偏好通过浏览器提供的 `storage.sync` API 保存；用户主动禁用的网站 origin 通过 `storage.local` 保存在当前浏览器配置中。
+BA Click FX 只为实现可见的点击特效、光标拖尾与站点开关而在本地处理鼠标坐标和当前网页 origin。鼠标坐标只存在于内存中，不会记录或保留。颜色、不透明度、大小、画质、开关、语言和动态偏好通过浏览器提供的 `storage.sync` API 保存；从 1.0.5 起，用户主动禁用的网站 origin 通过 `storage.local` 保存在当前浏览器配置中。
 
 从 1.0.5 之前的版本升级时，旧同步站点规则会幂等复制到本机存储。为避免尚未升级的其他设备丢失规则，旧同步副本不会自动删除；用户确认其他设备完成升级后，可在完整设置页显式删除该副本。
 

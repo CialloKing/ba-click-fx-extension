@@ -1,6 +1,6 @@
 ﻿{
   "name": "ba-click-fx-extension",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "BA Click FX 的 Manifest V3 浏览器扩展。",
   "private": true,
   "type": "module",
@@ -10,14 +10,22 @@
   },
   "scripts":
   {
-    "build": "node scripts/build.mjs",
-    "check": "node --test && node scripts/validate-build.mjs && node scripts/validate-store-assets.mjs && node scripts/encoding.mjs",
+    "build": "npm run build:chromium",
+    "build:chromium": "node scripts/build.mjs --target chromium",
+    "build:firefox": "node scripts/build.mjs --target firefox",
+    "build:all": "npm run build:chromium && npm run build:firefox",
+    "check": "node --test && node scripts/validate-build.mjs --target chromium && node scripts/validate-build.mjs --target firefox && node scripts/validate-store-assets.mjs && node scripts/encoding.mjs",
     "check:release": "node scripts/validate-release.mjs",
     "check:store": "node scripts/validate-store-assets.mjs",
     "check:encoding": "node scripts/encoding.mjs",
     "format:encoding": "node scripts/encoding.mjs --write",
-    "package": "npm run build && node scripts/package.mjs",
-    "test": "npm run build && npm run check"
+    "lint:firefox": "web-ext lint --no-config-discovery --source-dir dist-firefox --warnings-as-errors",
+    "package": "npm run package:chromium",
+    "package:chromium": "npm run build:chromium && node scripts/package.mjs --target chromium",
+    "package:firefox": "npm run build:firefox && npm run lint:firefox && node scripts/package.mjs --target firefox",
+    "package:firefox-source": "node scripts/package-source.mjs",
+    "package:all": "npm run build:all && npm run check:encoding && npm run lint:firefox && node scripts/package.mjs --target chromium && node scripts/package.mjs --target firefox && npm run package:firefox-source && node scripts/write-checksums.mjs",
+    "test": "npm run build:all && npm run check"
   },
   "dependencies":
   {
@@ -26,6 +34,7 @@
   "devDependencies":
   {
     "esbuild": "0.28.1",
-    "fflate": "0.8.3"
+    "fflate": "0.8.3",
+    "web-ext": "10.5.0"
   }
 }

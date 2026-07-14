@@ -11,15 +11,16 @@ import { fileURLToPath } from 'node:url';
 
 import { strFromU8, unzipSync, zipSync } from 'fflate';
 
+import {
+  parseTarget,
+  readJson,
+} from './targets.mjs';
+
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const distDir = join(rootDir, 'dist');
+const target = parseTarget(process.argv.slice(2));
+const distDir = join(rootDir, target.distDirectory);
 const releaseDir = join(rootDir, 'release');
 const ARCHIVE_MTIME = new Date(1980, 0, 1, 0, 0, 0);
-
-function readJson(path)
-{
-  return JSON.parse(readFileSync(path, 'utf8').replace(/^\uFEFF/, ''));
-}
 
 function collectFiles(directory)
 {
@@ -69,7 +70,7 @@ const manifest = readJson(join(distDir, 'manifest.json'));
 
 assert(packageJson.version === manifest.version, 'package.json 与 Manifest 版本不一致。');
 
-const archiveName = `ba-click-fx-extension-v${manifest.version}-chromium.zip`;
+const archiveName = `ba-click-fx-extension-v${manifest.version}-${target.archiveSuffix}.zip`;
 const archivePath = join(releaseDir, archiveName);
 const archiveBytes = zipSync(collectFiles(distDir), {
   level: 9,
@@ -84,7 +85,10 @@ const unpacked = unzipSync(archiveBytes);
 const entryNames = Object.keys(unpacked);
 
 assert(entryNames.includes('manifest.json'), 'ZIP 根目录缺少 manifest.json。');
-assert(!entryNames.some((name) => name.startsWith('dist/')), 'ZIP 不应包含额外的 dist 目录层级。');
+assert(
+  !entryNames.some((name) => name.startsWith(`${target.distDirectory}/`)),
+  `ZIP 不应包含额外的 ${target.distDirectory} 目录层级。`,
+);
 
 const zippedManifest = JSON.parse(strFromU8(unpacked['manifest.json']).replace(/^\uFEFF/, ''));
 
@@ -92,6 +96,6 @@ assert(zippedManifest.version === manifest.version, 'ZIP 中 Manifest 版本不�
 
 const sha256 = createHash('sha256').update(archiveBytes).digest('hex').toUpperCase();
 
-console.log(`Chromium 发布包：${archivePath}`);
+console.log(`${target.displayName} 发布包：${archivePath}`);
 console.log(`文件数量：${entryNames.length}`);
 console.log(`SHA-256：${sha256}`);

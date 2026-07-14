@@ -29,7 +29,7 @@ jobs:
         run: npm test
 
       - name: 生成商店提交包
-        run: npm run package
+        run: npm run package:all
 
       - name: 上传插件构建产物
         uses: actions/upload-artifact@v4
@@ -37,6 +37,8 @@ jobs:
           name: ba-click-fx-extension
           path: |
             dist/
+            dist-firefox/
             release/*.zip
+            release/SHA256SUMS.txt
             store-assets/
           if-no-files-found: error
