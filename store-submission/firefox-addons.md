@@ -9,7 +9,7 @@
 - Minimum Firefox Desktop version: `140.0`
 - Minimum Firefox for Android version declared for manifest validation: `142.0`
 - Submission platform: Firefox Desktop only
-- Submission status: Package prepared; awaiting manual Firefox runtime verification
+- Submission status: Firefox runtime verification passed; awaiting GitHub Release and AMO submission
 - Distribution: `On this site` / listed on AMO
 - Remote code: `No`
 - Data collection or transmission: `None`
