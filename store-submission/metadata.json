@@ -7,7 +7,7 @@
   "firefoxPackage": "release/ba-click-fx-extension-v1.0.6-firefox.zip",
   "firefoxSha256": "4F71DF6D22A7B03D57BC8742E505B59978856749547E6E606AE49E53C2B5BF63",
   "firefoxSourcePackage": "release/ba-click-fx-extension-v1.0.6-firefox-source.zip",
-  "firefoxSourceSha256": "34B3243472634A7E0D010F920D2140A4E1BD4E494C45110F12CD761D1425C5EA",
+  "firefoxSourceSha256": "3B3E45366A8D5DBFC8CA30DE7C7135AEA56BD0318118B7B30EC34BD71178DE56",
   "firefoxGeckoId": "ba-click-fx-extension@cialloking.top",
   "firefoxMinimumVersion": "140.0",
   "firefoxAndroidMinimumVersion": "142.0",

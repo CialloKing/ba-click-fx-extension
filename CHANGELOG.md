@@ -18,6 +18,7 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 - Split the shared Manifest from small Chromium and Firefox target overlays while retaining one content, popup, options, storage, and localization codebase.
 - Extended CI, release validation, and GitHub Release assets to cover Chromium, Firefox, and Firefox source packages.
+- Standardized local development, CI, Release, and AMO source rebuild instructions on Node.js 24 LTS.
 - Set Firefox Desktop 140 and Firefox for Android 142 as the declared minimum versions required by Mozilla's built-in data collection permission manifest field. The prepared AMO listing targets Firefox Desktop only.
 
 ### Compatibility

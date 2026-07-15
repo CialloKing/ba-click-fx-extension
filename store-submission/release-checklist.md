@@ -9,7 +9,7 @@
 
 ## 2. Build and automated verification
 
-- [ ] Run `npm ci` with Node.js 22.
+- [ ] Run `npm ci` with Node.js 24.
 - [ ] Run `npm test`.
 - [ ] Run `npm run package:all`.
 - [ ] Run `npm run check:release -- v1.0.6`.
