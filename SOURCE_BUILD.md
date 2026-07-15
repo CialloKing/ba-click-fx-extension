@@ -4,9 +4,9 @@ This source archive rebuilds the Firefox package submitted for BA Click FX Exten
 
 ## Environment
 
-- Node.js `22.x`
-- npm supplied with Node.js 22
-- Windows, macOS, or Linux; the release workflow uses Ubuntu with Node.js 22
+- Node.js `24.x`
+- npm supplied with Node.js 24
+- Windows, macOS, or Linux; the release workflow uses Ubuntu with Node.js 24
 - Internet access is required only for `npm ci` to download the exact dependencies in `package-lock.json`
 
 No global build tools are required. The build does not download or embed runtime code after `npm ci`.

@@ -16,7 +16,7 @@
 - Firefox package: `ba-click-fx-extension-v1.0.6-firefox.zip`
 - Firefox source package: `ba-click-fx-extension-v1.0.6-firefox-source.zip`
 - Firefox SHA-256: `4F71DF6D22A7B03D57BC8742E505B59978856749547E6E606AE49E53C2B5BF63`
-- Source SHA-256: `34B3243472634A7E0D010F920D2140A4E1BD4E494C45110F12CD761D1425C5EA`
+- Source SHA-256: `3B3E45366A8D5DBFC8CA30DE7C7135AEA56BD0318118B7B30EC34BD71178DE56`
 - No test account, credentials, payment, hardware, or external service required
 
 Do not upload the Chromium ZIP to AMO. The Firefox ZIP removes `minimum_chrome_version`, adds the stable Gecko identity, and declares the current built-in data collection permission.
@@ -189,7 +189,7 @@ No account, login, credentials, payment, hardware, or external service is requir
 
 The extension has no developer-operated server and performs no network requests. All executable code, including ba-click-fx, is bundled in the ZIP. Pointer coordinates are processed transiently in memory only to render visible effects. Visual, interface, and motion preferences use Firefox-provided sync storage. Website origins explicitly disabled by the user use local extension storage. The developer cannot access any of these values.
 
-The submitted source archive contains the exact package lock and SOURCE_BUILD.md. Use Node.js 22, run npm ci, then npm run package:firefox to reproduce the submitted Firefox ZIP.
+The submitted source archive contains the exact package lock and SOURCE_BUILD.md. Use Node.js 24, run npm ci, then npm run package:firefox to reproduce the submitted Firefox ZIP.
 
 Expected restrictions:
 - about: pages, addons.mozilla.org, and built-in viewers do not permit content scripts;

@@ -41,7 +41,7 @@ Firefox 构建使用固定 Gecko ID `ba-click-fx-extension@cialloking.top`，并
 
 ## 开发
 
-环境要求：Node.js 22 或更高版本。
+环境要求：Node.js 24 或更高版本。
 
 ```powershell
 npm install
