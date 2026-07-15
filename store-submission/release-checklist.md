@@ -2,52 +2,52 @@
 
 ## 1. Repository and public pages
 
-- [ ] Review all working-tree changes and confirm only `v1.0.6` work is included.
-- [ ] Confirm every repository text file passes UTF-8 BOM＋LF validation.
+- [x] Review all working-tree changes and confirm only `v1.0.6` work is included.
+- [x] Confirm every repository text file passes UTF-8 BOM＋LF validation.
 - [ ] Verify the demo, repository privacy policy, Issues support URL, and source repository without authentication.
-- [ ] Confirm this repository still has no GitHub Pages deployment or `cialloking.com` configuration.
+- [x] Confirm this repository still has no GitHub Pages deployment or `cialloking.com` configuration.
 
 ## 2. Build and automated verification
 
-- [ ] Run `npm ci` with Node.js 24.
-- [ ] Run `npm test`.
-- [ ] Run `npm run package:all`.
-- [ ] Run `npm run check:release -- v1.0.6`.
-- [ ] Confirm `web-ext lint` reports zero errors, notices, and warnings.
-- [ ] Confirm these files exist:
+- [x] Run `npm ci` with Node.js 24.
+- [x] Run `npm test`.
+- [x] Run `npm run package:all`.
+- [x] Run `npm run check:release -- v1.0.6`.
+- [x] Confirm `web-ext lint` reports zero errors, notices, and warnings.
+- [x] Confirm these files exist:
   - `ba-click-fx-extension-v1.0.6-chromium.zip`
   - `ba-click-fx-extension-v1.0.6-firefox.zip`
   - `ba-click-fx-extension-v1.0.6-firefox-source.zip`
   - `SHA256SUMS.txt`
-- [ ] Confirm `manifest.json` is at each browser ZIP root.
-- [ ] Confirm Chromium and Firefox ZIPs do not contain an extra `dist` directory layer.
-- [ ] Re-run `npm run package:all` and confirm the three SHA-256 values remain unchanged.
+- [x] Confirm `manifest.json` is at each browser ZIP root.
+- [x] Confirm Chromium and Firefox ZIPs do not contain an extra `dist` directory layer.
+- [x] Re-run `npm run package:all` and confirm the three SHA-256 values remain unchanged.
 
 ## 3. Browser runtime verification
 
 - [ ] Load `dist` in Chrome and complete [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md).
 - [ ] Load `dist` in Edge and repeat the Chromium checklist.
-- [ ] Load `dist-firefox/manifest.json` from `about:debugging#/runtime/this-firefox`.
-- [ ] Complete [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md).
-- [ ] Record the tested Firefox version, operating system, date, and result below.
+- [x] Load `dist-firefox/manifest.json` from `about:debugging#/runtime/this-firefox`.
+- [x] Complete [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md).
+- [x] Record the tested Firefox version, operating system, date, and result below.
 
 Firefox runtime record:
 
 ```text
-Firefox version:
-Operating system:
-Test date:
-Result:
-Tester:
+Firefox version: 152.0.6 (latest stable release on the test date)
+Operating system: Windows 11
+Test date: 2026-07-15
+Result: Pass; no issues or deviations reported
+Tester: Repository owner, tested on another device and confirmed by the user
 ```
 
 Do not create the `v1.0.6` Tag until this Firefox runtime record is complete and the result is Pass.
 
 ## 4. Git and GitHub Release
 
-- [ ] Commit implementation and documentation with Chinese commit messages.
-- [ ] Push `main` and confirm the CI workflow passes.
-- [ ] Confirm `CHANGELOG.md` contains the final `1.0.6` record.
+- [x] Commit implementation and documentation with Chinese commit messages.
+- [x] Push `main` and confirm the CI workflow passes.
+- [x] Confirm `CHANGELOG.md` contains the final `1.0.6` record.
 - [ ] Create annotated Tag `v1.0.6` with a Chinese message.
 - [ ] Push the Tag and wait for the Release workflow.
 - [ ] Confirm the GitHub Release is public and not marked as a prerelease.
