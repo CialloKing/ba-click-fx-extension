@@ -9,7 +9,8 @@
 - Minimum Firefox Desktop version: `140.0`
 - Minimum Firefox for Android version declared for manifest validation: `142.0`
 - Submission platform: Firefox Desktop only
-- Submission status: Firefox runtime verification passed; awaiting GitHub Release and AMO submission
+- Submission status: GitHub Release published; awaiting AMO submission
+- GitHub Release: https://github.com/CialloKing/ba-click-fx-extension/releases/tag/v1.0.6
 - Distribution: `On this site` / listed on AMO
 - Remote code: `No`
 - Data collection or transmission: `None`

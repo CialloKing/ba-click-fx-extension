@@ -4,7 +4,7 @@
 
 - [x] Review all working-tree changes and confirm only `v1.0.6` work is included.
 - [x] Confirm every repository text file passes UTF-8 BOM＋LF validation.
-- [ ] Verify the demo, repository privacy policy, Issues support URL, and source repository without authentication.
+- [x] Verify the demo, repository privacy policy, Issues support URL, and source repository without authentication.
 - [x] Confirm this repository still has no GitHub Pages deployment or `cialloking.com` configuration.
 
 ## 2. Build and automated verification
@@ -48,12 +48,12 @@ Do not create the `v1.0.6` Tag until this Firefox runtime record is complete and
 - [x] Commit implementation and documentation with Chinese commit messages.
 - [x] Push `main` and confirm the CI workflow passes.
 - [x] Confirm `CHANGELOG.md` contains the final `1.0.6` record.
-- [ ] Create annotated Tag `v1.0.6` with a Chinese message.
-- [ ] Push the Tag and wait for the Release workflow.
-- [ ] Confirm the GitHub Release is public and not marked as a prerelease.
-- [ ] Confirm the Release attaches all three ZIPs and `SHA256SUMS.txt`.
-- [ ] Download the Release assets and compare their SHA-256 values with `SHA256SUMS.txt`.
-- [ ] Confirm previous Tags, Releases, and ZIPs remain unchanged.
+- [x] Create annotated Tag `v1.0.6` with a Chinese message.
+- [x] Push the Tag and wait for the Release workflow.
+- [x] Confirm the GitHub Release is public and not marked as a prerelease.
+- [x] Confirm the Release attaches all three ZIPs and `SHA256SUMS.txt`.
+- [x] Download the Release assets and compare their SHA-256 values with `SHA256SUMS.txt`.
+- [x] Confirm previous Tags, Releases, and ZIPs remain unchanged.
 
 ## 5. Firefox Add-ons
 
