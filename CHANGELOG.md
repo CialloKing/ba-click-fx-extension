@@ -4,6 +4,26 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-07-17
+
+### Changed
+
+- Upgraded `ba-click-fx` from `^1.2.1` to `^1.2.3` (internal robustness improvements: `structuredClone` for deep copies, `setFxParam` range validation, instance-level `themeHueShift`, `clearTrail` no longer clears unrelated effects).
+
+## [1.1.0] - 2026-07-17
+
+### Changed
+
+- Migrated from `ba-click-fx` v1.1.x setter API to v1.2.x unified API: `setColor(r,g,b)` → `setThemeColor(hex)`, five individual setters (`setOpacity`/`setScale`/`setClick`/`setTrail`/`setTrailAlways`) → batch `updateConfig()`.
+- Simplified quality profiles to `maxDpr` only; `trailRenderScale`, `minRenderScale`, and `maxBackingPixels` removed as the upstream no longer supports them.
+- Removed dead code: `getRenderOptions`, `hexToRgb`, `MAX_BACKING_PIXELS`.
+- Constructor now passes `scale`, `opacity`, `clickEnabled`, `trailEnabled`, `trailAlways`, and `maxDpr` directly instead of the removed `render` option.
+
+### Compatibility
+
+- All user-facing features preserved: click effects, cursor trails, hover trails (`trailAlways`), per-site disable, quality tiers.
+- `ba-click-fx` v1.2.x is a required upgrade; v1.1.x is no longer supported.
+
 ## [1.0.6] - 2026-07-14
 
 ### Added
