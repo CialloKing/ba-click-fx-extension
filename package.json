@@ -4,12 +4,10 @@
   "description": "BA Click FX 的 Manifest V3 浏览器扩展。",
   "private": true,
   "type": "module",
-  "engines":
-  {
+  "engines": {
     "node": ">=24"
   },
-  "scripts":
-  {
+  "scripts": {
     "build": "npm run build:chromium",
     "build:chromium": "node scripts/build.mjs --target chromium",
     "build:firefox": "node scripts/build.mjs --target firefox",
@@ -27,12 +25,10 @@
     "package:all": "npm run build:all && npm run check:encoding && npm run lint:firefox && node scripts/package.mjs --target chromium && node scripts/package.mjs --target firefox && npm run package:firefox-source && node scripts/write-checksums.mjs",
     "test": "npm run build:all && npm run check"
   },
-  "dependencies":
-  {
-    "ba-click-fx": "1.1.11"
+  "dependencies": {
+    "ba-click-fx": "^1.2.1"
   },
-  "devDependencies":
-  {
+  "devDependencies": {
     "esbuild": "0.28.1",
     "fflate": "0.8.3",
     "web-ext": "10.5.0"
