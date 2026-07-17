@@ -1,9 +1,8 @@
 ﻿import { BAClickFX } from 'ba-click-fx';
 import {
   DEFAULT_SETTINGS,
-  getRenderOptions,
+  getQualityProfile,
   getSiteKey,
-  hexToRgb,
   shouldReduceMotion,
 } from './shared/settings.js';
 import {
@@ -96,46 +95,52 @@ function applySettings(settings)
     return;
   }
 
-  const [red, green, blue] = hexToRgb(settings.color);
-
   if (!appliedSettings || appliedSettings.color !== settings.color)
   {
-    engine.setColor(red, green, blue);
+    engine.setThemeColor(settings.color);
   }
+
+  const nextTrailAlways = getEffectiveTrailAlways(settings);
+  const updates = {};
 
   if (!appliedSettings || appliedSettings.opacity !== settings.opacity)
   {
-    engine.setOpacity(settings.opacity);
+    updates.opacity = settings.opacity;
   }
 
   if (!appliedSettings || appliedSettings.scale !== settings.scale)
   {
-    engine.setScale(settings.scale);
+    updates.scale = settings.scale;
   }
 
   if (!appliedSettings || appliedSettings.clickEnabled !== settings.clickEnabled)
   {
-    engine.setClick(settings.clickEnabled);
+    updates.clickEnabled = settings.clickEnabled;
   }
 
   if (!appliedSettings || appliedSettings.trailEnabled !== settings.trailEnabled)
   {
-    // ba-click-fx 1.1.11 会在关闭时完整释放拖尾输入、轨迹和拖尾粒子。
-    engine.setTrail(settings.trailEnabled);
+    // v1.2.x 关闭 trailEnabled 时会自动释放拖尾输入、轨迹和粒子。
+    updates.trailEnabled = settings.trailEnabled;
   }
 
-  const trailAlways = getEffectiveTrailAlways(settings);
-
-  if (appliedTrailAlways !== trailAlways)
+  if (appliedTrailAlways !== nextTrailAlways)
   {
-    engine.setTrailAlways(trailAlways);
-    appliedTrailAlways = trailAlways;
+    updates.trailAlways = nextTrailAlways;
+    appliedTrailAlways = nextTrailAlways;
+  }
+
+  if (Object.keys(updates).length > 0)
+  {
+    engine.updateConfig(updates);
   }
 
   if (appliedQuality !== settings.quality)
   {
-    // 交给核心按三个实际 Canvas 的 backing store 总量执行统一预算。
-    engine.setRenderOptions(getRenderOptions(settings.quality));
+    // v1.2.x 仅 maxDpr 可控；trailRenderScale 已移除，质量档位降级。
+    const profile = getQualityProfile(settings.quality);
+
+    engine.updateConfig({ maxDpr: profile.maxDpr });
     appliedQuality = settings.quality;
   }
 
@@ -158,10 +163,12 @@ function createEngine()
     engine = new BAClickFX(
     {
       target: surface.canvas,
+      scale: currentSettings.scale,
+      opacity: currentSettings.opacity,
       trailEnabled: currentSettings.trailEnabled,
       trailAlways: getEffectiveTrailAlways(currentSettings),
       clickEnabled: currentSettings.clickEnabled,
-      render: getRenderOptions(currentSettings.quality),
+      maxDpr: getQualityProfile(currentSettings.quality).maxDpr,
     });
     appliedQuality = currentSettings.quality;
     appliedTrailAlways = getEffectiveTrailAlways(currentSettings);

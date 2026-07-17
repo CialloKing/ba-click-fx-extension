@@ -6,9 +6,7 @@ import {
   DEFAULT_SETTINGS,
   detectAppearancePreset,
   getQualityProfile,
-  getRenderOptions,
   getSiteKey,
-  hexToRgb,
   normalizeSettings,
   shouldReduceMotion,
 } from '../src/shared/settings.js';
@@ -76,22 +74,17 @@ test('站点键按源隔离，并为本地文件提供稳定键', () =>
   assert.equal(getSiteKey('not a url'), null);
 });
 
-test('画质配置直接使用上游总 backing store 像素预算', () =>
+test('画质档位只保留 maxDpr，未知档位回退到 balanced', () =>
 {
-  assert.deepEqual(hexToRgb('#69a1ff'), [105, 161, 255]);
   assert.deepEqual(getQualityProfile('high'),
   {
     maxDpr: 2,
-    trailRenderScale: 1,
+  });
+  assert.deepEqual(getQualityProfile('performance'),
+  {
+    maxDpr: 1,
   });
   assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('balanced'));
-  assert.deepEqual(getRenderOptions('high'),
-  {
-    maxDpr: 2,
-    trailRenderScale: 1,
-    minRenderScale: 0.5,
-    maxBackingPixels: 20_000_000,
-  });
 });
 
 test('外观预设可识别，手动外观保持自定义状态', () =>

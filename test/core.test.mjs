@@ -137,12 +137,14 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
   {
     const effect = new BAClickFX({ target: canvas });
 
-    effect.setColor(25, 150, 255);
-    effect.setTrailAlways(true);
-    effect.setDpr(1);
+    effect.setThemeColor('#1996ff');
+    effect.updateConfig({ trailAlways: true });
+    effect.updateConfig({ maxDpr: 1 });
 
-    assert.deepEqual(effect.getConfig().color, [25, 150, 255]);
-    assert.equal(effect.getConfig().trail.always, true);
+    const config = effect.getConfig();
+
+    assert.equal(config.trailAlways, true);
+    assert.equal(config.maxDpr, 1);
     assert.ok(environment.listenerCount() > 0);
 
     effect.destroy();
@@ -159,19 +161,21 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
 test('公开事件路径下关闭拖尾会跳过移动输入且保留点击', () =>
 {
   const environment = installDomMock();
-  const effect = new BAClickFX({ target: new MockCanvas() });
   let filteredInputCount = 0;
-
-  try
+  const effect = new BAClickFX(
   {
-    effect.setInputFilter(() =>
+    target: new MockCanvas(),
+    inputFilter: () =>
     {
       filteredInputCount++;
       return true;
-    });
-    effect.setTrail(false);
-    effect.setTrailAlways(false);
+    },
+    trailEnabled: false,
+    trailAlways: false,
+  });
 
+  try
+  {
     environment.dispatch('pointerdown',
     {
       clientX: 120,
@@ -187,7 +191,7 @@ test('公开事件路径下关闭拖尾会跳过移动输入且保留点击', ()
       pointerId: 1,
     });
 
-    assert.equal(effect.getConfig().trail.enabled, false);
+    assert.equal(effect.getConfig().trailEnabled, false);
     assert.equal(effect.getConfig().clickEnabled, true);
     assert.equal(filteredInputCount, 1);
   }

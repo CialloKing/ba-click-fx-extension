@@ -66,17 +66,14 @@ const QUALITY_PROFILES = Object.freeze(
   performance: Object.freeze(
   {
     maxDpr: 1,
-    trailRenderScale: 0.6,
   }),
   balanced: Object.freeze(
   {
     maxDpr: 1,
-    trailRenderScale: 0.8,
   }),
   high: Object.freeze(
   {
     maxDpr: 2,
-    trailRenderScale: 1,
   }),
 });
 
@@ -85,7 +82,6 @@ const MOTION_MODES = new Set(['system', 'full', 'reduced']);
 const PRESET_NAMES = new Set([...Object.keys(APPEARANCE_PRESETS), 'custom']);
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
 const MAX_SITE_KEY_LENGTH = 512;
-const MAX_BACKING_PIXELS = 20_000_000;
 
 function clamp(value, min, max, fallback)
 {
@@ -197,18 +193,6 @@ export function getQualityProfile(quality)
   return QUALITY_PROFILES[quality] || QUALITY_PROFILES[DEFAULT_SETTINGS.quality];
 }
 
-export function getRenderOptions(quality)
-{
-  const profile = getQualityProfile(quality);
-
-  return {
-    ...profile,
-    minRenderScale: 0.5,
-    // 上游按三个实际 backing store 统一限额，比适配层估算 DPR 更可靠。
-    maxBackingPixels: MAX_BACKING_PIXELS,
-  };
-}
-
 export function shouldReduceMotion(settings, systemPrefersReducedMotion)
 {
   if (settings.motionMode === 'reduced')
@@ -247,16 +231,4 @@ export function getSiteKey(urlValue)
   }
 
   return null;
-}
-
-export function hexToRgb(hex)
-{
-  const normalized = HEX_COLOR_PATTERN.test(hex) ? hex : DEFAULT_SETTINGS.color;
-  const value = Number.parseInt(normalized.slice(1), 16);
-
-  return [
-    (value >> 16) & 255,
-    (value >> 8) & 255,
-    value & 255,
-  ];
 }
