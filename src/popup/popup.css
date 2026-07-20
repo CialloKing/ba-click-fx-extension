@@ -252,7 +252,7 @@ input:focus-visible
 .nested-row
 {
   min-height: 38px;
-  padding-left: 12px;
+  padding: 6px 0 6px 12px;
 }
 
 .nested-row::before
@@ -442,6 +442,11 @@ select
   color: #dff6ff;
   background: #0c2138;
   font-size: 11px;
+}
+
+#language-mode
+{
+  min-width: 110px;
 }
 
 .actions

@@ -5,6 +5,15 @@ import { BAClickFX } from 'ba-click-fx';
 
 class MockHTMLElement
 {
+  constructor()
+  {
+    this.attributes = new Map();
+  }
+
+  setAttribute(name, value)
+  {
+    this.attributes.set(name, String(value));
+  }
 }
 
 class MockCanvas extends MockHTMLElement
@@ -139,11 +148,18 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
 
     effect.setThemeColor('#1996ff');
     effect.updateConfig({ trailAlways: true });
-    effect.updateConfig({ maxDpr: 1 });
+    effect.updateConfig(
+    {
+      renderingMode: 'enhanced',
+      softwareBloomEnabled: false,
+      maxDpr: 1,
+    });
 
     const config = effect.getConfig();
 
     assert.equal(config.trailAlways, true);
+    assert.equal(config.renderingMode, 'enhanced');
+    assert.equal(config.softwareBloomEnabled, false);
     assert.equal(config.maxDpr, 1);
     assert.ok(environment.listenerCount() > 0);
 

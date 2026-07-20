@@ -51,18 +51,19 @@ function createSurface()
   setImportantStyle(host, 'contain', 'strict');
 
   const shadowRoot = host.attachShadow({ mode: 'closed' });
-  const canvas = document.createElement('canvas');
+  const container = document.createElement('div');
 
-  canvas.setAttribute('aria-hidden', 'true');
-  setImportantStyle(canvas, 'position', 'absolute');
-  setImportantStyle(canvas, 'inset', '0');
-  setImportantStyle(canvas, 'display', 'block');
-  setImportantStyle(canvas, 'width', '100%');
-  setImportantStyle(canvas, 'height', '100%');
-  setImportantStyle(canvas, 'pointer-events', 'none');
-  setImportantStyle(canvas, 'touch-action', 'auto');
+  container.setAttribute('aria-hidden', 'true');
+  setImportantStyle(container, 'position', 'absolute');
+  setImportantStyle(container, 'inset', '0');
+  setImportantStyle(container, 'display', 'block');
+  setImportantStyle(container, 'width', '100%');
+  setImportantStyle(container, 'height', '100%');
+  setImportantStyle(container, 'overflow', 'hidden');
+  setImportantStyle(container, 'pointer-events', 'none');
 
-  shadowRoot.appendChild(canvas);
+  // 让核心拥有内部 Canvas，才能按渲染模式创建独立的加色层与浅色背景对比层。
+  shadowRoot.appendChild(container);
 
   const parent = document.documentElement || document.body;
 
@@ -75,7 +76,7 @@ function createSurface()
 
   return {
     host,
-    canvas,
+    container,
   };
 }
 
@@ -135,15 +136,6 @@ function applySettings(settings)
     engine.updateConfig(updates);
   }
 
-  if (appliedQuality !== settings.quality)
-  {
-    // v1.2.x 仅 maxDpr 可控；trailRenderScale 已移除，质量档位降级。
-    const profile = getQualityProfile(settings.quality);
-
-    engine.updateConfig({ maxDpr: profile.maxDpr });
-    appliedQuality = settings.quality;
-  }
-
   appliedSettings = settings;
 }
 
@@ -151,24 +143,32 @@ function createEngine()
 {
   if (engine)
   {
-    applySettings(currentSettings);
-    return;
+    if (appliedQuality === currentSettings.quality)
+    {
+      applySettings(currentSettings);
+      return;
+    }
+
+    // Legacy 与增强模式拥有不同的 Canvas 层拓扑，切换画质时完整重建最可靠。
+    destroyEngine();
   }
 
   surface = createSurface();
 
   try
   {
-    // 构造时直接传入预算，避免先按默认尺寸分配再二次缩放的瞬时内存峰值。
+    const qualityProfile = getQualityProfile(currentSettings.quality);
+
+    // 构造时直接传入渲染模式与 DPR，避免先按默认模式分配再切换的瞬时开销。
     engine = new BAClickFX(
     {
-      target: surface.canvas,
+      target: surface.container,
       scale: currentSettings.scale,
       opacity: currentSettings.opacity,
       trailEnabled: currentSettings.trailEnabled,
       trailAlways: getEffectiveTrailAlways(currentSettings),
       clickEnabled: currentSettings.clickEnabled,
-      maxDpr: getQualityProfile(currentSettings.quality).maxDpr,
+      ...qualityProfile,
     });
     appliedQuality = currentSettings.quality;
     appliedTrailAlways = getEffectiveTrailAlways(currentSettings);
@@ -207,7 +207,7 @@ function destroyEngine()
 
   if (surface)
   {
-    // target 模式下核心引擎保留调用方 Canvas，由适配层移除整个隔离宿主。
+    // 核心会移除自己创建的 Canvas；适配层只负责清理隔离宿主。
     surface.host.remove();
     surface = null;
   }

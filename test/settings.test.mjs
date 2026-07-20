@@ -33,7 +33,7 @@ test('无效设置会回退或裁剪到安全范围', () =>
     color: 'blue',
     opacity: 99,
     scale: -20,
-    quality: 'ultra',
+    quality: 'cinematic',
     languageMode: 'ja',
     motionMode: 'lots',
   });
@@ -74,17 +74,32 @@ test('站点键按源隔离，并为本地文件提供稳定键', () =>
   assert.equal(getSiteKey('not a url'), null);
 });
 
-test('画质档位只保留 maxDpr，未知档位回退到 balanced', () =>
+test('三档画质映射 Legacy、原生辉光与软件 Bloom', () =>
 {
-  assert.deepEqual(getQualityProfile('high'),
+  assert.deepEqual(getQualityProfile('balanced'),
   {
-    maxDpr: 2,
-  });
-  assert.deepEqual(getQualityProfile('performance'),
-  {
+    renderingMode: 'legacy',
+    softwareBloomEnabled: false,
     maxDpr: 1,
   });
+  assert.deepEqual(getQualityProfile('high'),
+  {
+    renderingMode: 'enhanced',
+    softwareBloomEnabled: false,
+    maxDpr: 2,
+  });
+  assert.deepEqual(getQualityProfile('ultra'),
+  {
+    renderingMode: 'enhanced',
+    softwareBloomEnabled: true,
+    maxDpr: 2,
+  });
   assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('balanced'));
+});
+
+test('旧省电画质会迁移到新的均衡档', () =>
+{
+  assert.equal(normalizeSettings({ quality: 'performance' }).quality, 'balanced');
 });
 
 test('外观预设可识别，手动外观保持自定义状态', () =>

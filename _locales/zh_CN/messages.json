@@ -92,11 +92,7 @@
   },
   "qualityDescription":
   {
-    "message": "高画质会使用更高设备像素比"
-  },
-  "qualityPerformance":
-  {
-    "message": "省电"
+    "message": "均衡：Legacy；高级：原生辉光；最高画质：软件 Bloom"
   },
   "qualityBalanced":
   {
@@ -104,7 +100,11 @@
   },
   "qualityHigh":
   {
-    "message": "高画质"
+    "message": "高级"
+  },
+  "qualityUltra":
+  {
+    "message": "最高画质"
   },
   "previewEffect":
   {

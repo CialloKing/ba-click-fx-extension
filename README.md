@@ -7,7 +7,8 @@
 - 安装后默认开启，无需给每个网站添加脚本。
 - 点击特效与光标拖尾可分别开关。
 - 可按网站持久禁用，不影响其他页面。
-- 独立设置页可管理主题颜色、透明度、特效大小、画质和外观预设。
+- 工具栏弹窗可直接切换均衡、高级和最高画质，分别使用 Legacy、原生辉光和软件 Bloom，并可切换界面语言。
+- 独立设置页可管理主题颜色、透明度、特效大小、外观预设、语言、动态偏好和网站规则。
 - 视觉偏好通过浏览器提供的同步存储保存；站点禁用规则仅保存在本机扩展存储。
 - 默认跟随系统语言：中文环境使用简体中文，非中文环境使用英文，检测失败回退中文；也可手动指定。
 - 支持跟随系统的“减少动态效果”偏好，并允许手动选择完整或减少持续动态。
@@ -28,7 +29,7 @@
 
 浏览器内部页面、扩展商店和部分内置 PDF 页面禁止内容脚本注入，这是浏览器的安全限制。若要在 `file://` 页面使用，还需在扩展详情页开启“允许访问文件网址”。
 
-当前构建面向 Chrome/Edge 102 或更高版本。为避免在广告等多 iframe 页面重复创建 Canvas，扩展只注入顶层文档；嵌入式视频、编辑器或地图的 iframe 内部不会显示特效。后台标签页会释放 Canvas，再次切回时自动恢复；核心会按三个实际 Canvas 的 backing store 总量执行像素预算，避免 2K/4K 屏幕产生过高显存占用。
+当前构建面向 Chrome/Edge 102 或更高版本。为避免在广告等多 iframe 页面重复创建 Canvas，扩展只注入顶层文档；嵌入式视频、编辑器或地图的 iframe 内部不会显示特效。后台标签页会释放 Canvas，再次切回时自动恢复；不同画质档位会同时选择渲染管线和设备像素比上限，在效果与资源占用之间取舍。
 
 ### Firefox 临时安装
 
@@ -57,7 +58,7 @@ npm test
 | `npm run build:all` | 构建 Chromium 与 Firefox 两个目标 |
 | `npm test` | 构建双目标并执行单元测试、Manifest、商店资源和编码校验 |
 | `npm run lint:firefox` | 使用 `web-ext` 校验 Firefox 包且将警告视为错误 |
-| `npm run check:release -- v1.0.6` | 打包后校验标签、版本、三个 ZIP 和全部哈希 |
+| `npm run check:release -- v1.1.2` | 打包后校验标签、版本、三个 ZIP 和全部哈希 |
 | `npm run check:store` | 检查版本、商店文案、链接和全部图片尺寸 |
 | `npm run package` | 构建并生成 Manifest 位于 ZIP 根目录的 Chromium 提交包 |
 | `npm run package:firefox` | 构建、lint 并生成 Firefox 提交包 |
@@ -89,9 +90,9 @@ npm run package:all
 输出文件包括：
 
 ```text
-release/ba-click-fx-extension-v1.0.6-chromium.zip
-release/ba-click-fx-extension-v1.0.6-firefox.zip
-release/ba-click-fx-extension-v1.0.6-firefox-source.zip
+release/ba-click-fx-extension-v1.1.2-chromium.zip
+release/ba-click-fx-extension-v1.1.2-firefox.zip
+release/ba-click-fx-extension-v1.1.2-firefox-source.zip
 release/SHA256SUMS.txt
 ```
 

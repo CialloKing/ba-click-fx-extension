@@ -4,6 +4,23 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-07-20
+
+### Added
+
+- Added quality and language selectors to the toolbar popup so common preferences can be changed without opening Full settings.
+- Added Balanced, Advanced, and Highest quality modes, mapped to Legacy, native glow, and software Bloom respectively.
+
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.3` to `1.2.6` and pinned the exact package version.
+- Let the core own its rendering canvases inside the extension's closed Shadow DOM, enabling the enhanced renderer's additive and light-background contrast layers.
+- Updated the three appearance presets to use the new quality model; the Power-saving preset now uses Balanced rendering with its existing lower opacity and scale.
+
+### Migration
+
+- Existing `balanced` and `high` values keep working. The removed `performance` quality value safely falls back to Balanced.
+
 ## [1.1.1] - 2026-07-17
 
 ### Changed

@@ -22,6 +22,8 @@ const elements =
   clickEnabled: document.querySelector('#click-enabled'),
   trailEnabled: document.querySelector('#trail-enabled'),
   trailAlways: document.querySelector('#trail-always'),
+  quality: document.querySelector('#quality'),
+  languageMode: document.querySelector('#language-mode'),
   preview: document.querySelector('#preview'),
   openOptions: document.querySelector('#open-options'),
   status: document.querySelector('#status'),
@@ -130,6 +132,8 @@ function render()
   elements.trailEnabled.checked = settings.trailEnabled;
   elements.trailAlways.checked = settings.trailAlways;
   elements.trailAlways.disabled = !settings.trailEnabled;
+  elements.quality.value = settings.quality;
+  elements.languageMode.value = settings.languageMode;
 
   const siteSupported = Boolean(activeSiteKey);
   const siteEnabled = siteSupported && settings.disabledSites[activeSiteKey] !== true;
@@ -205,6 +209,19 @@ function bindEvents()
   bindToggle(elements.trailEnabled, 'trailEnabled');
   bindToggle(elements.trailAlways, 'trailAlways');
 
+  elements.quality.addEventListener('change', () =>
+  {
+    void updateSettings({ quality: elements.quality.value, preset: 'custom' });
+  });
+
+  elements.languageMode.addEventListener('change', async () =>
+  {
+    await updateSettings({ languageMode: elements.languageMode.value });
+    i18n = createI18n(settings.languageMode);
+    i18n.localizeDocument();
+    render();
+  });
+
   elements.siteEnabled.addEventListener('change', () =>
   {
     if (!activeSiteKey)
@@ -268,11 +285,19 @@ function bindStorageChanges()
       return;
     }
 
+    const previousLanguageMode = settings.languageMode;
     const nextSettings = applyStorageChanges(settings, changes, areaName);
 
     if (nextSettings !== settings)
     {
       settings = nextSettings;
+
+      if (settings.languageMode !== previousLanguageMode)
+      {
+        i18n = createI18n(settings.languageMode);
+        i18n.localizeDocument();
+      }
+
       render();
     }
   });
