@@ -23,7 +23,9 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Global enable/disable applies immediately.
 - [ ] Click and trail switches work independently.
 - [ ] “Always show while moving” works as described.
-- [ ] Color, opacity, size, all three quality modes, and Classic/Soft/Power-saving presets apply immediately.
+- [ ] The popup switches Balanced/Legacy, Advanced/native glow, and Highest/software Bloom immediately.
+- [ ] The popup switches System, Simplified Chinese, and English immediately and keeps the selected language after reopening.
+- [ ] Color, opacity, size, and Classic/Soft/Power-saving presets apply immediately.
 - [ ] Current-site disable removes effects only for that origin.
 - [ ] Re-enabling the site removes the saved rule.
 - [ ] Website rules appear in the options page and search/remove/clear work with confirmation where required.
@@ -45,7 +47,7 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Back/forward cache navigation restores effects.
 - [ ] Single-page-app navigation does not create duplicate overlays.
 - [ ] Resizing and moving between normal/high-DPI monitors remains usable.
-- [ ] High quality on 2K/4K displays does not cause browser instability.
+- [ ] Highest quality on 2K/4K displays does not cause browser instability.
 - [ ] Offline operation remains fully functional.
 
 ## Expected restrictions

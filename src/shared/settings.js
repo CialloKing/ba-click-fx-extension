@@ -57,22 +57,28 @@ export const APPEARANCE_PRESETS = Object.freeze(
     color: '#69a1ff',
     opacity: 0.45,
     scale: 1,
-    quality: 'performance',
+    quality: 'balanced',
   }),
 });
 
 const QUALITY_PROFILES = Object.freeze(
 {
-  performance: Object.freeze(
-  {
-    maxDpr: 1,
-  }),
   balanced: Object.freeze(
   {
+    renderingMode: 'legacy',
+    softwareBloomEnabled: false,
     maxDpr: 1,
   }),
   high: Object.freeze(
   {
+    renderingMode: 'enhanced',
+    softwareBloomEnabled: false,
+    maxDpr: 2,
+  }),
+  ultra: Object.freeze(
+  {
+    renderingMode: 'enhanced',
+    softwareBloomEnabled: true,
     maxDpr: 2,
   }),
 });

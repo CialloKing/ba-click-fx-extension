@@ -92,6 +92,17 @@ assert(
 );
 assert(sourcePackageJson.version === packageJson.version, 'Firefox 源码包版本不一致。');
 assert(firefoxSource.entries['SOURCE_BUILD.md'], 'Firefox 源码包缺少构建说明。');
+const sourceBuildInstructions = strFromU8(firefoxSource.entries['SOURCE_BUILD.md'])
+  .replace(/^\uFEFF/, '');
+
+assert(
+  sourceBuildInstructions.includes(`v${packageJson.version}`),
+  'Firefox 源码包构建说明中的版本不一致。',
+);
+assert(
+  sourceBuildInstructions.includes(`release/${archiveNames.firefox}`),
+  'Firefox 源码包构建说明中的输出文件名不一致。',
+);
 assert(firefoxSource.entries['src/content.js'], 'Firefox 源码包缺少内容脚本源码。');
 assert(!firefoxSource.entries['dist-firefox/content.js'], 'Firefox 源码包不应包含构建产物。');
 

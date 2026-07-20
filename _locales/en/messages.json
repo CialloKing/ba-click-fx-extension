@@ -92,11 +92,7 @@
   },
   "qualityDescription":
   {
-    "message": "High quality uses a higher device pixel ratio"
-  },
-  "qualityPerformance":
-  {
-    "message": "Power saving"
+    "message": "Balanced: Legacy; Advanced: native glow; Highest: software Bloom"
   },
   "qualityBalanced":
   {
@@ -104,7 +100,11 @@
   },
   "qualityHigh":
   {
-    "message": "High"
+    "message": "Advanced"
+  },
+  "qualityUltra":
+  {
+    "message": "Highest"
   },
   "previewEffect":
   {
