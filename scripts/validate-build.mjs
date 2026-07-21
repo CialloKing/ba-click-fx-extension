@@ -172,6 +172,30 @@ const optionsMessageKeys = new Set([
   ...[...optionsScript.matchAll(/getMessage\(['"]([^'"]+)['"]/g)]
     .map((match) => match[1]),
 ]);
+
+// 完整设置页必须持续覆盖展示页提供的全部核心特效入口，避免上游升级后 UI 悄然缺项。
+for (const requiredControlId of [
+  'color',
+  'opacity',
+  'scale',
+  'quality',
+  'render-mode',
+  'max-dpr',
+  'click-fx-groups',
+  'trail-fx-groups',
+])
+{
+  assert(
+    optionsHtml.includes(`id="${requiredControlId}"`),
+    `完整设置页缺少 ${requiredControlId} 控件。`,
+  );
+}
+
+assert(
+  /<input\b[^>]*\bid=["']scale["'][^>]*\bmin=["']0\.01["'][^>]*\bmax=["']5["'][^>]*\bstep=["']0\.01["'][^>]*>/i
+    .test(optionsHtml),
+  '特效大小滑块必须精确表示 0.90、1.00 等展示页默认值与预设值。',
+);
 const englishMessageKeys = Object.keys(localeMessages.get('en')).sort();
 const chineseMessageKeys = Object.keys(localeMessages.get('zh_CN')).sort();
 

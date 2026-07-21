@@ -1,10 +1,13 @@
 ﻿import { BAClickFX } from 'ba-click-fx';
 import {
   DEFAULT_SETTINGS,
-  getQualityProfile,
+  getRenderModeProfile,
   getSiteKey,
   shouldReduceMotion,
 } from './shared/settings.js';
+import {
+  expandFxParams,
+} from './shared/fx-settings.js';
 import {
   applyStorageChanges,
   readSettings,
@@ -23,7 +26,6 @@ let currentSettings = DEFAULT_SETTINGS;
 let engine = null;
 let surface = null;
 let appliedSettings = null;
-let appliedQuality = null;
 let appliedTrailAlways = null;
 let initializationState = 'loading';
 let initializationError = '';
@@ -89,6 +91,71 @@ function getEffectiveTrailAlways(settings)
   );
 }
 
+function getRenderProfile(settings)
+{
+  return {
+    ...getRenderModeProfile(settings.renderMode),
+    maxDpr: settings.maxDpr,
+  };
+}
+
+function requiresEngineRebuild(previous, next)
+{
+  return Boolean(
+    previous &&
+    previous.renderMode !== next.renderMode &&
+    (previous.renderMode === 'legacy' || next.renderMode === 'legacy'),
+  );
+}
+
+function hasSameFxParams(previous, next)
+{
+  const previousEntries = Object.entries(previous?.fxParams || {});
+  const nextParams = next.fxParams || {};
+
+  if (previousEntries.length !== Object.keys(nextParams).length)
+  {
+    return false;
+  }
+
+  return previousEntries.every(([path, value]) => nextParams[path] === value);
+}
+
+function applyFxParam(path, value)
+{
+  if (path === 'rings.rotationDirection' && value < 0)
+  {
+    // 上游 1.2.7 会把负方向钳制为 0；只有 -1 默认值有效，非法负覆盖已在共享层规范化。
+    return;
+  }
+
+  engine.setFxParam(path, value);
+}
+
+function applyFxParams(settings)
+{
+  const renderProfile = getRenderProfile(settings);
+
+  // 切到 Legacy 时 updateConfig 会写入该模式的资源映射；先切模式，再重置并重放。
+  engine.updateConfig(renderProfile);
+  engine.resetFxConfig();
+
+  if (renderProfile.renderingMode === 'legacy')
+  {
+    // 上游只有发生 enhanced→legacy 切换时才应用 Legacy 映射，因此重复切一次来确定重置后的基线。
+    engine.updateConfig({ ...renderProfile, renderingMode: 'enhanced' });
+    engine.updateConfig(renderProfile);
+  }
+
+  const overrides = expandFxParams(settings.fxParams);
+
+  for (const [path, value] of Object.entries(overrides))
+  {
+    // rootDurationMs 在上游 1.2.7 中尚无运行时读取点，但仍转交以保持公开 API 契约。
+    applyFxParam(path, value);
+  }
+}
+
 function applySettings(settings)
 {
   if (!engine)
@@ -103,6 +170,17 @@ function applySettings(settings)
 
   const nextTrailAlways = getEffectiveTrailAlways(settings);
   const updates = {};
+  const renderProfileChanged = Boolean(
+    !appliedSettings ||
+    appliedSettings.renderMode !== settings.renderMode ||
+    appliedSettings.maxDpr !== settings.maxDpr,
+  );
+  const fxParamsChanged = !hasSameFxParams(appliedSettings, settings);
+
+  if (renderProfileChanged || fxParamsChanged)
+  {
+    applyFxParams(settings);
+  }
 
   if (!appliedSettings || appliedSettings.opacity !== settings.opacity)
   {
@@ -143,21 +221,23 @@ function createEngine()
 {
   if (engine)
   {
-    if (appliedQuality === currentSettings.quality)
+    if (requiresEngineRebuild(appliedSettings, currentSettings))
+    {
+      // Legacy 与增强模式使用不同的 Canvas 层拓扑；重建可保证渲染层与参数基线一致。
+      destroyEngine();
+    }
+    else
     {
       applySettings(currentSettings);
       return;
     }
-
-    // Legacy 与增强模式拥有不同的 Canvas 层拓扑，切换画质时完整重建最可靠。
-    destroyEngine();
   }
 
   surface = createSurface();
 
   try
   {
-    const qualityProfile = getQualityProfile(currentSettings.quality);
+    const renderProfile = getRenderProfile(currentSettings);
 
     // 构造时直接传入渲染模式与 DPR，避免先按默认模式分配再切换的瞬时开销。
     engine = new BAClickFX(
@@ -168,9 +248,8 @@ function createEngine()
       trailEnabled: currentSettings.trailEnabled,
       trailAlways: getEffectiveTrailAlways(currentSettings),
       clickEnabled: currentSettings.clickEnabled,
-      ...qualityProfile,
+      ...renderProfile,
     });
-    appliedQuality = currentSettings.quality;
     appliedTrailAlways = getEffectiveTrailAlways(currentSettings);
     appliedSettings = null;
     applySettings(currentSettings);
@@ -184,7 +263,6 @@ function createEngine()
     }
 
     appliedSettings = null;
-    appliedQuality = null;
     appliedTrailAlways = null;
 
     surface.host.remove();
@@ -202,7 +280,6 @@ function destroyEngine()
   }
 
   appliedSettings = null;
-  appliedQuality = null;
   appliedTrailAlways = null;
 
   if (surface)

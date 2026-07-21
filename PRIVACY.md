@@ -2,7 +2,7 @@
 
 Effective date: July 14, 2026
 
-Last updated: July 14, 2026
+Last updated: July 21, 2026
 
 BA Click FX is an unofficial, fan-made browser extension that renders configurable click effects and cursor trails on ordinary webpages. This policy explains the information the extension processes, how it is used, and the controls available to users.
 
@@ -13,7 +13,7 @@ BA Click FX processes only the information required to provide its visible effec
 - Pointer coordinates and pointer events are processed temporarily in memory to draw click rings, particles, and cursor trails. They are not logged or retained.
 - The current webpage origin is processed locally to determine whether the user has disabled the extension for that website.
 - If the user explicitly disables a website, that website origin is saved as a site-specific preference.
-- Visual preferences—including enabled states, color, opacity, scale, quality, language, and motion choices—are saved with the browser-provided `storage.sync` API.
+- Visual preferences—including enabled states, color, opacity, scale, quality, render mode, maximum device-pixel ratio, effect-parameter overrides, language, and motion choices—are saved with the browser-provided `storage.sync` API.
 - Site-specific disable rules are saved with the browser-provided `storage.local` API and remain on that browser profile.
 - When upgrading from a version before 1.0.5, legacy site rules are copied from sync storage into local storage. The legacy synced copy is retained until the user explicitly removes it from the options page so another device that has not updated does not lose its rules.
 
@@ -63,7 +63,7 @@ https://github.com/CialloKing/ba-click-fx-extension/issues
 
 ## 中文摘要
 
-BA Click FX 只为实现可见的点击特效、光标拖尾与站点开关而在本地处理鼠标坐标和当前网页 origin。鼠标坐标只存在于内存中，不会记录或保留。颜色、不透明度、大小、画质、开关、语言和动态偏好通过浏览器提供的 `storage.sync` API 保存；从 1.0.5 起，用户主动禁用的网站 origin 通过 `storage.local` 保存在当前浏览器配置中。
+BA Click FX 只为实现可见的点击特效、光标拖尾与站点开关而在本地处理鼠标坐标和当前网页 origin。鼠标坐标只存在于内存中，不会记录或保留。颜色、不透明度、缩放、画质、渲染模式、最大设备像素比、圆环/碎片/Bloom/Hit/Flare/拖尾参数、开关、语言和动态偏好通过浏览器提供的 `storage.sync` API 保存；从 1.0.5 起，用户主动禁用的网站 origin 通过 `storage.local` 保存在当前浏览器配置中。
 
 从 1.0.5 之前的版本升级时，旧同步站点规则会幂等复制到本机存储。为避免尚未升级的其他设备丢失规则，旧同步副本不会自动删除；用户确认其他设备完成升级后，可在完整设置页显式删除该副本。
 

@@ -129,6 +129,113 @@ a:focus-visible
   gap: 14px;
 }
 
+.switch-list,
+.fx-groups
+{
+  display: grid;
+  gap: 10px;
+}
+
+.switch-list
+{
+  margin-bottom: 14px;
+}
+
+.switch-field + .fx-groups
+{
+  margin-top: 14px;
+}
+
+.switch-field,
+.fx-toggle-field
+{
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 13px;
+  border: 1px solid rgba(122, 182, 222, 0.14);
+  border-radius: 11px;
+  color: #c9dfef;
+  background: rgba(8, 25, 43, 0.44);
+}
+
+.switch-field span
+{
+  display: grid;
+  gap: 3px;
+}
+
+.switch-field strong
+{
+  font-size: 12px;
+}
+
+.switch-field small
+{
+  color: #7892a9;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+input[type="checkbox"]
+{
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: #48bfff;
+  cursor: pointer;
+}
+
+.fx-group
+{
+  overflow: hidden;
+  border: 1px solid rgba(122, 182, 222, 0.14);
+  border-radius: 12px;
+  background: rgba(8, 25, 43, 0.34);
+}
+
+.fx-group summary
+{
+  padding: 12px 14px;
+  color: #a9e9ff;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fx-group[open] summary
+{
+  border-bottom: 1px solid rgba(122, 182, 222, 0.12);
+}
+
+.fx-grid
+{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 16px 14px 18px;
+}
+
+.fx-range-field
+{
+  min-width: 0;
+}
+
+.fx-toggle-field
+{
+  min-height: 44px;
+  padding: 8px 10px;
+}
+
+.fx-toggle-field .field-label
+{
+  min-width: 0;
+  flex: 1;
+}
+
 .field
 {
   display: flex;
@@ -400,7 +507,8 @@ a:hover
     padding-top: 24px;
   }
 
-  .settings-grid
+  .settings-grid,
+  .fx-grid
   {
     grid-template-columns: 1fr;
   }

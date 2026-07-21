@@ -48,24 +48,35 @@ Update highlights:
 
 `v1.0.6` adds the separate Firefox/AMO build, source package, validation, and submission materials. Chromium permissions, runtime behavior, storage schema, and listing copy are unchanged from `v1.0.5`. If Chrome has not yet received the v1.0.5 update, upload the newer v1.0.6 Chromium package and use the v1.0.5 description below. Do not upload the Firefox ZIP to Chrome Web Store.
 
-### v1.0.5 listing-description replacement — prepared, not yet submitted
+## Prepared update — v1.1.3
 
-Use these blocks to replace the v1.0.2 dashboard descriptions when uploading v1.0.5. After submission, relabel them as the actual submitted version and copy back any dashboard edits.
+- Extension version: `1.1.3`
+- Core dependency: `ba-click-fx 1.2.7`
+- Package: `ba-click-fx-extension-v1.1.3-chromium.zip`
+- SHA-256: `36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA`
+- Submission status: Prepared; not yet uploaded
+
+`v1.1.3` adds WebGL2 Bloom and exposes every upstream demo effect parameter in Full settings. Rendering remains local with Canvas 2D or WebGL2; permissions, network behavior, and disclosed data categories do not change.
+
+### v1.1.3 listing-description replacement — prepared, not yet submitted
+
+Use these blocks to replace the currently saved dashboard descriptions when uploading `v1.1.3`. After submission, relabel them as the actual submitted version and copy back any dashboard edits.
 
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
 
-It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D. Quick controls are available in the toolbar popup, while the full settings page manages appearance, performance, language, motion preferences, and disabled websites.
+It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D or WebGL2. The toolbar popup provides quick effect, quality, language, and current-website controls, while Full settings mirrors every effect parameter from the upstream demo.
 
 Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
 • Choose Classic, Soft, or Power-saving appearance presets
-• Adjust theme color, opacity, effect size, and quality
+• Switch among Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom quality; Highest falls back to software Bloom when WebGL2 is unavailable
+• Adjust theme color, opacity, effect size, raw render mode, maximum DPR, and every ring, shard, Bloom, Hit/Flare, and trail parameter
 • Follow the system language or choose Simplified Chinese or English
 • Follow the system reduced-motion preference or choose full/reduced continuous motion
 • Search, remove, or clear locally saved website rules
-• Release Canvas resources while a tab is in the background
+• Release rendering resources while a tab is in the background
 • Work offline with no developer server or remotely hosted code
 
 How to use:
@@ -93,17 +104,18 @@ BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or
 ```text
 BA Click FX 是一个非官方的网页视觉特效扩展。
 
-安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 在本地渲染。工具栏弹窗提供常用开关，完整设置页可管理外观、性能、语言、动态偏好和已禁用网站。
+安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 或 WebGL2 在本地渲染。工具栏弹窗提供特效、画质、语言和当前网站的快捷控制，完整设置页同步展示页提供的全部特效参数。
 
 主要功能：
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
 • 可选择经典、柔和或省电外观预设
-• 可调整主题颜色、不透明度、特效大小和画质
+• 可切换均衡/Legacy、高级/原生辉光和最高画质/WebGL2 Bloom；WebGL2 不可用时，最高画质自动回退软件 Bloom
+• 可调整主题颜色、不透明度、特效大小、原始渲染模式、最大 DPR，以及全部圆环、碎片、Bloom、Hit/Flare 和拖尾参数
 • 可跟随系统语言，或指定简体中文/英文
 • 可跟随系统减少动态偏好，或指定完整/减少持续动态
 • 可搜索、移除或清空本机网站规则
-• 标签页进入后台时会释放 Canvas 资源
+• 标签页进入后台时会释放渲染资源
 • 无需开发者服务器或远程代码，离线也能运行
 
 使用方法：
@@ -310,7 +322,7 @@ The disclosed values are processed locally or stored through chrome.storage.sync
 
 ## Store assets
 
-Screenshot 1 is retained from the v1.0.2 submission because the visible effect runtime is unchanged. Screenshots 2–4 were regenerated from the final v1.0.6 build and show the simplified popup, current-site control, and full settings page. Use this refreshed set for a v1.0.5 or v1.0.6 Chromium update.
+Regenerate the localized screenshots from the final `v1.1.3` build before upload. Screenshot 1 must represent the current WebGL2 Bloom-capable runtime, and screenshot 4 must show the complete Full settings control panel; do not reuse the earlier “runtime unchanged” justification.
 
 - Chrome Web Store icon: `icons/icon-128.png`
 - Small promo: `store-assets/common/promo-small-440x280.png`

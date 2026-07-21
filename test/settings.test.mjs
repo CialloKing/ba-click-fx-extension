@@ -5,20 +5,30 @@ import {
   APPEARANCE_PRESETS,
   DEFAULT_SETTINGS,
   detectAppearancePreset,
+  detectQualityProfile,
+  getClassicDefaultsMigrationPatch,
   getQualityProfile,
+  getQualitySettingsPatch,
+  getRenderModeProfile,
   getSiteKey,
   normalizeSettings,
   shouldReduceMotion,
 } from '../src/shared/settings.js';
 
-test('缺省设置安装后立即启用点击和移动拖尾', () =>
+test('缺省设置与上游演示页一致', () =>
 {
   const settings = normalizeSettings();
 
   assert.equal(settings.enabled, true);
   assert.equal(settings.clickEnabled, true);
   assert.equal(settings.trailEnabled, true);
-  assert.equal(settings.trailAlways, true);
+  assert.equal(settings.trailAlways, false);
+  assert.equal(settings.opacity, 1);
+  assert.equal(settings.scale, 1);
+  assert.equal(settings.quality, 'ultra');
+  assert.equal(settings.renderMode, 'webgl2-bloom');
+  assert.equal(settings.maxDpr, 2);
+  assert.deepEqual(settings.fxParams, {});
   assert.equal(settings.languageMode, 'system');
   assert.equal(settings.motionMode, 'system');
   assert.equal(settings.preset, 'classic');
@@ -41,7 +51,7 @@ test('无效设置会回退或裁剪到安全范围', () =>
   assert.equal(settings.enabled, false);
   assert.equal(settings.color, DEFAULT_SETTINGS.color);
   assert.equal(settings.opacity, 1);
-  assert.equal(settings.scale, 0.5);
+  assert.equal(settings.scale, 0.01);
   assert.equal(settings.quality, DEFAULT_SETTINGS.quality);
   assert.equal(settings.languageMode, DEFAULT_SETTINGS.languageMode);
   assert.equal(settings.motionMode, DEFAULT_SETTINGS.motionMode);
@@ -74,32 +84,95 @@ test('站点键按源隔离，并为本地文件提供稳定键', () =>
   assert.equal(getSiteKey('not a url'), null);
 });
 
-test('三档画质映射 Legacy、原生辉光与软件 Bloom', () =>
+test('三档画质映射 Legacy、原生辉光与 WebGL2 Bloom', () =>
 {
   assert.deepEqual(getQualityProfile('balanced'),
   {
-    renderingMode: 'legacy',
-    softwareBloomEnabled: false,
+    renderMode: 'legacy',
     maxDpr: 1,
   });
   assert.deepEqual(getQualityProfile('high'),
   {
-    renderingMode: 'enhanced',
-    softwareBloomEnabled: false,
+    renderMode: 'native-bloom',
     maxDpr: 2,
   });
   assert.deepEqual(getQualityProfile('ultra'),
   {
-    renderingMode: 'enhanced',
-    softwareBloomEnabled: true,
+    renderMode: 'webgl2-bloom',
     maxDpr: 2,
   });
-  assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('balanced'));
+  assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('ultra'));
+  assert.deepEqual(getRenderModeProfile('software-bloom'),
+  {
+    renderingMode: 'enhanced',
+    bloomBackend: 'software',
+  });
+  assert.deepEqual(getQualitySettingsPatch('balanced'),
+  {
+    quality: 'balanced',
+    renderMode: 'legacy',
+    maxDpr: 1,
+  });
+  assert.equal(detectQualityProfile('software-bloom', 2), 'custom');
+  assert.deepEqual(normalizeSettings(
+  {
+    quality: 'ultra',
+    renderMode: 'software-bloom',
+    maxDpr: 3,
+  }),
+  {
+    ...DEFAULT_SETTINGS,
+    quality: 'custom',
+    renderMode: 'software-bloom',
+    maxDpr: 3,
+    preset: 'custom',
+  });
 });
 
 test('旧省电画质会迁移到新的均衡档', () =>
 {
   assert.equal(normalizeSettings({ quality: 'performance' }).quality, 'balanced');
+});
+
+test('旧版经典默认参数生成持久化补丁且保留显式拖尾选择', () =>
+{
+  const migrated = getClassicDefaultsMigrationPatch(
+  {
+    preset: 'classic',
+    color: '#69a1ff',
+    opacity: 0.5,
+    scale: 1.1,
+    quality: 'balanced',
+  });
+  const explicitTrail = getClassicDefaultsMigrationPatch(
+  {
+    preset: 'classic',
+    color: '#69a1ff',
+    opacity: 0.5,
+    scale: 1.1,
+    quality: 'balanced',
+    trailAlways: true,
+  });
+  const custom = getClassicDefaultsMigrationPatch({ preset: 'custom' });
+
+  assert.deepEqual(migrated,
+  {
+    color: '#69a1ff',
+    opacity: 1,
+    scale: 1,
+    quality: 'ultra',
+    preset: 'classic',
+    trailAlways: false,
+  });
+  assert.deepEqual(explicitTrail,
+  {
+    color: '#69a1ff',
+    opacity: 1,
+    scale: 1,
+    quality: 'ultra',
+    preset: 'classic',
+  });
+  assert.deepEqual(custom, {});
 });
 
 test('外观预设可识别，手动外观保持自定义状态', () =>

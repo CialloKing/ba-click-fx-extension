@@ -1,6 +1,6 @@
 ﻿# Firefox Source Build Instructions
 
-This source archive rebuilds the Firefox package submitted for BA Click FX Extension `v1.1.2`.
+This source archive rebuilds the Firefox package submitted for BA Click FX Extension `v1.1.3`.
 
 ## Environment
 
@@ -25,7 +25,7 @@ npm run package:firefox
 The unpacked extension is written to `dist-firefox/`. The AMO upload ZIP is written to:
 
 ```text
-release/ba-click-fx-extension-v1.1.2-firefox.zip
+release/ba-click-fx-extension-v1.1.3-firefox.zip
 ```
 
 The submitted Firefox ZIP contains the files from `dist-firefox/` directly at the archive root. `manifest.json` must therefore be at the ZIP root, not inside a `dist-firefox/` directory.

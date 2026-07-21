@@ -1,6 +1,6 @@
 ﻿# Store Submission Kit
 
-This directory preserves the actual Chrome Web Store `1.0.2` submission record, the prepared Chromium `1.0.5` update, and the Firefox/AMO materials for BA Click FX `1.0.6`.
+This directory preserves the historical Chrome Web Store records and contains the current Chrome, Edge, and Firefox submission materials for BA Click FX `1.1.3`.
 
 ## Canonical public URLs
 
@@ -20,15 +20,15 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - [data-inventory.md](./data-inventory.md): code-to-disclosure inventory explaining every locally processed or stored value.
 - [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md): Chrome/Edge manual loading and regression steps.
 - [release-checklist.md](./release-checklist.md): ordered release and submission checklist.
-- [firefox-addons.md](./firefox-addons.md): actual Firefox `1.0.6` package details, AMO listing copy, privacy answers, reviewer notes, and manual submission steps.
-- [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md): required Firefox runtime verification before creating the `v1.0.6` Tag.
+- [firefox-addons.md](./firefox-addons.md): prepared Firefox `1.1.3` package details, AMO listing copy, privacy answers, reviewer notes, and manual submission steps.
+- [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md): required Firefox runtime verification before creating the `v1.1.3` Tag.
 - [metadata.json](./metadata.json): machine-readable version, URL, locale, package, and asset inventory.
 
 ## Required upload files
 
-- Chromium ZIP: `release/ba-click-fx-extension-v1.0.6-chromium.zip`
-- Firefox ZIP: `release/ba-click-fx-extension-v1.0.6-firefox.zip`
-- Firefox source ZIP: `release/ba-click-fx-extension-v1.0.6-firefox-source.zip`
+- Chromium ZIP: `release/ba-click-fx-extension-v1.1.3-chromium.zip`
+- Firefox ZIP: `release/ba-click-fx-extension-v1.1.3-firefox.zip`
+- Firefox source ZIP: `release/ba-click-fx-extension-v1.1.3-firefox-source.zip`
 - SHA-256 inventory: `release/SHA256SUMS.txt`
 - Logo: `store-assets/common/logo-300.png`
 - Small promotional tile: `store-assets/common/promo-small-440x280.png`
@@ -36,7 +36,7 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - Four English screenshots: `store-assets/en/`
 - Four Simplified Chinese screenshots: `store-assets/zh_CN/`
 
-The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Screenshot 1 is retained because the visible effect runtime is unchanged; screenshots 2–4 were regenerated from the final v1.0.6 build so the popup, per-site control, and full settings page match the submitted extension.
+The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.3`, regenerate the localized screenshots from the final build: the effect screenshot must show the current WebGL2 Bloom runtime, and the settings screenshot must show the complete upstream control panel.
 
 ## Important disclosure decision
 

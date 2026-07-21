@@ -1,6 +1,7 @@
 ﻿import { createI18n } from '../shared/i18n.js';
 import {
   DEFAULT_SETTINGS,
+  getQualitySettingsPatch,
   getSiteKey,
   normalizeSettings,
 } from '../shared/settings.js';
@@ -211,7 +212,11 @@ function bindEvents()
 
   elements.quality.addEventListener('change', () =>
   {
-    void updateSettings({ quality: elements.quality.value, preset: 'custom' });
+    void updateSettings(
+    {
+      ...getQualitySettingsPatch(elements.quality.value),
+      preset: 'custom',
+    });
   });
 
   elements.languageMode.addEventListener('change', async () =>

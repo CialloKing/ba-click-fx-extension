@@ -2,22 +2,22 @@
 
 ## Prepared release
 
-- Extension version: `1.0.6`
-- Core dependency: `ba-click-fx 1.1.11`
+- Extension version: `1.1.3`
+- Core dependency: `ba-click-fx 1.2.7`
 - Manifest version: `3`
 - Gecko ID: `ba-click-fx-extension@cialloking.top`
 - Minimum Firefox Desktop version: `140.0`
 - Minimum Firefox for Android version declared for manifest validation: `142.0`
 - Submission platform: Firefox Desktop only
-- Submission status: GitHub Release published; awaiting AMO submission
-- GitHub Release: https://github.com/CialloKing/ba-click-fx-extension/releases/tag/v1.0.6
+- Submission status: Prepared; awaiting GitHub Release and AMO submission
+- GitHub Release: https://github.com/CialloKing/ba-click-fx-extension/releases/tag/v1.1.3
 - Distribution: `On this site` / listed on AMO
 - Remote code: `No`
 - Data collection or transmission: `None`
-- Firefox package: `ba-click-fx-extension-v1.0.6-firefox.zip`
-- Firefox source package: `ba-click-fx-extension-v1.0.6-firefox-source.zip`
-- Firefox SHA-256: `4F71DF6D22A7B03D57BC8742E505B59978856749547E6E606AE49E53C2B5BF63`
-- Source SHA-256: `3B3E45366A8D5DBFC8CA30DE7C7135AEA56BD0318118B7B30EC34BD71178DE56`
+- Firefox package: `ba-click-fx-extension-v1.1.3-firefox.zip`
+- Firefox source package: `ba-click-fx-extension-v1.1.3-firefox-source.zip`
+- Firefox SHA-256: `D8ACBD108904A9C5906A20328837D6615F7B0CFE22501E35E3EB80B51675F946`
+- Source SHA-256: `F344BDFE756D9AD779DEAEE16AB8144E24BE0190F8053BE8B111D284A064A2C2`
 - No test account, credentials, payment, hardware, or external service required
 
 Do not upload the Chromium ZIP to AMO. The Firefox ZIP removes `minimum_chrome_version`, adds the stable Gecko identity, and declares the current built-in data collection permission.
@@ -48,17 +48,18 @@ Add configurable click rings, particles, and cursor trails to ordinary webpages.
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
 
-It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D. Quick controls are available in the toolbar popup, while the full settings page manages appearance, performance, language, motion preferences, and disabled websites.
+It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D or WebGL2. Quick controls are available in the toolbar popup, while full settings also manages render mode, maximum DPR, and every ring, shard, Bloom, Hit/Flare, and trail parameter exposed by the upstream demo.
 
 Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
 • Choose Classic, Soft, or Power-saving appearance presets
-• Adjust theme color, opacity, effect size, and quality
+• Switch among Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom quality; Highest falls back to software Bloom when WebGL2 is unavailable
+• Adjust theme color, opacity, effect size, raw render mode, maximum DPR, and every ring, shard, Bloom, Hit/Flare, and trail parameter
 • Follow the system language or choose Simplified Chinese or English
 • Follow the system reduced-motion preference or choose full/reduced continuous motion
 • Search, remove, or clear locally saved website rules
-• Release Canvas resources while a tab is in the background
+• Release rendering resources while a tab is in the background
 • Work offline with no developer server or remotely hosted code
 
 How to use:
@@ -94,17 +95,18 @@ BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or
 ```text
 BA Click FX 是一个非官方的网页视觉特效扩展。
 
-安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 在本地渲染。工具栏弹窗提供常用开关，完整设置页可管理外观、性能、语言、动态偏好和已禁用网站。
+安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 或 WebGL2 在本地渲染。工具栏弹窗提供常用开关，完整设置页还可管理渲染模式、最大 DPR，以及展示页提供的圆环、碎片、Bloom、Hit/Flare 和拖尾参数。
 
 主要功能：
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
 • 可选择经典、柔和或省电外观预设
-• 可调整主题颜色、不透明度、特效大小和画质
+• 可切换均衡/Legacy、高级/原生辉光和最高画质/WebGL2 Bloom；WebGL2 不可用时，最高画质自动回退软件 Bloom
+• 可调整主题颜色、不透明度、特效大小、原始渲染模式、最大 DPR，以及全部圆环、碎片、Bloom、Hit/Flare 和拖尾参数
 • 可跟随系统语言，或指定简体中文/英文
 • 可跟随系统减少动态偏好，或指定完整/减少持续动态
 • 可搜索、移除或清空本机网站规则
-• 标签页进入后台时会释放 Canvas 资源
+• 标签页进入后台时会释放渲染资源
 • 无需开发者服务器或远程代码，离线也能运行
 
 使用方法：
@@ -181,7 +183,7 @@ Testing steps:
 3. Click the page to see a ring and particle effect.
 4. Move the pointer to see the cursor trail.
 5. Open the toolbar popup. Verify the global, current-website, click-effect, trail, and preview controls.
-6. Select “Full settings”. Change the appearance preset, color, opacity, size, or quality and verify the webpage updates.
+6. Select “Full settings”. Change the appearance preset, color, opacity, size, quality, render mode, maximum DPR, or an advanced ring/shard/Bloom/Hit/Flare/trail parameter and verify the webpage updates.
 7. Select “Reduce continuous motion”. Verify click effects remain available while the always-moving trail is suppressed.
 8. Turn off the current website in the popup. Verify the Canvas overlay is removed only for that origin and the origin appears under Disabled websites in Full settings.
 9. Re-enable or remove that website rule and use “Preview click effect”.
@@ -202,17 +204,17 @@ Testing on file:// pages is optional and is not required to verify the extension
 
 ## Manual submission checklist
 
-1. Complete the Firefox runtime checklist before tagging `v1.0.6`.
+1. Complete the Firefox runtime checklist before tagging `v1.1.3`.
 2. Confirm the GitHub Release contains both Firefox archives and `SHA256SUMS.txt`.
 3. Log in to https://addons.mozilla.org/developers/ with a Mozilla Account.
 4. Choose **Submit a New Add-on** and **On this site**.
-5. Upload `ba-click-fx-extension-v1.0.6-firefox.zip`.
+5. Upload `ba-click-fx-extension-v1.1.3-firefox.zip`.
 6. Stop and fix the package if AMO reports an error or a security/privacy warning.
 7. Select Firefox Desktop as the compatible platform.
-8. Answer **Yes** to the source-code question and upload `ba-click-fx-extension-v1.0.6-firefox-source.zip`.
+8. Answer **Yes** to the source-code question and upload `ba-click-fx-extension-v1.1.3-firefox-source.zip`.
 9. Fill the listing fields from this document and add English and Simplified Chinese localizations.
-10. Upload the 128×128 icon and the refreshed v1.0.6 localized 1280×800 screenshots.
+10. Upload the 128×128 icon and the current localized 1280×800 screenshots.
 11. Paste the English reviewer notes and submit the version.
 12. Record the AMO item URL, submission time, status, and final dashboard text after submission.
 
-Do not replace a submitted `v1.0.6` archive. Listing-only corrections may be made in AMO; code or package corrections require a new extension version.
+Do not replace a submitted `v1.1.3` archive. Listing-only corrections may be made in AMO; code or package corrections require a new extension version.

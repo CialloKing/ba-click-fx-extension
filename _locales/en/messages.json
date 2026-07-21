@@ -92,7 +92,7 @@
   },
   "qualityDescription":
   {
-    "message": "Balanced: Legacy; Advanced: native glow; Highest: software Bloom"
+    "message": "Balanced: Legacy; Advanced: native glow; Highest: WebGL2 Bloom with automatic software fallback"
   },
   "qualityBalanced":
   {
@@ -214,7 +214,7 @@
   },
   "resetVisualSettings":
   {
-    "message": "Reset visual settings"
+    "message": "Reset effect settings"
   },
   "appearancePreset":
   {
@@ -355,5 +355,257 @@
   "privacyPolicy":
   {
     "message": "Privacy policy"
+  },
+  "qualityCustom":
+  {
+    "message": "Custom"
+  },
+  "renderMode":
+  {
+    "message": "Raw render mode"
+  },
+  "renderSoftwareBloom":
+  {
+    "message": "Software Bloom"
+  },
+  "renderWebGL2Bloom":
+  {
+    "message": "WebGL2 Bloom"
+  },
+  "renderNativeBloom":
+  {
+    "message": "Native glow"
+  },
+  "renderLegacy":
+  {
+    "message": "Legacy"
+  },
+  "maxDpr":
+  {
+    "message": "Maximum DPR"
+  },
+  "renderModeDescription":
+  {
+    "message": "Quality presets set both the render mode and DPR; use these controls for a precise combination."
+  },
+  "clickSettingsTitle":
+  {
+    "message": "Click effect"
+  },
+  "clickSettingsDescription":
+  {
+    "message": "Adjust rings, shards, Bloom, and the optional Hit and Flare layers."
+  },
+  "trailSettingsTitle":
+  {
+    "message": "Cursor trail"
+  },
+  "trailSettingsDescription":
+  {
+    "message": "Adjust the cursor path, trail shards, and Bloom parameters."
+  },
+  "enabledLabel":
+  {
+    "message": "On"
+  },
+  "disabledLabel":
+  {
+    "message": "Off"
+  },
+  "unitMilliseconds":
+  {
+    "message": "ms"
+  },
+  "rotationCounterclockwise":
+  {
+    "message": "Counterclockwise"
+  },
+  "rotationClockwise":
+  {
+    "message": "Clockwise"
+  },
+  "fxGroupClickRings":
+  {
+    "message": "Ring parameters"
+  },
+  "fxGroupClickShards":
+  {
+    "message": "Click shards"
+  },
+  "fxGroupClickBloom":
+  {
+    "message": "Click & Bloom"
+  },
+  "fxGroupHitFlare":
+  {
+    "message": "Hit / Flare"
+  },
+  "fxGroupTrailLayer":
+  {
+    "message": "Trail layer"
+  },
+  "fxGroupTrailShards":
+  {
+    "message": "Trail shards"
+  },
+  "fxGroupTrailBloom":
+  {
+    "message": "Trail & Bloom"
+  },
+  "fxRingHdrIntensity":
+  {
+    "message": "Ring HDR intensity"
+  },
+  "fxRingRadiusMin":
+  {
+    "message": "Ring starting radius"
+  },
+  "fxRingRadiusMax":
+  {
+    "message": "Ring ending radius"
+  },
+  "fxRingWidthStart":
+  {
+    "message": "Ring starting width scale"
+  },
+  "fxRingWidthEnd":
+  {
+    "message": "Ring ending width scale"
+  },
+  "fxRingLifetime":
+  {
+    "message": "Ring lifetime"
+  },
+  "fxClickShardCount":
+  {
+    "message": "Click shard count"
+  },
+  "fxMaxShardCount":
+  {
+    "message": "Maximum shards"
+  },
+  "fxBloomRingBlur":
+  {
+    "message": "Bloom ring blur"
+  },
+  "fxBloomThreshold":
+  {
+    "message": "Bloom threshold"
+  },
+  "fxBloomIntensity":
+  {
+    "message": "Bloom intensity"
+  },
+  "fxBloomScatter":
+  {
+    "message": "Bloom scatter"
+  },
+  "fxRingCount":
+  {
+    "message": "Ring count"
+  },
+  "fxDiskRadius":
+  {
+    "message": "Disk radius"
+  },
+  "fxDiskLifetime":
+  {
+    "message": "Disk lifetime"
+  },
+  "fxRingAngularVelocity":
+  {
+    "message": "Rotation speed multiplier"
+  },
+  "fxRingArcSamples":
+  {
+    "message": "Arc sampling quality"
+  },
+  "fxRingDirection":
+  {
+    "message": "Rotation direction"
+  },
+  "fxRootDuration":
+  {
+    "message": "Root duration"
+  },
+  "fxClickShardLifetimeMin":
+  {
+    "message": "Minimum click shard lifetime"
+  },
+  "fxClickShardLifetimeMax":
+  {
+    "message": "Maximum click shard lifetime"
+  },
+  "fxHitEnabled":
+  {
+    "message": "Enable Hit burst"
+  },
+  "fxHitRadius":
+  {
+    "message": "Hit radius"
+  },
+  "fxHitLifetime":
+  {
+    "message": "Hit lifetime"
+  },
+  "fxFlareEnabled":
+  {
+    "message": "Enable Flare flash"
+  },
+  "fxFlareRadius":
+  {
+    "message": "Flare radius"
+  },
+  "fxFlareLifetime":
+  {
+    "message": "Flare lifetime"
+  },
+  "fxFlareRayCount":
+  {
+    "message": "Flare ray count"
+  },
+  "fxTrailWidth":
+  {
+    "message": "Trail width"
+  },
+  "fxTrailOuterGlowWidth":
+  {
+    "message": "Outer glow width"
+  },
+  "fxTrailLifetime":
+  {
+    "message": "Trail lifetime"
+  },
+  "fxTrailShardSpacing":
+  {
+    "message": "Shard spacing"
+  },
+  "fxBloomTrailEmission":
+  {
+    "message": "Bloom trail emission scale"
+  },
+  "fxTrailOpacity":
+  {
+    "message": "Overall trail opacity"
+  },
+  "fxTrailGeometryWidth":
+  {
+    "message": "Geometry width"
+  },
+  "fxTrailMinVertexDistance":
+  {
+    "message": "Minimum vertex distance"
+  },
+  "fxTrailShardLifetimeMin":
+  {
+    "message": "Minimum trail shard lifetime"
+  },
+  "fxTrailShardLifetimeMax":
+  {
+    "message": "Maximum trail shard lifetime"
+  },
+  "fxBloomDiskBlur":
+  {
+    "message": "Bloom disk blur"
   }
 }
