@@ -81,7 +81,7 @@
       {
         get(_defaults, callback)
         {
-          callback({ ...localOverrides, storageSchemaVersion: 2 });
+          callback({ ...localOverrides, storageSchemaVersion: 4 });
         },
         set(_settings, callback)
         {

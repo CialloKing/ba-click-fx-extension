@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BA Click FX Popup Preview</title>
-  <link rel="stylesheet" href="../../dist/popup/popup.css?v=1.1.2">
+  <link rel="stylesheet" href="../../dist/popup/popup.css?v=1.1.3">
 </head>
 <body>
   <main class="panel">
@@ -75,12 +75,13 @@
       <label class="setting-row select-row" for="quality">
         <span>
           <strong data-i18n="quality">画质</strong>
-          <small data-i18n="qualityDescription">均衡：Legacy；高级：原生辉光；最高画质：软件 Bloom</small>
+          <small data-i18n="qualityDescription">均衡：Legacy；高级：原生辉光；最高画质：WebGL2 Bloom（不可用时自动使用软件 Bloom）</small>
         </span>
         <select id="quality">
           <option value="balanced" data-i18n="qualityBalanced">均衡</option>
           <option value="high" data-i18n="qualityHigh">高级</option>
-          <option value="ultra" data-i18n="qualityUltra">最高画质</option>
+          <option value="ultra" data-i18n="qualityUltra" selected>最高画质</option>
+          <option value="custom" data-i18n="qualityCustom" disabled>自定义</option>
         </select>
       </label>
 

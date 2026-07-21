@@ -1,6 +1,6 @@
-﻿# Firefox v1.0.6 Runtime Checklist
+﻿# Firefox v1.1.3 Runtime Checklist
 
-Complete this checklist before creating the `v1.0.6` Tag and GitHub Release.
+Complete this checklist before creating the `v1.1.3` Tag and GitHub Release.
 
 ## Temporary installation
 
@@ -8,7 +8,7 @@ Complete this checklist before creating the `v1.0.6` Tag and GitHub Release.
 - [ ] Run `npm ci`, `npm test`, and `npm run package:all`.
 - [ ] Open `about:debugging#/runtime/this-firefox`.
 - [ ] Select **Load Temporary Add-on** and choose `dist-firefox/manifest.json`.
-- [ ] Confirm Firefox shows version `1.0.6` and Gecko ID `ba-click-fx-extension@cialloking.top`.
+- [ ] Confirm Firefox shows version `1.1.3` and Gecko ID `ba-click-fx-extension@cialloking.top`.
 - [ ] Confirm the extension console has no uncaught startup errors.
 
 ## Ordinary webpage behavior
@@ -18,14 +18,16 @@ Complete this checklist before creating the `v1.0.6` Tag and GitHub Release.
 - [ ] Move and drag the pointer and confirm the cursor trail appears.
 - [ ] Confirm the overlay does not block links, text selection, scrolling, or page buttons.
 - [ ] Confirm only one `data-ba-click-fx-extension-root` host exists in the top-level document.
-- [ ] Switch the tab to the background and back; confirm Canvas resources are restored without duplicate hosts.
+- [ ] Switch the tab to the background and back; confirm rendering resources are restored without duplicate hosts.
 - [ ] Navigate away, use Back/Forward, and confirm BFCache restoration remains functional.
 
 ## Popup and full settings
 
 - [ ] Test global, current-site, click, trail, continuous-trail, and preview controls.
 - [ ] Open Full settings and test Classic, Soft, Power-saving, and Custom appearance states.
-- [ ] Test color, opacity, size, and all three quality modes.
+- [ ] Test Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom; confirm Highest falls back to software Bloom when WebGL2 is unavailable.
+- [ ] Test the raw render-mode and maximum-DPR selectors plus every ring, shard, Bloom, Hit/Flare, and trail control copied from the demo panel.
+- [ ] Reset visual settings and confirm every advanced value returns to its upstream default while website rules remain intact.
 - [ ] Test system, Simplified Chinese, and English language modes.
 - [ ] Test system, full, and reduced continuous-motion modes.
 - [ ] Disable `https://example.com`, confirm the Canvas is removed, then restore the site rule.

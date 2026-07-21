@@ -4,6 +4,20 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-07-21
+
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.6` to `1.2.7`.
+- Highest quality now prefers WebGL2 Bloom and automatically falls back to software Bloom when WebGL2 is unavailable; Balanced remains Legacy and Advanced remains native glow.
+- Full settings now exposes every effect control from the upstream demo: raw render mode, maximum DPR, rings, shards, Bloom, Hit/Flare, and trail parameters.
+- Advanced effect overrides use a validated sparse sync record and are reapplied after render-mode changes.
+
+### Fixed
+
+- Matched untouched Classic effect parameters to the upstream demo: scale `1`, opacity `1`, click and trail enabled, and continuous movement trail disabled. Existing custom choices remain unchanged.
+- Preserved Legacy-specific rendering while replaying user overrides and kept the native-glow trail calibration linked to the Bloom trail control.
+
 ## [1.1.2] - 2026-07-20
 
 ### Added

@@ -67,6 +67,20 @@
 
   <script>
     // 浏览器夹具只模拟扩展 API；正式构建仍由真实 chrome.storage 提供设置。
+    const storageListeners = [];
+
+    globalThis.applyRuntimeSettings = (patch) =>
+    {
+      const changes = Object.fromEntries(
+        Object.entries(patch).map(([key, value]) => [key, { newValue: value }]),
+      );
+
+      for (const listener of storageListeners)
+      {
+        listener(changes, 'sync');
+      }
+    };
+
     globalThis.chrome =
     {
       storage:
@@ -82,7 +96,7 @@
         {
           get(_defaults, callback)
           {
-            callback({ storageSchemaVersion: 2 });
+            callback({ storageSchemaVersion: 4 });
           },
           set(_settings, callback)
           {
@@ -91,8 +105,10 @@
         },
         onChanged:
         {
-          addListener()
+          addListener(listener)
           {
+            // 手动调用 applyRuntimeSettings() 可覆盖实时更新和模式切换路径。
+            storageListeners.push(listener);
           },
         },
       },

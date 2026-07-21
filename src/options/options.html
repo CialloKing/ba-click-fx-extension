@@ -23,7 +23,7 @@
           <h2 id="appearance-title" data-i18n="appearanceTitle">外观与性能</h2>
           <p data-i18n="appearanceOptionsDescription">视觉偏好使用浏览器扩展同步存储保存。</p>
         </div>
-        <button id="reset-visual" class="secondary-button" type="button" data-i18n="resetVisualSettings">恢复视觉默认值</button>
+        <button id="reset-visual" class="secondary-button" type="button" data-i18n="resetVisualSettings">恢复特效默认值</button>
       </div>
 
       <div class="settings-grid">
@@ -48,17 +48,18 @@
         <label class="field field-wide" for="opacity">
           <span class="field-label">
             <span data-i18n="opacity">不透明度</span>
-            <output id="opacity-value" for="opacity">50%</output>
+            <output id="opacity-value" for="opacity">100%</output>
           </span>
-          <input id="opacity" type="range" min="0.1" max="1" step="0.05">
+          <input id="opacity" type="range" min="0" max="1" step="0.05">
         </label>
 
         <label class="field field-wide" for="scale">
           <span class="field-label">
             <span data-i18n="effectSize">特效大小</span>
-            <output id="scale-value" for="scale">1.10×</output>
+            <output id="scale-value" for="scale">1.00×</output>
           </span>
-          <input id="scale" type="range" min="0.5" max="2" step="0.05">
+          <!-- 展示页的 0.05 步进无法表示 0.90/1.00 预设；细分步进保留同一范围与精确默认值。 -->
+          <input id="scale" type="range" min="0.01" max="5" step="0.01">
         </label>
 
         <label class="field" for="quality">
@@ -66,10 +67,78 @@
           <select id="quality">
             <option value="balanced" data-i18n="qualityBalanced">均衡</option>
             <option value="high" data-i18n="qualityHigh">高级</option>
-            <option value="ultra" data-i18n="qualityUltra">最高画质</option>
+            <option value="ultra" data-i18n="qualityUltra" selected>最高画质</option>
+            <option value="custom" data-i18n="qualityCustom" disabled>自定义</option>
           </select>
         </label>
+
+        <label class="field" for="render-mode">
+          <span data-i18n="renderMode">原始渲染模式</span>
+          <select id="render-mode">
+            <option value="software-bloom" data-i18n="renderSoftwareBloom">软件 Bloom</option>
+            <option value="webgl2-bloom" data-i18n="renderWebGL2Bloom">WebGL2 Bloom</option>
+            <option value="native-bloom" data-i18n="renderNativeBloom">原生辉光</option>
+            <option value="legacy" data-i18n="renderLegacy">Legacy</option>
+          </select>
+        </label>
+
+        <label class="field field-wide" for="max-dpr">
+          <span class="field-label">
+            <span data-i18n="maxDpr">最大 DPR</span>
+            <output id="max-dpr-value" for="max-dpr">2</output>
+          </span>
+          <input id="max-dpr" type="range" min="1" max="3" step="1">
+        </label>
       </div>
+      <p class="section-note" data-i18n="renderModeDescription">三档画质会同时设置渲染模式与 DPR；也可在这里精确组合。</p>
+    </section>
+
+    <section class="settings-section" aria-labelledby="click-settings-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="click-settings-title" data-i18n="clickSettingsTitle">点击特效</h2>
+          <p data-i18n="clickSettingsDescription">调整圆环、碎片、Bloom，以及可选的 Hit 与 Flare。</p>
+        </div>
+      </div>
+
+      <label class="switch-field" for="click-enabled">
+        <span>
+          <strong data-i18n="clickEffect">点击特效</strong>
+          <small data-i18n="clickEffectDescription">点击时显示圆环与碎片</small>
+        </span>
+        <input id="click-enabled" type="checkbox">
+      </label>
+
+      <div id="click-fx-groups" class="fx-groups"></div>
+    </section>
+
+    <section class="settings-section" aria-labelledby="trail-settings-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="trail-settings-title" data-i18n="trailSettingsTitle">拖尾轨迹</h2>
+          <p data-i18n="trailSettingsDescription">调整光标轨迹、拖尾碎片与 Bloom 参数。</p>
+        </div>
+      </div>
+
+      <div class="switch-list">
+        <label class="switch-field" for="trail-enabled">
+          <span>
+            <strong data-i18n="cursorTrail">光标拖尾</strong>
+            <small data-i18n="cursorTrailDescription">移动或拖动时显示主题色光轨</small>
+          </span>
+          <input id="trail-enabled" type="checkbox">
+        </label>
+
+        <label class="switch-field" for="trail-always">
+          <span>
+            <strong data-i18n="trailAlways">移动时始终显示</strong>
+            <small data-i18n="trailAlwaysDescription">关闭后仅按住鼠标时显示拖尾</small>
+          </span>
+          <input id="trail-always" type="checkbox">
+        </label>
+      </div>
+
+      <div id="trail-fx-groups" class="fx-groups"></div>
     </section>
 
     <section class="settings-section" aria-labelledby="preferences-title">

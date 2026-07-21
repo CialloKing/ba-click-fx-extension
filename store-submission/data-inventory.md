@@ -8,7 +8,7 @@ This inventory is the source of truth for privacy-policy and store-dashboard ans
 | Current webpage URL/origin | `getSiteKey(window.location.href)` and popup active-tab lookup | Not persisted by merely visiting/opening the popup | None | Determine and display the current-site enable state |
 | Explicitly disabled website origins | `disabledSites` in shared settings | Browser `storage.local` until re-enabled/removed/cleared/uninstalled | None since v1.0.5 | Remember site-specific disable choices on the current browser profile |
 | Legacy explicitly disabled origins | Pre-v1.0.5 `disabledSites` migration | Existing browser `storage.sync` copy is retained until explicit options-page cleanup | Browser-vendor sync only when enabled | Prevent another device that has not updated from losing its existing rules |
-| Enabled states, color, opacity, scale, quality, preset, language, motion | Popup/options/shared settings | Browser `storage.sync` until changed/reset/uninstalled | Browser-vendor sync only when enabled | Apply the user's visual, performance, interface, and accessibility preferences |
+| Enabled states, color, opacity, scale, quality, render mode, maximum DPR, preset, effect-parameter overrides, language, motion | Popup/options/shared settings | Browser `storage.sync` until changed/reset/uninstalled | Browser-vendor sync only when enabled | Apply the user's visual, performance, interface, and accessibility preferences |
 | Webpage text, forms, cookies, passwords, communications, account/payment data | Not used | None | None | Not applicable |
 
 ## Network inventory

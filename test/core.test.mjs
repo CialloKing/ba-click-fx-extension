@@ -2,17 +2,56 @@
 import test from 'node:test';
 
 import { BAClickFX } from 'ba-click-fx';
+import { expandFxParams } from '../src/shared/fx-settings.js';
 
 class MockHTMLElement
 {
   constructor()
   {
     this.attributes = new Map();
+    this.children = [];
+    this.parentNode = null;
+    this.style =
+    {
+      setProperty(property, value)
+      {
+        this[property] = value;
+      },
+    };
   }
 
   setAttribute(name, value)
   {
     this.attributes.set(name, String(value));
+  }
+
+  appendChild(child)
+  {
+    this.children.push(child);
+    child.parentNode = this;
+    return child;
+  }
+
+  removeChild(child)
+  {
+    this.children = this.children.filter((item) => item !== child);
+    child.parentNode = null;
+    return child;
+  }
+
+  remove()
+  {
+    this.parentNode?.removeChild(this);
+  }
+
+  getBoundingClientRect()
+  {
+    return {
+      left: 0,
+      top: 0,
+      width: 1280,
+      height: 720,
+    };
   }
 }
 
@@ -22,10 +61,8 @@ class MockCanvas extends MockHTMLElement
   {
     super();
     this.tagName = 'CANVAS';
-    this.style = {};
     this.width = 0;
     this.height = 0;
-    this.parentNode = null;
   }
 
   getContext()
@@ -46,15 +83,6 @@ class MockCanvas extends MockHTMLElement
     });
   }
 
-  getBoundingClientRect()
-  {
-    return {
-      left: 0,
-      top: 0,
-      width: 1280,
-      height: 720,
-    };
-  }
 }
 
 function installDomMock()
@@ -151,7 +179,7 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
     effect.updateConfig(
     {
       renderingMode: 'enhanced',
-      softwareBloomEnabled: false,
+      bloomBackend: 'webgl2',
       maxDpr: 1,
     });
 
@@ -159,7 +187,10 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
 
     assert.equal(config.trailAlways, true);
     assert.equal(config.renderingMode, 'enhanced');
-    assert.equal(config.softwareBloomEnabled, false);
+    assert.equal(config.bloomBackend, 'webgl2');
+    assert.equal(config.softwareBloomEnabled, true);
+    // 已有 Canvas 无法挂载 WebGL2 叠层，核心应立即选择软件 Bloom 作为回退。
+    assert.equal(config.resolvedBloomBackend, 'software');
     assert.equal(config.maxDpr, 1);
     assert.ok(environment.listenerCount() > 0);
 
@@ -210,6 +241,95 @@ test('公开事件路径下关闭拖尾会跳过移动输入且保留点击', ()
     assert.equal(effect.getConfig().trailEnabled, false);
     assert.equal(effect.getConfig().clickEnabled, true);
     assert.equal(filteredInputCount, 1);
+  }
+  finally
+  {
+    effect.destroy();
+    environment.restore();
+  }
+});
+
+test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应用', () =>
+{
+  const environment = installDomMock();
+  const effect = new BAClickFX({ target: new MockHTMLElement() });
+
+  try
+  {
+    const fxParams = expandFxParams(
+    {
+      'rings.hdrIntensity': 7,
+      'bloom.trailEmissionAlpha': 0.5,
+      'hit.enabled': true,
+      'rootDurationMs': 1500,
+    });
+
+    effect.updateConfig(
+    {
+      renderingMode: 'legacy',
+      bloomBackend: 'native',
+      maxDpr: 1,
+    });
+    effect.resetFxConfig();
+    effect.updateConfig(
+    {
+      renderingMode: 'enhanced',
+      bloomBackend: 'native',
+      maxDpr: 1,
+    });
+    effect.updateConfig(
+    {
+      renderingMode: 'legacy',
+      bloomBackend: 'native',
+      maxDpr: 1,
+    });
+
+    for (const [path, value] of Object.entries(fxParams))
+    {
+      effect.setFxParam(path, value);
+    }
+
+    assert.equal(effect.getConfig().renderingMode, 'legacy');
+    assert.equal(effect.getConfig().maxDpr, 1);
+    assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);
+    // 未覆盖参数必须保留 Legacy 的内部兼容映射。
+    assert.equal(effect.getFxConfig().rings.widthStart, 5.2);
+    assert.equal(effect.getFxConfig().bloom.trailEmissionAlpha, 0.5);
+    assert.equal(effect.getFxConfig().bloom.trailAlpha, 0.09);
+    assert.equal(effect.getFxConfig().hit.enabled, true);
+    // 1.2.7 暂未读取 rootDurationMs，但公开 setter 仍应保留此配置值。
+    assert.equal(effect.getFxConfig().rootDurationMs, 1500);
+
+    effect.updateConfig(
+    {
+      renderingMode: 'enhanced',
+      bloomBackend: 'webgl2',
+      maxDpr: 2,
+    });
+    effect.resetFxConfig();
+
+    for (const [path, value] of Object.entries(fxParams))
+    {
+      effect.setFxParam(path, value);
+    }
+
+    assert.equal(effect.getConfig().renderingMode, 'enhanced');
+    assert.equal(effect.getConfig().bloomBackend, 'webgl2');
+    assert.equal(effect.getConfig().maxDpr, 2);
+    assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);
+    assert.equal(effect.getFxConfig().rings.rotationDirection, -1);
+
+    // 从稀疏覆盖中删除字段时，内容脚本会先重置，不能遗留旧实例参数。
+    effect.updateConfig(
+    {
+      renderingMode: 'enhanced',
+      bloomBackend: 'webgl2',
+      maxDpr: 2,
+    });
+    effect.resetFxConfig();
+
+    assert.equal(effect.getFxConfig().rings.hdrIntensity, 5.992157);
+    assert.equal(effect.getFxConfig().hit.enabled, false);
   }
   finally
   {

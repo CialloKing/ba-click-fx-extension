@@ -92,7 +92,7 @@
   },
   "qualityDescription":
   {
-    "message": "均衡：Legacy；高级：原生辉光；最高画质：软件 Bloom"
+    "message": "均衡：Legacy；高级：原生辉光；最高画质：WebGL2 Bloom（不可用时自动使用软件 Bloom）"
   },
   "qualityBalanced":
   {
@@ -214,7 +214,7 @@
   },
   "resetVisualSettings":
   {
-    "message": "恢复视觉默认值"
+    "message": "恢复特效默认值"
   },
   "appearancePreset":
   {
@@ -355,5 +355,257 @@
   "privacyPolicy":
   {
     "message": "隐私政策"
+  },
+  "qualityCustom":
+  {
+    "message": "自定义"
+  },
+  "renderMode":
+  {
+    "message": "原始渲染模式"
+  },
+  "renderSoftwareBloom":
+  {
+    "message": "软件 Bloom"
+  },
+  "renderWebGL2Bloom":
+  {
+    "message": "WebGL2 Bloom"
+  },
+  "renderNativeBloom":
+  {
+    "message": "原生辉光"
+  },
+  "renderLegacy":
+  {
+    "message": "Legacy"
+  },
+  "maxDpr":
+  {
+    "message": "最大 DPR"
+  },
+  "renderModeDescription":
+  {
+    "message": "三档画质会同时设置渲染模式与 DPR；也可在这里精确组合。"
+  },
+  "clickSettingsTitle":
+  {
+    "message": "点击特效"
+  },
+  "clickSettingsDescription":
+  {
+    "message": "调整圆环、碎片、Bloom，以及可选的 Hit 与 Flare。"
+  },
+  "trailSettingsTitle":
+  {
+    "message": "拖尾轨迹"
+  },
+  "trailSettingsDescription":
+  {
+    "message": "调整光标轨迹、拖尾碎片与 Bloom 参数。"
+  },
+  "enabledLabel":
+  {
+    "message": "启用"
+  },
+  "disabledLabel":
+  {
+    "message": "关闭"
+  },
+  "unitMilliseconds":
+  {
+    "message": "毫秒"
+  },
+  "rotationCounterclockwise":
+  {
+    "message": "逆时针"
+  },
+  "rotationClockwise":
+  {
+    "message": "顺时针"
+  },
+  "fxGroupClickRings":
+  {
+    "message": "圆环参数"
+  },
+  "fxGroupClickShards":
+  {
+    "message": "点击碎片"
+  },
+  "fxGroupClickBloom":
+  {
+    "message": "点击与 Bloom"
+  },
+  "fxGroupHitFlare":
+  {
+    "message": "Hit / Flare"
+  },
+  "fxGroupTrailLayer":
+  {
+    "message": "轨迹图层"
+  },
+  "fxGroupTrailShards":
+  {
+    "message": "拖尾碎片"
+  },
+  "fxGroupTrailBloom":
+  {
+    "message": "拖尾与 Bloom"
+  },
+  "fxRingHdrIntensity":
+  {
+    "message": "圆环 HDR 强度"
+  },
+  "fxRingRadiusMin":
+  {
+    "message": "圆环起始半径"
+  },
+  "fxRingRadiusMax":
+  {
+    "message": "圆环终止半径"
+  },
+  "fxRingWidthStart":
+  {
+    "message": "圆环起始厚度倍率"
+  },
+  "fxRingWidthEnd":
+  {
+    "message": "圆环终止厚度倍率"
+  },
+  "fxRingLifetime":
+  {
+    "message": "圆环寿命"
+  },
+  "fxClickShardCount":
+  {
+    "message": "点击碎片数量"
+  },
+  "fxMaxShardCount":
+  {
+    "message": "碎片上限"
+  },
+  "fxBloomRingBlur":
+  {
+    "message": "Bloom 圆环模糊"
+  },
+  "fxBloomThreshold":
+  {
+    "message": "Bloom 阈值"
+  },
+  "fxBloomIntensity":
+  {
+    "message": "Bloom 强度"
+  },
+  "fxBloomScatter":
+  {
+    "message": "Bloom 扩散"
+  },
+  "fxRingCount":
+  {
+    "message": "圆环数量"
+  },
+  "fxDiskRadius":
+  {
+    "message": "光盘半径"
+  },
+  "fxDiskLifetime":
+  {
+    "message": "光盘寿命"
+  },
+  "fxRingAngularVelocity":
+  {
+    "message": "旋转速度倍率"
+  },
+  "fxRingArcSamples":
+  {
+    "message": "弧线采样精度"
+  },
+  "fxRingDirection":
+  {
+    "message": "旋转方向"
+  },
+  "fxRootDuration":
+  {
+    "message": "根持续时间"
+  },
+  "fxClickShardLifetimeMin":
+  {
+    "message": "点击碎片最短寿命"
+  },
+  "fxClickShardLifetimeMax":
+  {
+    "message": "点击碎片最长寿命"
+  },
+  "fxHitEnabled":
+  {
+    "message": "启用 Hit 撞击爆发"
+  },
+  "fxHitRadius":
+  {
+    "message": "Hit 半径"
+  },
+  "fxHitLifetime":
+  {
+    "message": "Hit 寿命"
+  },
+  "fxFlareEnabled":
+  {
+    "message": "启用 Flare 闪光"
+  },
+  "fxFlareRadius":
+  {
+    "message": "Flare 半径"
+  },
+  "fxFlareLifetime":
+  {
+    "message": "Flare 寿命"
+  },
+  "fxFlareRayCount":
+  {
+    "message": "Flare 射线数"
+  },
+  "fxTrailWidth":
+  {
+    "message": "拖尾宽度"
+  },
+  "fxTrailOuterGlowWidth":
+  {
+    "message": "外发光宽度"
+  },
+  "fxTrailLifetime":
+  {
+    "message": "拖尾寿命"
+  },
+  "fxTrailShardSpacing":
+  {
+    "message": "碎片间距"
+  },
+  "fxBloomTrailEmission":
+  {
+    "message": "Bloom 拖尾发射校准"
+  },
+  "fxTrailOpacity":
+  {
+    "message": "拖尾整体透明度"
+  },
+  "fxTrailGeometryWidth":
+  {
+    "message": "几何带宽"
+  },
+  "fxTrailMinVertexDistance":
+  {
+    "message": "最小采样间距"
+  },
+  "fxTrailShardLifetimeMin":
+  {
+    "message": "拖尾碎片最短寿命"
+  },
+  "fxTrailShardLifetimeMax":
+  {
+    "message": "拖尾碎片最长寿命"
+  },
+  "fxBloomDiskBlur":
+  {
+    "message": "Bloom 光盘模糊"
   }
 }

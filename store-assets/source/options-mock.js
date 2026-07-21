@@ -17,6 +17,9 @@
     preset: 'soft',
     languageMode: locale,
     motionMode: 'system',
+    renderMode: 'legacy',
+    maxDpr: 1,
+    fxParams: {},
   };
   const localValues =
   {
@@ -25,7 +28,7 @@
       'https://example.com': true,
       'https://news.example': true,
     },
-    storageSchemaVersion: 2,
+    storageSchemaVersion: 4,
   };
 
   function getMessage(key, substitutions = [])
@@ -96,7 +99,7 @@
       lastError: null,
       getManifest()
       {
-        return { version: '1.1.1' };
+        return { version: '1.1.3' };
       },
     },
     storage:

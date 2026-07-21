@@ -2,10 +2,10 @@
 
 ## Package and URLs
 
-- Extension version: `1.0.6`
-- Package: `release/ba-click-fx-extension-v1.0.6-chromium.zip`
-- SHA-256: `1F8B43B8F78177866BB4849357AB2E3F13BD84410044FB379E8D9DED3EF088F8`
-- Core dependency: `ba-click-fx 1.1.11`
+- Extension version: `1.1.3`
+- Package: `release/ba-click-fx-extension-v1.1.3-chromium.zip`
+- SHA-256: `36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA`
+- Core dependency: `ba-click-fx 1.2.7`
 - Submission status: Prepared; not yet uploaded
 - Website: https://ba-click-fx.cialloking.top/
 - Microsoft Edge privacy policy: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
@@ -15,7 +15,7 @@
 - Markets: all markets
 - Mature content: no
 
-`v1.0.6` adds the separate Firefox/AMO release pipeline. The Chromium runtime, permissions, and listing description remain unchanged from `v1.0.5`; use the newer deterministic Chromium ZIP if the Edge update has not yet been submitted.
+`v1.1.3` adds WebGL2 Bloom and the complete upstream effect-control panel without changing permissions or network behavior.
 
 ## English listing (`en-US`)
 
@@ -36,9 +36,9 @@ Add game-inspired click rings, particles, and cursor trails to ordinary websites
 ### Description
 
 ```text
-BA Click FX is an unofficial, fan-made visual-effects extension for Microsoft Edge. It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail to ordinary webpages. All effects are rendered locally with Canvas 2D.
+BA Click FX is an unofficial, fan-made visual-effects extension for Microsoft Edge. It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail to ordinary webpages. All effects are rendered locally with Canvas 2D or WebGL2.
 
-Use the toolbar popup for quick effect and current-website controls. The full settings page provides appearance presets, color, opacity, size, quality, language, reduced-motion preferences, and searchable local website-rule management. The extension releases Canvas resources while tabs are in the background and works offline without a developer server.
+Use the toolbar popup for quick effect, current-website, language, and quality controls. Balanced uses Legacy, Advanced uses native glow, and Highest prefers WebGL2 Bloom with automatic software Bloom fallback. Full settings provides appearance presets, color, opacity, scale, render mode, maximum DPR, ring, shard, Bloom, Hit/Flare and trail parameters, reduced-motion preferences, and searchable local website-rule management. The extension releases rendering resources while tabs are in the background and works offline without a developer server.
 
 Pointer coordinates are processed temporarily in memory only to draw visible effects. The current website origin is processed locally for the site switch, and an origin is saved only when the user explicitly disables that website. Visual, interface, and motion preferences use Microsoft Edge browser sync storage; current website rules use local extension storage. The developer cannot access pointer data, browsing activity, or saved preferences.
 
@@ -70,9 +70,9 @@ BA Click FX
 ### 描述
 
 ```text
-BA Click FX 是一个适用于 Microsoft Edge 的非官方网页视觉特效扩展。它会为普通网页添加游戏风格的点击圆环、粒子碎片和主题色鼠标光标拖尾，所有效果均使用 Canvas 2D 在本地渲染。
+BA Click FX 是一个适用于 Microsoft Edge 的非官方网页视觉特效扩展。它会为普通网页添加游戏风格的点击圆环、粒子碎片和主题色鼠标光标拖尾，所有效果均使用 Canvas 2D 或 WebGL2 在本地渲染。
 
-用户可以通过工具栏弹窗快速控制点击特效、拖尾和当前网站。完整设置页提供外观预设、颜色、不透明度、大小、画质、语言、减少动态偏好和可搜索的本机网站规则管理。标签页进入后台时会释放 Canvas 资源；扩展无需开发者服务器，离线也能使用。
+用户可以通过工具栏弹窗快速控制点击特效、拖尾、当前网站、语言和画质。均衡使用 Legacy，高级使用原生辉光，最高画质优先使用 WebGL2 Bloom，并在不可用时自动回退软件 Bloom。完整设置页提供外观预设、颜色、不透明度、缩放、渲染模式、最大 DPR、圆环、碎片、Bloom、Hit/Flare、拖尾参数、减少动态偏好和可搜索的本机网站规则管理。标签页进入后台时会释放渲染资源；扩展无需开发者服务器，离线也能使用。
 
 鼠标坐标只在内存中临时处理，用于绘制用户可见的特效。当前网站 origin 只在本地用于站点开关，只有当用户主动关闭某个网站时才会保存。视觉、界面和动态偏好使用 Microsoft Edge 浏览器同步存储，当前网站规则使用本机扩展存储；开发者无法访问鼠标数据、浏览活动或保存的设置。
 

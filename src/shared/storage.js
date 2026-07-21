@@ -5,10 +5,15 @@
   LOCAL_SETTING_KEYS,
   STORAGE_SCHEMA_VERSION,
   SYNC_SETTING_KEYS,
+  getQualityConsistencyPatch,
+  getQualitySettingsPatch,
+  getSettingsMigrationPatch,
   mergeDisabledSites,
   normalizeDisabledSites,
   normalizeSettings,
 } from './settings.js';
+
+const LOCAL_SITE_RULES_SCHEMA_VERSION = 2;
 
 function getStorageArea(chromeApi, areaName)
 {
@@ -75,19 +80,36 @@ function selectValues(source, keys)
 
 export async function loadStorageState(chromeApi = globalThis.chrome)
 {
-  const [syncValues, localValues] = await Promise.all([
+  const [storedSyncValues, localValues] = await Promise.all([
     storageGet(chromeApi, 'sync', [...SYNC_SETTING_KEYS, LEGACY_DISABLED_SITES_KEY]),
     storageGet(chromeApi, 'local', [...LOCAL_SETTING_KEYS, 'storageSchemaVersion']),
   ]);
+  let syncValues = storedSyncValues || {};
   const legacyDisabledSites = normalizeDisabledSites(
     syncValues?.[LEGACY_DISABLED_SITES_KEY],
   );
   let disabledSites = normalizeDisabledSites(localValues?.disabledSites);
   let storageSchemaVersion = Number(localValues?.storageSchemaVersion) || 0;
 
-  if (storageSchemaVersion < STORAGE_SCHEMA_VERSION)
+  if (storageSchemaVersion < LOCAL_SITE_RULES_SCHEMA_VERSION)
   {
     disabledSites = mergeDisabledSites(disabledSites, legacyDisabledSites);
+  }
+
+  const migrationPatch = getSettingsMigrationPatch(syncValues);
+
+  if (Object.keys(migrationPatch).length > 0)
+  {
+    // 一次写回全部旧默认字段，避免后续局部设置使迁移结果丢失。
+    await storageSet(chromeApi, 'sync', migrationPatch);
+    syncValues = { ...syncValues, ...migrationPatch };
+  }
+
+  // 旧设备可能只更新 quality；读取时以该公共档位为准，避免异步回写覆盖用户的新选择。
+  syncValues = { ...syncValues, ...getQualityConsistencyPatch(syncValues) };
+
+  if (storageSchemaVersion < STORAGE_SCHEMA_VERSION)
+  {
     storageSchemaVersion = STORAGE_SCHEMA_VERSION;
 
     // 保留旧 sync 键，避免扩展更新时把尚未同步到其他设备的站点规则删掉。
@@ -118,11 +140,14 @@ export async function readSettings(chromeApi = globalThis.chrome)
 
 export async function writeSettingsPatch(patch, chromeApi = globalThis.chrome)
 {
-  const normalized = normalizeSettings({ ...DEFAULT_SETTINGS, ...patch });
+  const expandedPatch = Object.hasOwn(patch, 'quality')
+    ? { ...getQualitySettingsPatch(patch.quality), ...patch }
+    : patch;
+  const normalized = normalizeSettings({ ...DEFAULT_SETTINGS, ...expandedPatch });
   const syncPatch = selectValues(normalized, SYNC_SETTING_KEYS.filter((key) =>
-    Object.hasOwn(patch, key)));
+    Object.hasOwn(expandedPatch, key)));
   const localPatch = selectValues(normalized, LOCAL_SETTING_KEYS.filter((key) =>
-    Object.hasOwn(patch, key)));
+    Object.hasOwn(expandedPatch, key)));
   const writes = [];
 
   if (Object.keys(syncPatch).length > 0)
@@ -161,7 +186,17 @@ export function applyStorageChanges(settings, changes, areaName)
     return settings;
   }
 
-  return normalizeSettings({ ...settings, ...patch });
+  const expandedPatch = (
+    areaName === 'sync' &&
+    Object.hasOwn(patch, 'quality') &&
+    !Object.hasOwn(patch, 'renderMode') &&
+    !Object.hasOwn(patch, 'maxDpr')
+  )
+    ? { ...getQualitySettingsPatch(patch.quality), ...patch }
+    : patch;
+
+  // 兼容尚未升级的设备：它们只写 quality，新字段仍应跟随该快捷档。
+  return normalizeSettings({ ...settings, ...expandedPatch });
 }
 
 export function getDefaultStorageRecords()
