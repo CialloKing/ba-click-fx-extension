@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   applyStorageChanges,
+  createSettingsWriteQueue,
   loadStorageState,
   removeLegacyDisabledSites,
   writeSettingsPatch,
@@ -90,6 +91,71 @@ function createStorageMock(initial = {}, options = {})
     },
   };
 }
+
+function createDeferred()
+{
+  let resolve;
+
+  const promise = new Promise((fulfill) =>
+  {
+    resolve = fulfill;
+  });
+
+  return { promise, resolve };
+}
+
+test('设置写入队列等待前一项完成并保持提交顺序', async () =>
+{
+  const firstGate = createDeferred();
+  const secondGate = createDeferred();
+  const events = [];
+  const queueWrite = createSettingsWriteQueue(async ({ id }) =>
+  {
+    events.push(`start:${id}`);
+    await (id === 1 ? firstGate.promise : secondGate.promise);
+    events.push(`finish:${id}`);
+  });
+  const first = queueWrite({ id: 1 });
+  const second = queueWrite({ id: 2 });
+
+  await Promise.resolve();
+  assert.deepEqual(events, ['start:1']);
+
+  firstGate.resolve();
+  await first;
+  await Promise.resolve();
+  assert.deepEqual(events, ['start:1', 'finish:1', 'start:2']);
+
+  secondGate.resolve();
+  await second;
+  assert.deepEqual(events, ['start:1', 'finish:1', 'start:2', 'finish:2']);
+});
+
+test('设置写入队列在前一项失败后继续执行下一项', async () =>
+{
+  const firstGate = createDeferred();
+  const started = [];
+  const queueWrite = createSettingsWriteQueue(async ({ id }) =>
+  {
+    started.push(id);
+
+    if (id === 1)
+    {
+      await firstGate.promise;
+      throw new Error('first failed');
+    }
+  });
+  const first = queueWrite({ id: 1 });
+  const second = queueWrite({ id: 2 });
+
+  await Promise.resolve();
+  assert.deepEqual(started, [1]);
+
+  firstGate.resolve();
+  await assert.rejects(first, /first failed/);
+  await second;
+  assert.deepEqual(started, [1, 2]);
+});
 
 test('旧同步站点规则幂等合并到本机且保留旧副本', async () =>
 {

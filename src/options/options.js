@@ -15,9 +15,9 @@ import {
 } from '../shared/settings.js';
 import {
   applyStorageChanges,
+  createSettingsWriteQueue,
   loadStorageState,
   removeLegacyDisabledSites,
-  writeSettingsPatch,
 } from '../shared/storage.js';
 
 const VISUAL_DEFAULTS =
@@ -106,7 +106,9 @@ let settings = DEFAULT_SETTINGS;
 let hasLegacyDisabledSites = false;
 let i18n = createI18n(settings.languageMode);
 let statusTimer = 0;
+let updateRevision = 0;
 const fxControls = new Map();
+const queueSettingsWrite = createSettingsWriteQueue();
 
 function countDecimalPlaces(value)
 {
@@ -355,6 +357,7 @@ function render()
 
 async function savePatch(patch, successMessageKey = 'statusSaved')
 {
+  const revision = ++updateRevision;
   const previous = settings;
 
   settings = normalizeSettings({ ...settings, ...patch });
@@ -362,14 +365,21 @@ async function savePatch(patch, successMessageKey = 'statusSaved')
 
   try
   {
-    await writeSettingsPatch(patch);
-    showStatus(successMessageKey, 'success');
+    await queueSettingsWrite(patch);
+
+    if (revision === updateRevision)
+    {
+      showStatus(successMessageKey, 'success');
+    }
   }
   catch (error)
   {
-    settings = previous;
-    render();
-    showStatus('statusSaveFailed', 'error', [error.message]);
+    if (revision === updateRevision)
+    {
+      settings = previous;
+      render();
+      showStatus('statusSaveFailed', 'error', [error.message]);
+    }
   }
 }
 
