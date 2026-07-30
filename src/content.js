@@ -121,38 +121,19 @@ function hasSameFxParams(previous, next)
   return previousEntries.every(([path, value]) => nextParams[path] === value);
 }
 
-function applyFxParam(path, value)
-{
-  if (path === 'rings.rotationDirection' && value < 0)
-  {
-    // 上游 1.2.7 会把负方向钳制为 0；只有 -1 默认值有效，非法负覆盖已在共享层规范化。
-    return;
-  }
-
-  engine.setFxParam(path, value);
-}
-
 function applyFxParams(settings)
 {
   const renderProfile = getRenderProfile(settings);
 
-  // 切到 Legacy 时 updateConfig 会写入该模式的资源映射；先切模式，再重置并重放。
+  // 先切换模式再重置，确保上游按当前 Enhanced/Legacy 基线恢复参数。
   engine.updateConfig(renderProfile);
   engine.resetFxConfig();
-
-  if (renderProfile.renderingMode === 'legacy')
-  {
-    // 上游只有发生 enhanced→legacy 切换时才应用 Legacy 映射，因此重复切一次来确定重置后的基线。
-    engine.updateConfig({ ...renderProfile, renderingMode: 'enhanced' });
-    engine.updateConfig(renderProfile);
-  }
 
   const overrides = expandFxParams(settings.fxParams);
 
   for (const [path, value] of Object.entries(overrides))
   {
-    // rootDurationMs 在上游 1.2.7 中尚无运行时读取点，但仍转交以保持公开 API 契约。
-    applyFxParam(path, value);
+    engine.setFxParam(path, value);
   }
 }
 
