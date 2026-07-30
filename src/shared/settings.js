@@ -363,7 +363,7 @@ export function normalizeSettings(value = {})
   const requestedRenderMode = Object.hasOwn(RENDER_MODE_PROFILES, source.renderMode)
     ? source.renderMode
     : fallbackProfile.renderMode;
-  const maxDpr = Math.round(clamp(source.maxDpr, 1, 3, fallbackProfile.maxDpr));
+  const maxDpr = clamp(source.maxDpr, 1, 3, fallbackProfile.maxDpr);
   const renderMode = requestedRenderMode;
   const quality = detectQualityProfile(renderMode, maxDpr);
   const inferredPreset = detectAppearancePreset({ ...appearance, quality });
