@@ -40,8 +40,8 @@
         <label class="field" for="color">
           <span data-i18n="themeColor">主题颜色</span>
           <span class="color-control">
-            <input id="color" type="color" value="#69a1ff">
-            <output id="color-value" for="color">#69a1ff</output>
+            <input id="color" type="color" value="#4ca7ff">
+            <output id="color-value" for="color">#4ca7ff</output>
           </span>
         </label>
 
@@ -50,7 +50,7 @@
             <span data-i18n="opacity">不透明度</span>
             <output id="opacity-value" for="opacity">100%</output>
           </span>
-          <input id="opacity" type="range" min="0" max="1" step="0.05">
+          <input id="opacity" type="range" min="0" max="1" step="0.01">
         </label>
 
         <label class="field field-wide" for="scale">
@@ -75,6 +75,7 @@
         <label class="field" for="render-mode">
           <span data-i18n="renderMode">原始渲染模式</span>
           <select id="render-mode">
+            <option value="full-webgl2" data-i18n="renderFullWebGL2">完整 WebGL2</option>
             <option value="software-bloom" data-i18n="renderSoftwareBloom">软件 Bloom</option>
             <option value="webgl2-bloom" data-i18n="renderWebGL2Bloom">WebGL2 Bloom</option>
             <option value="native-bloom" data-i18n="renderNativeBloom">原生辉光</option>
@@ -87,7 +88,32 @@
             <span data-i18n="maxDpr">最大 DPR</span>
             <output id="max-dpr-value" for="max-dpr">2</output>
           </span>
-          <input id="max-dpr" type="range" min="1" max="3" step="1">
+          <input id="max-dpr" type="range" min="1" max="3" step="0.1">
+        </label>
+
+        <label class="field" for="output-compositing">
+          <span data-i18n="outputCompositing">输出合成</span>
+          <select id="output-compositing">
+            <option value="scene" data-i18n="outputCompositingScene">场景合成</option>
+            <option value="transparent-overlay" data-i18n="outputCompositingTransparentOverlay">透明覆盖层</option>
+          </select>
+        </label>
+
+        <label class="switch-field" for="isolated-compositing">
+          <span>
+            <strong data-i18n="isolatedCompositing">隔离合成</strong>
+            <small data-i18n="isolatedCompositingDescription">将特效合成限制在独立图层。</small>
+          </span>
+          <input id="isolated-compositing" type="checkbox">
+        </label>
+
+        <label class="field field-wide" for="light-background-contrast-alpha">
+          <span class="field-label">
+            <span data-i18n="lightBackgroundContrastAlpha">浅色背景对比 Alpha</span>
+            <output id="light-background-contrast-alpha-value" for="light-background-contrast-alpha">0%</output>
+          </span>
+          <input id="light-background-contrast-alpha" type="range" min="0" max="1" step="0.01">
+          <small class="field-description" data-i18n="lightBackgroundContrastAlphaDescription">在浅色背景上增加轻微对比，不改变深色背景表现。</small>
         </label>
       </div>
       <p class="section-note" data-i18n="renderModeDescription">三档画质会同时设置渲染模式与 DPR；也可在这里精确组合。</p>
@@ -107,6 +133,15 @@
           <small data-i18n="clickEffectDescription">点击时显示圆环与碎片</small>
         </span>
         <input id="click-enabled" type="checkbox">
+      </label>
+
+      <label class="field timing-field" for="click-time-scale">
+        <span class="field-label">
+          <span data-i18n="clickTimeScale">点击时间倍率</span>
+          <output id="click-time-scale-value" for="click-time-scale">1.00×</output>
+        </span>
+        <input id="click-time-scale" type="range" min="0.25" max="4" step="0.01">
+        <small class="field-description" data-i18n="timeScaleDescription">只改变动画速度，不改变特效形状。</small>
       </label>
 
       <div id="click-fx-groups" class="fx-groups"></div>
@@ -137,6 +172,15 @@
           <input id="trail-always" type="checkbox">
         </label>
       </div>
+
+      <label class="field timing-field" for="trail-time-scale">
+        <span class="field-label">
+          <span data-i18n="trailTimeScale">轨迹时间倍率</span>
+          <output id="trail-time-scale-value" for="trail-time-scale">1.00×</output>
+        </span>
+        <input id="trail-time-scale" type="range" min="0.25" max="4" step="0.01">
+        <small class="field-description" data-i18n="timeScaleDescription">只改变动画速度，不改变特效形状。</small>
+      </label>
 
       <div id="trail-fx-groups" class="fx-groups"></div>
     </section>

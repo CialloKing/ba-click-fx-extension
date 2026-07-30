@@ -146,6 +146,15 @@ a:focus-visible
   margin-top: 14px;
 }
 
+.timing-field
+{
+  margin: 14px 0;
+  padding: 12px 13px;
+  border: 1px solid rgba(122, 182, 222, 0.14);
+  border-radius: 11px;
+  background: rgba(8, 25, 43, 0.34);
+}
+
 .switch-field,
 .fx-toggle-field
 {
@@ -252,6 +261,14 @@ input[type="checkbox"]
   grid-column: 1 / -1;
 }
 
+.field-description
+{
+  color: #7892a9;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
 .field-label,
 .color-control
 {
@@ -277,6 +294,11 @@ input[type="search"]
   border-radius: 10px;
   color: #e7f8ff;
   background: #0c2138;
+}
+
+.fx-range-field select
+{
+  width: 100%;
 }
 
 input[type="color"]
