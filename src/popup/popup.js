@@ -7,8 +7,8 @@ import {
 } from '../shared/settings.js';
 import {
   applyStorageChanges,
+  createSettingsWriteQueue,
   readSettings,
-  writeSettingsPatch,
 } from '../shared/storage.js';
 
 const MESSAGE_PREVIEW = 'BA_CLICK_FX_PREVIEW';
@@ -37,7 +37,7 @@ let activeSiteKey = null;
 let contentStatus = null;
 let statusTimer = 0;
 let updateRevision = 0;
-let writeQueue = Promise.resolve();
+const queueSettingsWrite = createSettingsWriteQueue();
 
 function queryActiveTab()
 {
@@ -166,14 +166,7 @@ async function updateSettings(patch, successMessageKey = 'statusSaved')
 
   render();
 
-  const writeOperation = writeQueue
-    .catch(() =>
-    {
-      // 前一次失败不应阻止后续独立设置继续保存。
-    })
-    .then(() => writeSettingsPatch(normalizedPatch));
-
-  writeQueue = writeOperation;
+  const writeOperation = queueSettingsWrite(normalizedPatch);
 
   try
   {

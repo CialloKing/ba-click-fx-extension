@@ -260,6 +260,23 @@ export async function writeSettingsPatch(patch, chromeApi = globalThis.chrome)
   await Promise.all(writes);
 }
 
+export function createSettingsWriteQueue(writer = writeSettingsPatch)
+{
+  let tail = Promise.resolve();
+
+  return (patch) =>
+  {
+    const operation = tail.then(() => writer(patch));
+
+    // 队列尾部只负责恢复串行链；调用方仍会收到当前写入的原始拒绝。
+    tail = operation.catch(() =>
+    {
+    });
+
+    return operation;
+  };
+}
+
 export async function removeLegacyDisabledSites(chromeApi = globalThis.chrome)
 {
   await storageRemove(chromeApi, 'sync', LEGACY_DISABLED_SITES_KEY);
