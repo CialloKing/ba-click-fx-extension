@@ -1,4 +1,8 @@
-﻿import { BAClickFX } from 'ba-click-fx';
+﻿import {
+  BAClickFX,
+  BLOOM_BACKEND_CHANGE_EVENT,
+  EFFECT_BACKEND_CHANGE_EVENT,
+} from 'ba-click-fx';
 import {
   DEFAULT_SETTINGS,
   getRenderModeProfile,
@@ -6,16 +10,13 @@ import {
   shouldReduceMotion,
 } from './shared/settings.js';
 import {
-  expandFxParams,
-} from './shared/fx-settings.js';
-import {
   applyStorageChanges,
   readSettings,
 } from './shared/storage.js';
 
 const MESSAGE_GET_STATUS = 'BA_CLICK_FX_GET_STATUS';
 const MESSAGE_PREVIEW = 'BA_CLICK_FX_PREVIEW';
-const MESSAGE_PROTOCOL_VERSION = 2;
+const MESSAGE_PROTOCOL_VERSION = 3;
 const ROOT_ATTRIBUTE = 'data-ba-click-fx-extension-root';
 const siteKey = getSiteKey(window.location.href);
 const reducedMotionQuery = typeof window.matchMedia === 'function'
@@ -26,7 +27,7 @@ let currentSettings = DEFAULT_SETTINGS;
 let engine = null;
 let surface = null;
 let appliedSettings = null;
-let appliedTrailAlways = null;
+let backendStatus = null;
 let initializationState = 'loading';
 let initializationError = '';
 
@@ -99,13 +100,23 @@ function getRenderProfile(settings)
   };
 }
 
-function requiresEngineRebuild(previous, next)
+function getEngineOptions(settings)
 {
-  return Boolean(
-    previous &&
-    previous.renderMode !== next.renderMode &&
-    (previous.renderMode === 'legacy' || next.renderMode === 'legacy'),
-  );
+  return {
+    scale: settings.scale,
+    opacity: settings.opacity,
+    themeColor: settings.color,
+    clickEnabled: settings.clickEnabled,
+    trailEnabled: settings.trailEnabled,
+    trailAlways: getEffectiveTrailAlways(settings),
+    inputSource: 'dom',
+    clickTimeScale: settings.clickTimeScale,
+    trailTimeScale: settings.trailTimeScale,
+    outputCompositing: settings.outputCompositing,
+    isolatedCompositing: settings.isolatedCompositing,
+    lightBackgroundContrastAlpha: settings.lightBackgroundContrastAlpha,
+    ...getRenderProfile(settings),
+  };
 }
 
 function hasSameFxParams(previous, next)
@@ -123,18 +134,75 @@ function hasSameFxParams(previous, next)
 
 function applyFxParams(settings)
 {
-  const renderProfile = getRenderProfile(settings);
-
-  // 先切换模式再重置，确保上游按当前 Enhanced/Legacy 基线恢复参数。
-  engine.updateConfig(renderProfile);
-  engine.resetFxConfig();
-
-  const overrides = expandFxParams(settings.fxParams);
-
-  for (const [path, value] of Object.entries(overrides))
+  const result = engine.setFxParams(settings.fxParams,
   {
-    engine.setFxParam(path, value);
+    reset: true,
+    strict: true,
+    schemaVersion: settings.fxParamSchemaVersion,
+  });
+
+  if (!result.committed)
+  {
+    const reasons = result.rejected
+      .map(({ path, reason }) => `${path}: ${reason}`)
+      .join(', ');
+
+    throw new Error(`特效参数应用失败：${reasons || 'unknown'}`);
   }
+}
+
+function updateBackendStatus()
+{
+  if (!engine)
+  {
+    backendStatus = null;
+    return;
+  }
+
+  const snapshot = engine.getConfig();
+
+  backendStatus = {
+    requestedEffectBackend: snapshot.effectBackend,
+    resolvedEffectBackend: snapshot.resolvedEffectBackend,
+    requestedBloomBackend: snapshot.bloomBackend,
+    resolvedBloomBackend: snapshot.resolvedBloomBackend,
+  };
+}
+
+function handleBackendChange()
+{
+  // 事件可能在后端回退或 Context 恢复期间重入，始终读取同一份核心快照。
+  updateBackendStatus();
+}
+
+function addBackendListeners()
+{
+  engine.canvas.addEventListener(EFFECT_BACKEND_CHANGE_EVENT, handleBackendChange);
+  engine.canvas.addEventListener(BLOOM_BACKEND_CHANGE_EVENT, handleBackendChange);
+  updateBackendStatus();
+}
+
+function removeBackendListeners(instance)
+{
+  instance.canvas.removeEventListener(EFFECT_BACKEND_CHANGE_EVENT, handleBackendChange);
+  instance.canvas.removeEventListener(BLOOM_BACKEND_CHANGE_EVENT, handleBackendChange);
+}
+
+function getBackendStatus()
+{
+  if (backendStatus)
+  {
+    return backendStatus;
+  }
+
+  const profile = getRenderProfile(currentSettings);
+
+  return {
+    requestedEffectBackend: profile.effectBackend,
+    resolvedEffectBackend: null,
+    requestedBloomBackend: profile.bloomBackend,
+    resolvedBloomBackend: null,
+  };
 }
 
 function applySettings(settings)
@@ -144,107 +212,58 @@ function applySettings(settings)
     return;
   }
 
-  if (!appliedSettings || appliedSettings.color !== settings.color)
-  {
-    engine.setThemeColor(settings.color);
-  }
-
-  const nextTrailAlways = getEffectiveTrailAlways(settings);
-  const updates = {};
-  const renderProfileChanged = Boolean(
+  const fxParamsMustBeApplied = Boolean(
     !appliedSettings ||
     appliedSettings.renderMode !== settings.renderMode ||
-    appliedSettings.maxDpr !== settings.maxDpr,
+    appliedSettings.fxParamSchemaVersion !== settings.fxParamSchemaVersion ||
+    !hasSameFxParams(appliedSettings, settings),
   );
-  const fxParamsChanged = !hasSameFxParams(appliedSettings, settings);
 
-  if (renderProfileChanged || fxParamsChanged)
+  engine.updateConfig(getEngineOptions(settings));
+
+  if (fxParamsMustBeApplied)
   {
     applyFxParams(settings);
   }
 
-  if (!appliedSettings || appliedSettings.opacity !== settings.opacity)
-  {
-    updates.opacity = settings.opacity;
-  }
-
-  if (!appliedSettings || appliedSettings.scale !== settings.scale)
-  {
-    updates.scale = settings.scale;
-  }
-
-  if (!appliedSettings || appliedSettings.clickEnabled !== settings.clickEnabled)
-  {
-    updates.clickEnabled = settings.clickEnabled;
-  }
-
-  if (!appliedSettings || appliedSettings.trailEnabled !== settings.trailEnabled)
-  {
-    // v1.2.x 关闭 trailEnabled 时会自动释放拖尾输入、轨迹和粒子。
-    updates.trailEnabled = settings.trailEnabled;
-  }
-
-  if (appliedTrailAlways !== nextTrailAlways)
-  {
-    updates.trailAlways = nextTrailAlways;
-    appliedTrailAlways = nextTrailAlways;
-  }
-
-  if (Object.keys(updates).length > 0)
-  {
-    engine.updateConfig(updates);
-  }
-
   appliedSettings = settings;
+  updateBackendStatus();
 }
 
 function createEngine()
 {
   if (engine)
   {
-    if (requiresEngineRebuild(appliedSettings, currentSettings))
-    {
-      // Legacy 与增强模式使用不同的 Canvas 层拓扑；重建可保证渲染层与参数基线一致。
-      destroyEngine();
-    }
-    else
-    {
-      applySettings(currentSettings);
-      return;
-    }
+    applySettings(currentSettings);
+    return;
   }
 
   surface = createSurface();
 
   try
   {
-    const renderProfile = getRenderProfile(currentSettings);
-
-    // 构造时直接传入渲染模式与 DPR，避免先按默认模式分配再切换的瞬时开销。
+    // 构造时提交完整宿主配置，避免按核心默认后端分配再切换的瞬时开销。
     engine = new BAClickFX(
     {
       target: surface.container,
-      scale: currentSettings.scale,
-      opacity: currentSettings.opacity,
-      trailEnabled: currentSettings.trailEnabled,
-      trailAlways: getEffectiveTrailAlways(currentSettings),
-      clickEnabled: currentSettings.clickEnabled,
-      ...renderProfile,
+      ...getEngineOptions(currentSettings),
     });
-    appliedTrailAlways = getEffectiveTrailAlways(currentSettings);
-    appliedSettings = null;
-    applySettings(currentSettings);
+    addBackendListeners();
+    applyFxParams(currentSettings);
+    appliedSettings = currentSettings;
+    updateBackendStatus();
   }
   catch (error)
   {
     if (engine)
     {
+      removeBackendListeners(engine);
       engine.destroy();
       engine = null;
     }
 
     appliedSettings = null;
-    appliedTrailAlways = null;
+    backendStatus = null;
 
     surface.host.remove();
     surface = null;
@@ -256,12 +275,13 @@ function destroyEngine()
 {
   if (engine)
   {
+    removeBackendListeners(engine);
     engine.destroy();
     engine = null;
   }
 
   appliedSettings = null;
-  appliedTrailAlways = null;
+  backendStatus = null;
 
   if (surface)
   {
@@ -332,6 +352,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) =>
 {
   if (message?.type === MESSAGE_GET_STATUS)
   {
+    const status = getBackendStatus();
+
     sendResponse(
     {
       protocolVersion: MESSAGE_PROTOCOL_VERSION,
@@ -339,6 +361,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) =>
       error: initializationError,
       active: Boolean(engine),
       siteKey,
+      ...status,
     });
     return;
   }
