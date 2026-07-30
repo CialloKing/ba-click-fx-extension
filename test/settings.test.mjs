@@ -23,12 +23,19 @@ test('缺省设置与上游演示页一致', () =>
   assert.equal(settings.clickEnabled, true);
   assert.equal(settings.trailEnabled, true);
   assert.equal(settings.trailAlways, false);
+  assert.equal(settings.color, '#4ca7ff');
   assert.equal(settings.opacity, 1);
   assert.equal(settings.scale, 1);
   assert.equal(settings.quality, 'ultra');
   assert.equal(settings.renderMode, 'webgl2-bloom');
   assert.equal(settings.maxDpr, 2);
   assert.deepEqual(settings.fxParams, {});
+  assert.equal(settings.fxParamSchemaVersion, 1);
+  assert.equal(settings.clickTimeScale, 1);
+  assert.equal(settings.trailTimeScale, 1);
+  assert.equal(settings.outputCompositing, 'scene');
+  assert.equal(settings.isolatedCompositing, false);
+  assert.equal(settings.lightBackgroundContrastAlpha, 0);
   assert.equal(settings.languageMode, 'system');
   assert.equal(settings.motionMode, 'system');
   assert.equal(settings.preset, 'classic');
@@ -104,8 +111,15 @@ test('三档画质映射 Legacy、原生辉光与 WebGL2 Bloom', () =>
   assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('ultra'));
   assert.deepEqual(getRenderModeProfile('software-bloom'),
   {
+    effectBackend: 'canvas2d',
     renderingMode: 'enhanced',
     bloomBackend: 'software',
+  });
+  assert.deepEqual(getRenderModeProfile('full-webgl2'),
+  {
+    effectBackend: 'webgl2',
+    renderingMode: 'enhanced',
+    bloomBackend: 'webgl2',
   });
   assert.deepEqual(getQualitySettingsPatch('balanced'),
   {
@@ -157,7 +171,7 @@ test('旧版经典默认参数生成持久化补丁且保留显式拖尾选择',
 
   assert.deepEqual(migrated,
   {
-    color: '#69a1ff',
+    color: '#4ca7ff',
     opacity: 1,
     scale: 1,
     quality: 'ultra',
@@ -166,7 +180,7 @@ test('旧版经典默认参数生成持久化补丁且保留显式拖尾选择',
   });
   assert.deepEqual(explicitTrail,
   {
-    color: '#69a1ff',
+    color: '#4ca7ff',
     opacity: 1,
     scale: 1,
     quality: 'ultra',

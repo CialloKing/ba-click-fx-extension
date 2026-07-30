@@ -3,30 +3,44 @@
  * 内容脚本、弹窗和设置页共用这里的默认值与校验逻辑，避免各入口规则漂移。
  */
 
-import { normalizeFxParams } from './fx-settings.js';
+import { DEFAULT_THEME_COLOR } from 'ba-click-fx';
+import {
+  FX_PARAM_SCHEMA_VERSION,
+  normalizeFxParams,
+} from './fx-settings.js';
 
-export const STORAGE_SCHEMA_VERSION = 4;
+export const STORAGE_SCHEMA_VERSION = 5;
 export const LEGACY_DISABLED_SITES_KEY = 'disabledSites';
 
 export const RENDER_MODE_PROFILES = Object.freeze(
 {
+  'full-webgl2': Object.freeze(
+  {
+    effectBackend: 'webgl2',
+    renderingMode: 'enhanced',
+    bloomBackend: 'webgl2',
+  }),
   'software-bloom': Object.freeze(
   {
+    effectBackend: 'canvas2d',
     renderingMode: 'enhanced',
     bloomBackend: 'software',
   }),
   'webgl2-bloom': Object.freeze(
   {
+    effectBackend: 'canvas2d',
     renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   }),
   'native-bloom': Object.freeze(
   {
+    effectBackend: 'canvas2d',
     renderingMode: 'enhanced',
     bloomBackend: 'native',
   }),
   legacy: Object.freeze(
   {
+    effectBackend: 'canvas2d',
     renderingMode: 'legacy',
     bloomBackend: 'native',
   }),
@@ -45,13 +59,19 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   clickEnabled: true,
   trailEnabled: true,
   trailAlways: false,
-  color: '#69a1ff',
+  color: DEFAULT_THEME_COLOR,
   opacity: 1,
   scale: 1,
   quality: 'ultra',
   renderMode: QUALITY_PROFILES.ultra.renderMode,
   maxDpr: QUALITY_PROFILES.ultra.maxDpr,
   fxParams: Object.freeze({}),
+  fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
+  clickTimeScale: 1,
+  trailTimeScale: 1,
+  outputCompositing: 'scene',
+  isolatedCompositing: false,
+  lightBackgroundContrastAlpha: 0,
   languageMode: 'system',
   motionMode: 'system',
   preset: 'classic',
@@ -76,7 +96,7 @@ export const APPEARANCE_PRESETS = Object.freeze(
 {
   classic: Object.freeze(
   {
-    color: '#69a1ff',
+    color: DEFAULT_THEME_COLOR,
     opacity: 1,
     scale: 1,
     quality: 'ultra',
@@ -90,24 +110,35 @@ export const APPEARANCE_PRESETS = Object.freeze(
   }),
   performance: Object.freeze(
   {
-    color: '#69a1ff',
+    color: DEFAULT_THEME_COLOR,
     opacity: 0.45,
     scale: 1,
     quality: 'balanced',
   }),
 });
 
-const PREVIOUS_CLASSIC_DEFAULTS = Object.freeze(
-{
-  color: '#69a1ff',
-  opacity: 0.5,
-  scale: 1.1,
-  quality: 'balanced',
-  preset: 'classic',
-});
+const PREVIOUS_CLASSIC_DEFAULTS = Object.freeze([
+  Object.freeze(
+  {
+    color: '#69a1ff',
+    opacity: 0.5,
+    scale: 1.1,
+    quality: 'balanced',
+    preset: 'classic',
+  }),
+  Object.freeze(
+  {
+    color: '#69a1ff',
+    opacity: 1,
+    scale: 1,
+    quality: 'ultra',
+    preset: 'classic',
+  }),
+]);
 
 const LANGUAGE_MODES = new Set(['system', 'zh_CN', 'en']);
 const MOTION_MODES = new Set(['system', 'full', 'reduced']);
+const OUTPUT_COMPOSITING_MODES = new Set(['scene', 'transparent-overlay']);
 const PRESET_NAMES = new Set([...Object.keys(APPEARANCE_PRESETS), 'custom']);
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
 const MAX_SITE_KEY_LENGTH = 512;
@@ -226,13 +257,12 @@ export function getClassicDefaultsMigrationPatch(value)
 {
   const source = value && typeof value === 'object' ? value : {};
   const color = typeof source.color === 'string' ? source.color.toLowerCase() : '';
-  const matchesPreviousDefaults = (
-    source.preset === PREVIOUS_CLASSIC_DEFAULTS.preset &&
-    color === PREVIOUS_CLASSIC_DEFAULTS.color &&
-    source.opacity === PREVIOUS_CLASSIC_DEFAULTS.opacity &&
-    source.scale === PREVIOUS_CLASSIC_DEFAULTS.scale &&
-    source.quality === PREVIOUS_CLASSIC_DEFAULTS.quality
-  );
+  const matchesPreviousDefaults = PREVIOUS_CLASSIC_DEFAULTS.some((defaults) =>
+    source.preset === defaults.preset &&
+    color === defaults.color &&
+    source.opacity === defaults.opacity &&
+    source.scale === defaults.scale &&
+    source.quality === defaults.quality);
 
   if (!matchesPreviousDefaults)
   {
@@ -242,7 +272,7 @@ export function getClassicDefaultsMigrationPatch(value)
   const patch =
   {
     ...APPEARANCE_PRESETS.classic,
-    preset: PREVIOUS_CLASSIC_DEFAULTS.preset,
+    preset: 'classic',
   };
 
   // 缺失表示沿用旧默认值；已存储的 true/false 都属于用户明确选择。
@@ -356,7 +386,37 @@ export function normalizeSettings(value = {})
     quality,
     renderMode,
     maxDpr,
-    fxParams: normalizeFxParams(source.fxParams),
+    fxParams: normalizeFxParams(source.fxParams,
+    {
+      schemaVersion: source.fxParamSchemaVersion === 0
+        ? 0
+        : FX_PARAM_SCHEMA_VERSION,
+    }),
+    fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
+    clickTimeScale: clamp(
+      source.clickTimeScale,
+      0.25,
+      4,
+      DEFAULT_SETTINGS.clickTimeScale,
+    ),
+    trailTimeScale: clamp(
+      source.trailTimeScale,
+      0.25,
+      4,
+      DEFAULT_SETTINGS.trailTimeScale,
+    ),
+    outputCompositing: OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
+      ? source.outputCompositing
+      : DEFAULT_SETTINGS.outputCompositing,
+    isolatedCompositing: source.isolatedCompositing === undefined
+      ? DEFAULT_SETTINGS.isolatedCompositing
+      : source.isolatedCompositing === true,
+    lightBackgroundContrastAlpha: clamp(
+      source.lightBackgroundContrastAlpha,
+      0,
+      1,
+      DEFAULT_SETTINGS.lightBackgroundContrastAlpha,
+    ),
     languageMode: LANGUAGE_MODES.has(source.languageMode)
       ? source.languageMode
       : DEFAULT_SETTINGS.languageMode,
