@@ -130,7 +130,7 @@ test('旧同步站点规则幂等合并到本机且保留旧副本', async () =>
   });
 });
 
-test('schema v4 原子持久化旧版默认值并补齐渲染配置', async () =>
+test('schema v5 原子持久化旧版默认值、渲染配置和参数版本', async () =>
 {
   const mock = createStorageMock(
   {
@@ -166,7 +166,7 @@ test('schema v4 原子持久化旧版默认值并补齐渲染配置', async () =
   assert.equal(mock.setCalls.sync.length, 1);
   assert.deepEqual(mock.setCalls.sync[0],
   {
-    color: '#69a1ff',
+    color: '#4ca7ff',
     opacity: 1,
     scale: 1,
     quality: 'ultra',
@@ -174,6 +174,8 @@ test('schema v4 原子持久化旧版默认值并补齐渲染配置', async () =
     trailAlways: false,
     renderMode: 'webgl2-bloom',
     maxDpr: 2,
+    fxParams: {},
+    fxParamSchemaVersion: 1,
   });
   // v2 已处理过站点规则，v3 不应把保留的旧副本重新合并回来。
   assert.deepEqual(migrated.settings.disabledSites, {});
@@ -199,7 +201,7 @@ test('schema v4 原子持久化旧版默认值并补齐渲染配置', async () =
   assert.equal(mock.records.local.storageSchemaVersion, STORAGE_SCHEMA_VERSION);
 });
 
-test('schema v4 保留旧版记录中显式选择的常显拖尾', async () =>
+test('schema v5 保留旧版记录中显式选择的常显拖尾', async () =>
 {
   const mock = createStorageMock(
   {
@@ -228,7 +230,63 @@ test('schema v4 保留旧版记录中显式选择的常显拖尾', async () =>
   assert.equal(Object.hasOwn(mock.setCalls.sync[0], 'trailAlways'), false);
 });
 
-test('schema v4 不改写用户自定义外观参数', async () =>
+test('参数 Schema 0 迁移与拒绝报告在一次同步写入中完成', async () =>
+{
+  const mock = createStorageMock(
+  {
+    sync:
+    {
+      quality: 'ultra',
+      renderMode: 'webgl2-bloom',
+      maxDpr: 2,
+      fxParams:
+      {
+        'bloom.scatter': 0.35,
+        'bloom.trailEmissionAlpha': 0.5,
+        rootDurationMs: 1500,
+      },
+    },
+    local:
+    {
+      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
+    },
+  });
+
+  const migrated = await loadStorageState(mock.chromeApi);
+
+  assert.deepEqual(migrated.settings.fxParams,
+  {
+    'bloom.diffusion': 7,
+    'bloom.trailEmissionAlpha': 0.5,
+    'bloom.trailAlpha': 0.09,
+  });
+  assert.equal(migrated.settings.fxParamSchemaVersion, 1);
+  assert.equal(
+    migrated.fxParamMigrationReport.normalized.some(({ reason }) => reason === 'renamed'),
+    true,
+  );
+  assert.deepEqual(migrated.fxParamMigrationReport.rejected,
+  [{
+    path: 'rootDurationMs',
+    value: 1500,
+    reason: 'deprecated-path',
+  }]);
+  assert.deepEqual(mock.setCalls.sync,
+  [{
+    fxParams:
+    {
+      'bloom.diffusion': 7,
+      'bloom.trailEmissionAlpha': 0.5,
+      'bloom.trailAlpha': 0.09,
+    },
+    fxParamSchemaVersion: 1,
+  }]);
+
+  await loadStorageState(mock.chromeApi);
+  assert.equal(mock.setCalls.sync.length, 1);
+});
+
+test('schema v5 不改写用户自定义外观参数', async () =>
 {
   const mock = createStorageMock(
   {
@@ -257,10 +315,12 @@ test('schema v4 不改写用户自定义外观参数', async () =>
   {
     renderMode: 'legacy',
     maxDpr: 1,
+    fxParams: {},
+    fxParamSchemaVersion: 1,
   });
 });
 
-test('schema v4 同步迁移失败时不会提前推进本机版本', async () =>
+test('schema v5 同步迁移失败时不会提前推进本机版本', async () =>
 {
   const mock = createStorageMock(
   {
@@ -330,16 +390,28 @@ test('自定义渲染组合将画质、模式与 DPR 原子写入 sync', async (
   }]);
 });
 
-test('高级特效参数规范为稀疏白名单后写入 sync', async () =>
+test('高级特效参数与 Schema 版本原子写入 sync', async () =>
 {
   const mock = createStorageMock();
+
+  await assert.rejects(
+    writeSettingsPatch(
+    {
+      fxParams:
+      {
+        'rings.radiusMin': 80,
+        'rings.unknown': 1,
+      },
+    }, mock.chromeApi),
+    /rings\.unknown: unknown-path/,
+  );
+  assert.equal(mock.setCalls.sync.length, 0);
 
   await writeSettingsPatch(
   {
     fxParams:
     {
       'rings.radiusMin': 80,
-      'rings.unknown': 1,
       'hit.enabled': true,
     },
   }, mock.chromeApi);
@@ -349,6 +421,16 @@ test('高级特效参数规范为稀疏白名单后写入 sync', async () =>
     'rings.radiusMin': 80,
     'hit.enabled': true,
   });
+  assert.equal(mock.records.sync.fxParamSchemaVersion, 1);
+  assert.deepEqual(mock.setCalls.sync,
+  [{
+    fxParams:
+    {
+      'rings.radiusMin': 80,
+      'hit.enabled': true,
+    },
+    fxParamSchemaVersion: 1,
+  }]);
 });
 
 test('显式清理只删除旧同步副本，不影响已经迁移的本机规则', async () =>
@@ -432,6 +514,7 @@ test('旧设备只同步 quality 时当前页与重新加载均保持档位', as
       quality: 'ultra',
       renderMode: 'webgl2-bloom',
       maxDpr: 2,
+      fxParamSchemaVersion: 1,
     },
     local:
     {
@@ -465,6 +548,7 @@ test('读取时修复旧设备留下的画质与渲染组合不一致', async ()
       quality: 'balanced',
       renderMode: 'webgl2-bloom',
       maxDpr: 2,
+      fxParamSchemaVersion: 1,
     },
     local:
     {

@@ -1,275 +1,223 @@
 ﻿/**
- * 上游演示页可调特效参数的唯一模型。
+ * 上游公开参数 Schema 的扩展适配层。
  *
- * 存储只保留偏离上游默认值的主路径；联动路径在应用到引擎前再展开，
- * 避免同一个控件产生两份可能互相矛盾的持久化状态。
+ * 上游负责参数类型、边界、默认值、顺序与迁移；扩展只补充控件 ID、
+ * 本地化键和持久化稀疏化，避免两份参数合同再次漂移。
  */
 
-export const FX_CONTROL_GROUPS = Object.freeze([
-  Object.freeze({ id: 'clickRings', i18nKey: 'fxGroupClickRings' }),
-  Object.freeze({ id: 'clickShards', i18nKey: 'fxGroupClickShards' }),
-  Object.freeze({ id: 'clickBloom', i18nKey: 'fxGroupClickBloom' }),
-  Object.freeze({ id: 'hitFlare', i18nKey: 'fxGroupHitFlare' }),
-  Object.freeze({ id: 'trailLayer', i18nKey: 'fxGroupTrailLayer' }),
-  Object.freeze({ id: 'trailShards', i18nKey: 'fxGroupTrailShards' }),
-  Object.freeze({ id: 'trailBloom', i18nKey: 'fxGroupTrailBloom' }),
-]);
+import {
+  FX_PARAM_SCHEMA,
+  FX_PARAM_SCHEMA_VERSION,
+  applyFxParamPatch,
+} from 'ba-click-fx';
 
-function defineNumber(
-  id,
-  path,
-  defaultValue,
-  min,
-  max,
-  step,
-  group,
-  i18nKey,
-  type = 'number',
-  extra = {},
-)
+const DEPRECATED_ROOT_DURATION_PATH = 'rootDurationMs';
+const LEGACY_TRAIL_EMISSION_PATH = 'bloom.trailEmissionAlpha';
+const LEGACY_TRAIL_ALPHA_PATH = 'bloom.trailAlpha';
+const LEGACY_TRAIL_ALPHA_FACTOR = 0.18;
+
+const UNIT_I18N_KEYS = Object.freeze(
 {
+  count: 'unitCount',
+  ms: 'unitMilliseconds',
+  multiplier: 'unitMultiplier',
+  px: 'unitPixels',
+  'px-per-second': 'unitPixelsPerSecond',
+  samples: 'unitSamples',
+});
+
+function toIdentifier(value)
+{
+  return value.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function toMessageKey(prefix, value)
+{
+  return `${prefix}_${value.replace(/[^a-zA-Z0-9]+/g, '_')}`;
+}
+
+function getModeName(renderMode)
+{
+  return renderMode === 'legacy' ? 'legacy' : 'enhanced';
+}
+
+function getModeDefault(definition, renderMode)
+{
+  return definition.modeDefaults?.[getModeName(renderMode)] ?? definition.defaultValue;
+}
+
+function toPatchObject(value)
+{
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value
+    : {};
+}
+
+function toAppliedObject(applied)
+{
+  return Object.fromEntries(applied.map(({ path, value }) => [path, value]));
+}
+
+function createControlDefinition(descriptor)
+{
+  const display = descriptor.display || {};
+
   return Object.freeze(
   {
-    id,
-    path,
-    defaultValue,
-    min,
-    max,
-    step,
-    group,
-    type,
-    i18nKey,
-    ...extra,
+    id: `fx-${toIdentifier(descriptor.path)}`,
+    path: descriptor.path,
+    defaultValue: descriptor.default,
+    min: display.min ?? descriptor.min ?? null,
+    max: display.max ?? descriptor.max ?? null,
+    step: display.step ?? descriptor.step ?? null,
+    hardMin: descriptor.min ?? null,
+    hardMax: descriptor.max ?? null,
+    group: descriptor.group,
+    groupOrder: descriptor.groupOrder,
+    order: descriptor.order,
+    type: descriptor.type,
+    unit: descriptor.unit,
+    unitKey: UNIT_I18N_KEYS[descriptor.unit] || null,
+    i18nKey: toMessageKey('fxParam', descriptor.path),
+    linkedParams: descriptor.linkedParams,
+    modeDefaults: descriptor.modeDefaults,
   });
 }
 
-const MILLISECONDS = Object.freeze({ unitKey: 'unitMilliseconds' });
+const sortedSchema = [...FX_PARAM_SCHEMA].sort((left, right) => left.order - right.order);
 
-function defineBoolean(id, path, defaultValue, group, i18nKey)
-{
-  return Object.freeze(
-  {
-    id,
-    path,
-    defaultValue,
-    min: null,
-    max: null,
-    step: null,
-    values: Object.freeze([false, true]),
-    group,
-    type: 'boolean',
-    i18nKey,
-  });
-}
+export const FX_CONTROL_DEFINITIONS = Object.freeze(
+  sortedSchema.map(createControlDefinition),
+);
 
-export const FX_CONTROL_DEFINITIONS = Object.freeze([
-  defineNumber('ringHdrIntensity', 'rings.hdrIntensity', 5.992157, 0, 8, 0.01,
-    'clickRings', 'fxRingHdrIntensity'),
-  defineNumber('ringRadiusMin', 'rings.radiusMin', 51.0560832, 20, 120, 0.01,
-    'clickRings', 'fxRingRadiusMin'),
-  defineNumber('ringRadiusMax', 'rings.radiusMax', 59.5654304, 20, 120, 0.01,
-    'clickRings', 'fxRingRadiusMax'),
-  defineNumber('ringWidthStart', 'rings.widthStart', 1, 0.25, 2, 0.05,
-    'clickRings', 'fxRingWidthStart'),
-  defineNumber('ringWidthEnd', 'rings.widthEnd', 1, 0.25, 2, 0.05,
-    'clickRings', 'fxRingWidthEnd'),
-  defineNumber('ringLifetime', 'rings.lifetimeMs', 600, 50, 2000, 10,
-    'clickRings', 'fxRingLifetime', 'integer', MILLISECONDS),
-
-  // 展示页允许 0；v1.2.7 的 setter 会将 Count/Blur 的 0 钳制为 1。
-  defineNumber('clickShardCount', 'shards.clickCount', 4, 0, 12, 1,
-    'clickShards', 'fxClickShardCount', 'integer'),
-  // 展示页的 5 步进无法表示引擎默认 96；整数步进仍覆盖其全部取值并保留精确默认值。
-  defineNumber('maxShardCount', 'shards.maxCount', 96, 0, 500, 1,
-    'clickShards', 'fxMaxShardCount', 'integer'),
-
-  defineNumber('bloomRingBlur', 'bloom.ringBlur', 80, 0, 200, 5,
-    'clickBloom', 'fxBloomRingBlur', 'integer'),
-  defineNumber('bloomThreshold', 'bloom.threshold', 1, 0, 5, 0.05,
-    'clickBloom', 'fxBloomThreshold'),
-  defineNumber('bloomIntensity', 'bloom.intensity', 0.45, 0, 2, 0.05,
-    'clickBloom', 'fxBloomIntensity'),
-  defineNumber('bloomScatter', 'bloom.scatter', 0.35, 0, 1, 0.05,
-    'clickBloom', 'fxBloomScatter'),
-  defineNumber('ringCount', 'rings.count', 2, 1, 6, 1,
-    'clickBloom', 'fxRingCount', 'integer'),
-  defineNumber('diskRadius', 'disk.radius', 48, 20, 120, 1,
-    'clickBloom', 'fxDiskRadius', 'integer'),
-  defineNumber('diskLifetime', 'disk.lifetimeMs', 200, 50, 500, 10,
-    'clickBloom', 'fxDiskLifetime', 'integer', MILLISECONDS),
-  defineNumber('ringAngularVelocity', 'rings.angularVelocityMultiplier', 11.170107,
-    1, 30, 0.1, 'clickBloom', 'fxRingAngularVelocity'),
-  defineNumber('ringArcSamples', 'rings.arcSamples', 96, 24, 192, 8,
-    'clickBloom', 'fxRingArcSamples', 'integer'),
-  defineNumber('ringDirection', 'rings.rotationDirection', -1, -1, 1, 2,
-    'clickBloom', 'fxRingDirection', 'integer'),
-  defineNumber('rootDuration', 'rootDurationMs', 1000, 200, 2000, 50,
-    'clickBloom', 'fxRootDuration', 'integer', MILLISECONDS),
-  defineNumber('clickShardLifetimeMin', 'shards.clickLifetimeMinMs', 600,
-    100, 1000, 10, 'clickBloom', 'fxClickShardLifetimeMin', 'integer', MILLISECONDS),
-  defineNumber('clickShardLifetimeMax', 'shards.clickLifetimeMaxMs', 700,
-    100, 1000, 10, 'clickBloom', 'fxClickShardLifetimeMax', 'integer', MILLISECONDS),
-
-  defineBoolean('hitEnabled', 'hit.enabled', false, 'hitFlare', 'fxHitEnabled'),
-  defineNumber('hitRadius', 'hit.radius', 24, 10, 60, 1,
-    'hitFlare', 'fxHitRadius', 'integer'),
-  defineNumber('hitLifetime', 'hit.lifetimeMs', 80, 20, 200, 10,
-    'hitFlare', 'fxHitLifetime', 'integer', MILLISECONDS),
-  defineBoolean('flareEnabled', 'flare.enabled', false, 'hitFlare', 'fxFlareEnabled'),
-  defineNumber('flareRadius', 'flare.radius', 36, 10, 80, 1,
-    'hitFlare', 'fxFlareRadius', 'integer'),
-  defineNumber('flareLifetime', 'flare.lifetimeMs', 150, 50, 300, 10,
-    'hitFlare', 'fxFlareLifetime', 'integer', MILLISECONDS),
-  defineNumber('flareRayCount', 'flare.rayCount', 6, 3, 12, 1,
-    'hitFlare', 'fxFlareRayCount', 'integer'),
-
-  defineNumber('trailWidth', 'trail.width', 2, 1, 25, 0.1,
-    'trailLayer', 'fxTrailWidth'),
-  defineNumber('trailOuterGlowWidth', 'trail.outerGlowWidth', 9, 1, 40, 0.5,
-    'trailLayer', 'fxTrailOuterGlowWidth'),
-  defineNumber('trailLifetime', 'trail.lifetimeMs', 300, 50, 2000, 10,
-    'trailLayer', 'fxTrailLifetime', 'integer', MILLISECONDS),
-
-  defineNumber('trailShardSpacing', 'shards.trailSpacing', 80, 10, 500, 5,
-    'trailShards', 'fxTrailShardSpacing', 'integer'),
-
-  defineNumber('bloomTrailEmission', 'bloom.trailEmissionAlpha', 1, 0, 1, 0.01,
-    'trailBloom', 'fxBloomTrailEmission', 'number',
+export const FX_CONTROL_GROUPS = Object.freeze(
+  [...new Map(
+    sortedSchema.map((descriptor) => [descriptor.group, Object.freeze(
     {
-      linkedParams: Object.freeze([
-        Object.freeze({ path: 'bloom.trailAlpha', factor: 0.18 }),
-      ]),
-    }),
-  defineNumber('trailOpacity', 'trail.trailOpacity', 1, 0, 1, 0.05,
-    'trailBloom', 'fxTrailOpacity'),
-  defineNumber('trailGeometryWidth', 'trail.geometryWidth', 2, 1, 8, 0.5,
-    'trailBloom', 'fxTrailGeometryWidth'),
-  defineNumber('trailMinVertexDistance', 'trail.minVertexDistance', 4, 1, 20, 0.5,
-    'trailBloom', 'fxTrailMinVertexDistance'),
-  defineNumber('trailShardLifetimeMin', 'shards.trailLifetimeMinMs', 200,
-    50, 500, 10, 'trailBloom', 'fxTrailShardLifetimeMin', 'integer', MILLISECONDS),
-  defineNumber('trailShardLifetimeMax', 'shards.trailLifetimeMaxMs', 400,
-    50, 500, 10, 'trailBloom', 'fxTrailShardLifetimeMax', 'integer', MILLISECONDS),
-  defineNumber('bloomDiskBlur', 'bloom.diskBlur', 65, 0, 200, 5,
-    'trailBloom', 'fxBloomDiskBlur', 'integer'),
-]);
+      id: descriptor.group,
+      order: descriptor.groupOrder,
+      i18nKey: toMessageKey('fxGroup', descriptor.group),
+    })]),
+  ).values()].sort((left, right) => left.order - right.order),
+);
 
 const FX_DEFINITION_BY_PATH = new Map(
   FX_CONTROL_DEFINITIONS.map((definition) => [definition.path, definition]),
 );
 
-function countDecimalPlaces(value)
-{
-  const text = String(value).toLowerCase();
+export {
+  FX_PARAM_SCHEMA,
+  FX_PARAM_SCHEMA_VERSION,
+};
 
-  if (text.includes('e-'))
+/**
+ * 迁移并验证一组不可信参数，同时保留上游拒绝报告。
+ */
+export function prepareFxParams(value = {}, options = {})
+{
+  const {
+    schemaVersion = FX_PARAM_SCHEMA_VERSION,
+    strict = false,
+  } = options;
+  const source = toPatchObject(value);
+  const patch = { ...source };
+  const extensionRejected = [];
+
+  if (Object.hasOwn(patch, DEPRECATED_ROOT_DURATION_PATH))
   {
-    return Number(text.split('e-')[1]) || 0;
+    extensionRejected.push(
+    {
+      path: DEPRECATED_ROOT_DURATION_PATH,
+      value: patch[DEPRECATED_ROOT_DURATION_PATH],
+      reason: 'deprecated-path',
+    });
+    delete patch[DEPRECATED_ROOT_DURATION_PATH];
   }
 
-  return text.includes('.') ? text.split('.')[1].length : 0;
-}
+  if (
+    schemaVersion === 0 &&
+    Object.hasOwn(patch, LEGACY_TRAIL_EMISSION_PATH) &&
+    !Object.hasOwn(patch, LEGACY_TRAIL_ALPHA_PATH)
+  )
+  {
+    // 旧扩展在运行时隐式写入此值；迁移时固化一次即可保留既有视觉。
+    patch[LEGACY_TRAIL_ALPHA_PATH] =
+      Number(patch[LEGACY_TRAIL_EMISSION_PATH]) * LEGACY_TRAIL_ALPHA_FACTOR;
+  }
 
-function snapNumber(value, definition)
-{
-  const clamped = Math.max(definition.min, Math.min(definition.max, value));
-  const steps = Math.round((clamped - definition.min) / definition.step);
-  const snapped = definition.min + (steps * definition.step);
-  const precision = Math.max(
-    countDecimalPlaces(definition.min),
-    countDecimalPlaces(definition.max),
-    countDecimalPlaces(definition.step),
+  const result = applyFxParamPatch(patch,
+  {
+    schemaVersion,
+    strict,
+  });
+  const rejected = [...extensionRejected, ...result.rejected];
+  const committed = (
+    (result.committed || Object.keys(patch).length === 0) &&
+    (!strict || extensionRejected.length === 0)
   );
-  const rounded = Number(snapped.toFixed(precision));
+  const params = {};
 
-  return Object.is(rounded, -0) ? 0 : rounded;
-}
-
-function normalizeFxValue(value, definition)
-{
-  if (definition.type === 'boolean')
+  if (committed)
   {
-    return typeof value === 'boolean' ? value : definition.defaultValue;
-  }
-
-  if (typeof value !== 'number' || !Number.isFinite(value))
-  {
-    return definition.defaultValue;
-  }
-
-  // 精确的 Unity 默认值不一定落在演示页滑块步长上，默认值必须原样保留。
-  if (value === definition.defaultValue)
-  {
-    return definition.defaultValue;
-  }
-
-  return snapNumber(value, definition);
-}
-
-export function normalizeFxParams(value = {})
-{
-  const source = value && typeof value === 'object' && !Array.isArray(value)
-    ? value
-    : {};
-  const normalized = {};
-
-  for (const definition of FX_CONTROL_DEFINITIONS)
-  {
-    if (!Object.hasOwn(source, definition.path))
+    for (const [path, parameterValue] of Object.entries(toAppliedObject(result.applied)))
     {
-      continue;
-    }
-
-    const nextValue = normalizeFxValue(source[definition.path], definition);
-
-    if (nextValue !== definition.defaultValue)
-    {
-      normalized[definition.path] = nextValue;
+      if (FX_DEFINITION_BY_PATH.has(path))
+      {
+        params[path] = parameterValue;
+      }
     }
   }
 
-  return normalized;
+  return {
+    ...result,
+    committed,
+    params,
+    rejected,
+  };
 }
 
-export function mergeFxParams(base = {}, patch = {})
+export function normalizeFxParams(value = {}, options = {})
+{
+  return prepareFxParams(value, options).params;
+}
+
+export function mergeFxParams(base = {}, patch = {}, options = {})
 {
   return normalizeFxParams(
   {
-    ...normalizeFxParams(base),
-    ...(patch && typeof patch === 'object' ? patch : {}),
-  });
+    ...toPatchObject(base),
+    ...toPatchObject(patch),
+  }, options);
 }
 
-export function flattenFxParams(value = {})
+export function flattenFxParams(value = {}, renderMode = 'enhanced')
 {
-  const overrides = normalizeFxParams(value);
+  const overrides = normalizeFxParams(value,
+  {
+    renderMode,
+    schemaVersion: FX_PARAM_SCHEMA_VERSION,
+  });
   const flattened = {};
 
   for (const definition of FX_CONTROL_DEFINITIONS)
   {
     flattened[definition.path] = Object.hasOwn(overrides, definition.path)
       ? overrides[definition.path]
-      : definition.defaultValue;
+      : getModeDefault(definition, renderMode);
   }
 
   return flattened;
 }
 
-export function expandFxParams(value = {})
+export function getFxParamDefault(path, renderMode = 'enhanced')
 {
-  const overrides = normalizeFxParams(value);
-  const expanded = {};
+  const definition = FX_DEFINITION_BY_PATH.get(path);
 
-  for (const [path, parameterValue] of Object.entries(overrides))
-  {
-    expanded[path] = parameterValue;
-    const definition = FX_DEFINITION_BY_PATH.get(path);
+  return definition ? getModeDefault(definition, renderMode) : undefined;
+}
 
-    for (const linked of definition?.linkedParams || [])
-    {
-      expanded[linked.path] = parameterValue * linked.factor;
-    }
-  }
-
-  return expanded;
+// 保留调用层的旧函数名；Schema v1 已不再声明隐式联动参数。
+export function expandFxParams(value = {}, options = {})
+{
+  return normalizeFxParams(value, options);
 }

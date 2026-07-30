@@ -12,6 +12,10 @@
   normalizeDisabledSites,
   normalizeSettings,
 } from './settings.js';
+import {
+  FX_PARAM_SCHEMA_VERSION,
+  prepareFxParams,
+} from './fx-settings.js';
 
 const LOCAL_SITE_RULES_SCHEMA_VERSION = 2;
 
@@ -78,6 +82,67 @@ function selectValues(source, keys)
   return selected;
 }
 
+function getStoredFxParamSchemaVersion(values)
+{
+  const version = Number(values?.fxParamSchemaVersion);
+
+  return Number.isInteger(version) && version >= 0 ? version : 0;
+}
+
+function haveSameEntries(left, right)
+{
+  const leftEntries = Object.entries(left || {});
+  const rightEntries = Object.entries(right || {});
+
+  return leftEntries.length === rightEntries.length &&
+    leftEntries.every(([key, value]) => right?.[key] === value);
+}
+
+export function getFxParamsMigration(values = {})
+{
+  const source = values && typeof values === 'object' ? values : {};
+  const schemaVersion = getStoredFxParamSchemaVersion(source);
+
+  if (schemaVersion > FX_PARAM_SCHEMA_VERSION)
+  {
+    return {
+      patch: {},
+      report:
+      {
+        applied: [],
+        normalized: [],
+        rejected: [
+          {
+            path: 'fxParamSchemaVersion',
+            value: schemaVersion,
+            reason: 'unsupported-schema-version',
+          },
+        ],
+        committed: false,
+        schemaVersion,
+      },
+    };
+  }
+
+  const report = prepareFxParams(source.fxParams,
+  {
+    schemaVersion,
+    strict: false,
+  });
+  const needsWrite = schemaVersion !== FX_PARAM_SCHEMA_VERSION ||
+    !haveSameEntries(source.fxParams, report.params);
+
+  return {
+    patch: needsWrite
+      ? {
+        fxParams: report.params,
+        fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
+      }
+      : {},
+    report,
+  };
+}
+
 export async function loadStorageState(chromeApi = globalThis.chrome)
 {
   const [storedSyncValues, localValues] = await Promise.all([
@@ -96,7 +161,12 @@ export async function loadStorageState(chromeApi = globalThis.chrome)
     disabledSites = mergeDisabledSites(disabledSites, legacyDisabledSites);
   }
 
-  const migrationPatch = getSettingsMigrationPatch(syncValues);
+  const fxParamsMigration = getFxParamsMigration(syncValues);
+  const migrationPatch =
+  {
+    ...getSettingsMigrationPatch(syncValues),
+    ...fxParamsMigration.patch,
+  };
 
   if (Object.keys(migrationPatch).length > 0)
   {
@@ -128,6 +198,7 @@ export async function loadStorageState(chromeApi = globalThis.chrome)
     }),
     storageSchemaVersion,
     hasLegacyDisabledSites: Object.keys(legacyDisabledSites).length > 0,
+    fxParamMigrationReport: fxParamsMigration.report,
   };
 }
 
@@ -140,9 +211,35 @@ export async function readSettings(chromeApi = globalThis.chrome)
 
 export async function writeSettingsPatch(patch, chromeApi = globalThis.chrome)
 {
-  const expandedPatch = Object.hasOwn(patch, 'quality')
+  let expandedPatch = Object.hasOwn(patch, 'quality')
     ? { ...getQualitySettingsPatch(patch.quality), ...patch }
     : patch;
+
+  if (Object.hasOwn(expandedPatch, 'fxParams'))
+  {
+    const result = prepareFxParams(expandedPatch.fxParams,
+    {
+      schemaVersion: FX_PARAM_SCHEMA_VERSION,
+      strict: true,
+    });
+
+    if (!result.committed)
+    {
+      const reasons = result.rejected
+        .map(({ path, reason }) => `${path}: ${reason}`)
+        .join(', ');
+
+      throw new Error(`特效参数未通过校验：${reasons || 'unknown'}`);
+    }
+
+    expandedPatch =
+    {
+      ...expandedPatch,
+      fxParams: result.params,
+      fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
+    };
+  }
+
   const normalized = normalizeSettings({ ...DEFAULT_SETTINGS, ...expandedPatch });
   const syncPatch = selectValues(normalized, SYNC_SETTING_KEYS.filter((key) =>
     Object.hasOwn(expandedPatch, key)));
@@ -194,6 +291,23 @@ export function applyStorageChanges(settings, changes, areaName)
   )
     ? { ...getQualitySettingsPatch(patch.quality), ...patch }
     : patch;
+
+  if (areaName === 'sync' && Object.hasOwn(expandedPatch, 'fxParams'))
+  {
+    const incomingVersion = Object.hasOwn(expandedPatch, 'fxParamSchemaVersion')
+      ? expandedPatch.fxParamSchemaVersion
+      : Object.hasOwn(expandedPatch.fxParams || {}, 'bloom.scatter')
+        ? 0
+        : settings.fxParamSchemaVersion;
+    const result = prepareFxParams(expandedPatch.fxParams,
+    {
+      schemaVersion: incomingVersion,
+      strict: false,
+    });
+
+    expandedPatch.fxParams = result.params;
+    expandedPatch.fxParamSchemaVersion = FX_PARAM_SCHEMA_VERSION;
+  }
 
   // 兼容尚未升级的设备：它们只写 quality，新字段仍应跟随该快捷档。
   return normalizeSettings({ ...settings, ...expandedPatch });

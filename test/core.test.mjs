@@ -260,8 +260,8 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
     {
       'rings.hdrIntensity': 7,
       'bloom.trailEmissionAlpha': 0.5,
+      'bloom.trailAlpha': 0.09,
       'hit.enabled': true,
-      'rootDurationMs': 1500,
     });
 
     effect.updateConfig(
