@@ -364,6 +364,10 @@
   {
     "message": "原始渲染模式"
   },
+  "renderFullWebGL2":
+  {
+    "message": "纯 WebGL2"
+  },
   "renderSoftwareBloom":
   {
     "message": "软件 Bloom"
@@ -379,6 +383,54 @@
   "renderLegacy":
   {
     "message": "Legacy"
+  },
+  "outputCompositing":
+  {
+    "message": "输出合成"
+  },
+  "outputCompositingScene":
+  {
+    "message": "场景合成"
+  },
+  "outputCompositingTransparentOverlay":
+  {
+    "message": "透明覆盖层"
+  },
+  "isolatedCompositing":
+  {
+    "message": "隔离合成"
+  },
+  "isolatedCompositingDescription":
+  {
+    "message": "先在独立透明组内合成各渲染层，改善浅色网页上的颜色与对比度。"
+  },
+  "lightBackgroundContrastAlpha":
+  {
+    "message": "浅色背景对比度"
+  },
+  "lightBackgroundContrastAlphaDescription":
+  {
+    "message": "增加不参与 Bloom 的淡青色轮廓；透明覆盖层模式会忽略此项。"
+  },
+  "clickTimeScale":
+  {
+    "message": "点击时间倍率"
+  },
+  "trailTimeScale":
+  {
+    "message": "轨迹时间倍率"
+  },
+  "timeScaleDescription":
+  {
+    "message": "分别调整点击动画和轨迹衰减的播放速度。"
+  },
+  "fxAdvancedSettingsTitle":
+  {
+    "message": "高级渲染设置"
+  },
+  "fxAdvancedSettingsDescription":
+  {
+    "message": "精确选择渲染后端、合成方式、时间倍率与浅色背景兼容选项。"
   },
   "maxDpr":
   {
@@ -416,6 +468,42 @@
   {
     "message": "毫秒"
   },
+  "unitCount":
+  {
+    "message": "个"
+  },
+  "unitMultiplier":
+  {
+    "message": "倍"
+  },
+  "unitPixels":
+  {
+    "message": "像素"
+  },
+  "unitPixelsPerSecond":
+  {
+    "message": "像素/秒"
+  },
+  "unitSamples":
+  {
+    "message": "采样"
+  },
+  "unitRatio":
+  {
+    "message": "比例"
+  },
+  "unitScalar":
+  {
+    "message": "标量"
+  },
+  "unitGammaHdr":
+  {
+    "message": "Gamma HDR"
+  },
+  "unitLinearHdr":
+  {
+    "message": "Linear HDR"
+  },
   "rotationCounterclockwise":
   {
     "message": "逆时针"
@@ -424,188 +512,300 @@
   {
     "message": "顺时针"
   },
-  "fxGroupClickRings":
+  "directionNegative":
   {
-    "message": "圆环参数"
+    "message": "负方向"
   },
-  "fxGroupClickShards":
+  "directionPositive":
   {
-    "message": "点击碎片"
+    "message": "正方向"
   },
-  "fxGroupClickBloom":
+  "fxGroup_hit":
   {
-    "message": "点击与 Bloom"
+    "message": "Hit 撞击"
   },
-  "fxGroupHitFlare":
+  "fxGroup_flare":
   {
-    "message": "Hit / Flare"
+    "message": "Flare 闪光"
   },
-  "fxGroupTrailLayer":
+  "fxGroup_disk":
   {
-    "message": "轨迹图层"
+    "message": "中心光盘"
   },
-  "fxGroupTrailShards":
+  "fxGroup_rings":
   {
-    "message": "拖尾碎片"
+    "message": "点击圆环"
   },
-  "fxGroupTrailBloom":
+  "fxGroup_shards":
   {
-    "message": "拖尾与 Bloom"
+    "message": "三角碎片"
   },
-  "fxRingHdrIntensity":
+  "fxGroup_trail":
   {
-    "message": "圆环 HDR 强度"
+    "message": "轨迹"
   },
-  "fxRingRadiusMin":
+  "fxGroup_bloom":
   {
-    "message": "圆环起始半径"
+    "message": "Bloom"
   },
-  "fxRingRadiusMax":
+  "fxParam_hit_enabled":
   {
-    "message": "圆环终止半径"
+    "message": "启用 Hit"
   },
-  "fxRingWidthStart":
-  {
-    "message": "圆环起始厚度倍率"
-  },
-  "fxRingWidthEnd":
-  {
-    "message": "圆环终止厚度倍率"
-  },
-  "fxRingLifetime":
-  {
-    "message": "圆环寿命"
-  },
-  "fxClickShardCount":
-  {
-    "message": "点击碎片数量"
-  },
-  "fxMaxShardCount":
-  {
-    "message": "碎片上限"
-  },
-  "fxBloomRingBlur":
-  {
-    "message": "Bloom 圆环模糊"
-  },
-  "fxBloomThreshold":
-  {
-    "message": "Bloom 阈值"
-  },
-  "fxBloomIntensity":
-  {
-    "message": "Bloom 强度"
-  },
-  "fxBloomScatter":
-  {
-    "message": "Bloom 扩散"
-  },
-  "fxRingCount":
-  {
-    "message": "圆环数量"
-  },
-  "fxDiskRadius":
-  {
-    "message": "光盘半径"
-  },
-  "fxDiskLifetime":
-  {
-    "message": "光盘寿命"
-  },
-  "fxRingAngularVelocity":
-  {
-    "message": "旋转速度倍率"
-  },
-  "fxRingArcSamples":
-  {
-    "message": "弧线采样精度"
-  },
-  "fxRingDirection":
-  {
-    "message": "旋转方向"
-  },
-  "fxRootDuration":
-  {
-    "message": "根持续时间"
-  },
-  "fxClickShardLifetimeMin":
-  {
-    "message": "点击碎片最短寿命"
-  },
-  "fxClickShardLifetimeMax":
-  {
-    "message": "点击碎片最长寿命"
-  },
-  "fxHitEnabled":
-  {
-    "message": "启用 Hit 撞击爆发"
-  },
-  "fxHitRadius":
-  {
-    "message": "Hit 半径"
-  },
-  "fxHitLifetime":
+  "fxParam_hit_lifetimeMs":
   {
     "message": "Hit 寿命"
   },
-  "fxFlareEnabled":
+  "fxParam_hit_radius":
   {
-    "message": "启用 Flare 闪光"
+    "message": "Hit 半径"
   },
-  "fxFlareRadius":
+  "fxParam_flare_enabled":
   {
-    "message": "Flare 半径"
+    "message": "启用 Flare"
   },
-  "fxFlareLifetime":
+  "fxParam_flare_lifetimeMs":
   {
     "message": "Flare 寿命"
   },
-  "fxFlareRayCount":
+  "fxParam_flare_radius":
   {
-    "message": "Flare 射线数"
+    "message": "Flare 半径"
   },
-  "fxTrailWidth":
+  "fxParam_flare_rayCount":
   {
-    "message": "拖尾宽度"
+    "message": "Flare 射线数量"
   },
-  "fxTrailOuterGlowWidth":
+  "fxParam_disk_lifetimeMs":
   {
-    "message": "外发光宽度"
+    "message": "光盘寿命"
   },
-  "fxTrailLifetime":
+  "fxParam_disk_radius":
   {
-    "message": "拖尾寿命"
+    "message": "光盘半径"
   },
-  "fxTrailShardSpacing":
+  "fxParam_rings_count":
   {
-    "message": "碎片间距"
+    "message": "圆环数量"
   },
-  "fxBloomTrailEmission":
+  "fxParam_rings_lifetimeMs":
   {
-    "message": "Bloom 拖尾发射校准"
+    "message": "圆环寿命"
   },
-  "fxTrailOpacity":
+  "fxParam_rings_radiusMin":
   {
-    "message": "拖尾整体透明度"
+    "message": "圆环最小半径"
   },
-  "fxTrailGeometryWidth":
+  "fxParam_rings_radiusMax":
   {
-    "message": "几何带宽"
+    "message": "圆环最大半径"
   },
-  "fxTrailMinVertexDistance":
+  "fxParam_rings_bandToOuterRadius":
   {
-    "message": "最小采样间距"
+    "message": "环带与外半径比例"
   },
-  "fxTrailShardLifetimeMin":
+  "fxParam_rings_widthStart":
   {
-    "message": "拖尾碎片最短寿命"
+    "message": "圆环起始宽度倍率"
   },
-  "fxTrailShardLifetimeMax":
+  "fxParam_rings_widthEnd":
   {
-    "message": "拖尾碎片最长寿命"
+    "message": "圆环终止宽度倍率"
   },
-  "fxBloomDiskBlur":
+  "fxParam_rings_angularVelocityMultiplier":
   {
-    "message": "Bloom 光盘模糊"
+    "message": "圆环旋转速度倍率"
+  },
+  "fxParam_rings_rotationDirection":
+  {
+    "message": "圆环旋转方向"
+  },
+  "fxParam_rings_hdrIntensity":
+  {
+    "message": "圆环 HDR 强度"
+  },
+  "fxParam_rings_arcSamples":
+  {
+    "message": "圆弧采样数"
+  },
+  "fxParam_rings_radialSamples":
+  {
+    "message": "径向采样数"
+  },
+  "fxParam_rings_dissolveDirection":
+  {
+    "message": "圆环溶解方向"
+  },
+  "fxParam_shards_hdrIntensity":
+  {
+    "message": "碎片 HDR 强度"
+  },
+  "fxParam_shards_clickCount":
+  {
+    "message": "点击碎片数量"
+  },
+  "fxParam_shards_clickLifetimeMinMs":
+  {
+    "message": "点击碎片最短寿命"
+  },
+  "fxParam_shards_clickLifetimeMaxMs":
+  {
+    "message": "点击碎片最长寿命"
+  },
+  "fxParam_shards_clickRadius":
+  {
+    "message": "点击碎片生成半径"
+  },
+  "fxParam_shards_clickSpeedMin":
+  {
+    "message": "点击碎片最小速度"
+  },
+  "fxParam_shards_clickSpeedMax":
+  {
+    "message": "点击碎片最大速度"
+  },
+  "fxParam_shards_trailLifetimeMinMs":
+  {
+    "message": "轨迹碎片最短寿命"
+  },
+  "fxParam_shards_trailLifetimeMaxMs":
+  {
+    "message": "轨迹碎片最长寿命"
+  },
+  "fxParam_shards_trailRadius":
+  {
+    "message": "轨迹碎片生成半径"
+  },
+  "fxParam_shards_trailSpeedMin":
+  {
+    "message": "轨迹碎片最小速度"
+  },
+  "fxParam_shards_trailSpeedMax":
+  {
+    "message": "轨迹碎片最大速度"
+  },
+  "fxParam_shards_sizeMin":
+  {
+    "message": "碎片最小尺寸"
+  },
+  "fxParam_shards_sizeMax":
+  {
+    "message": "碎片最大尺寸"
+  },
+  "fxParam_shards_trailSpacing":
+  {
+    "message": "轨迹碎片间距"
+  },
+  "fxParam_shards_maxCount":
+  {
+    "message": "轨迹碎片数量上限"
+  },
+  "fxParam_trail_lifetimeMs":
+  {
+    "message": "轨迹寿命"
+  },
+  "fxParam_trail_geometryWidth":
+  {
+    "message": "轨迹几何带宽"
+  },
+  "fxParam_trail_width":
+  {
+    "message": "轨迹可见宽度"
+  },
+  "fxParam_trail_minVertexDistance":
+  {
+    "message": "轨迹最小顶点间距"
+  },
+  "fxParam_trail_numCornerVertices":
+  {
+    "message": "轨迹圆角顶点数"
+  },
+  "fxParam_trail_numCapVertices":
+  {
+    "message": "轨迹端帽顶点数"
+  },
+  "fxParam_trail_outerGlowWidth":
+  {
+    "message": "轨迹外发光宽度"
+  },
+  "fxParam_trail_trailOpacity":
+  {
+    "message": "轨迹整体透明度"
+  },
+  "fxParam_bloom_threshold":
+  {
+    "message": "Bloom 阈值"
+  },
+  "fxParam_bloom_softKnee":
+  {
+    "message": "Bloom 柔和阈值"
+  },
+  "fxParam_bloom_clamp":
+  {
+    "message": "Bloom 预过滤上限"
+  },
+  "fxParam_bloom_intensity":
+  {
+    "message": "Bloom 强度"
+  },
+  "fxParam_bloom_diffusion":
+  {
+    "message": "Bloom 扩散"
+  },
+  "fxParam_bloom_resolutionScale":
+  {
+    "message": "Bloom 分辨率比例"
+  },
+  "fxParam_bloom_emissionRange":
+  {
+    "message": "Bloom 发射范围"
+  },
+  "fxParam_bloom_diskEmission":
+  {
+    "message": "光盘发射强度"
+  },
+  "fxParam_bloom_trailEmission":
+  {
+    "message": "轨迹发射强度"
+  },
+  "fxParam_bloom_trailCoverageScale":
+  {
+    "message": "轨迹覆盖倍率"
+  },
+  "fxParam_bloom_trailEmissionAlpha":
+  {
+    "message": "轨迹发射透明度"
+  },
+  "fxParam_bloom_clickEmissionScale":
+  {
+    "message": "点击发射倍率"
+  },
+  "fxParam_bloom_ringEmissionAlpha":
+  {
+    "message": "圆环发射透明度"
+  },
+  "fxParam_bloom_diskEmissionAlpha":
+  {
+    "message": "光盘发射透明度"
+  },
+  "fxParam_bloom_ringBlur":
+  {
+    "message": "原生圆环模糊"
+  },
+  "fxParam_bloom_ringAlpha":
+  {
+    "message": "原生圆环辉光透明度"
+  },
+  "fxParam_bloom_diskBlur":
+  {
+    "message": "原生光盘模糊"
+  },
+  "fxParam_bloom_diskAlpha":
+  {
+    "message": "原生光盘辉光透明度"
+  },
+  "fxParam_bloom_trailAlpha":
+  {
+    "message": "原生轨迹辉光透明度"
   }
 }
