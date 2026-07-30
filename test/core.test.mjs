@@ -292,13 +292,13 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
     assert.equal(effect.getConfig().renderingMode, 'legacy');
     assert.equal(effect.getConfig().maxDpr, 1);
     assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);
-    // 未覆盖参数必须保留 Legacy 的内部兼容映射。
-    assert.equal(effect.getFxConfig().rings.widthStart, 5.2);
+    // 未覆盖参数必须恢复上游公开的 Legacy 模式基线。
+    assert.equal(effect.getFxConfig().rings.widthStart, 1);
     assert.equal(effect.getFxConfig().bloom.trailEmissionAlpha, 0.5);
     assert.equal(effect.getFxConfig().bloom.trailAlpha, 0.09);
     assert.equal(effect.getFxConfig().hit.enabled, true);
-    // 1.2.7 暂未读取 rootDurationMs，但公开 setter 仍应保留此配置值。
-    assert.equal(effect.getFxConfig().rootDurationMs, 1500);
+    // 根粒子时长只是对象池元数据，不再属于公开视觉参数。
+    assert.equal(effect.getFxConfig().rootDurationMs, 1000);
 
     effect.updateConfig(
     {
