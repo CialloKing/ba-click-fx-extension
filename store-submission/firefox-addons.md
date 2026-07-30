@@ -3,7 +3,7 @@
 ## Prepared release
 
 - Extension version: `1.1.3`
-- Core dependency: `ba-click-fx 1.2.7`
+- Core dependency: `ba-click-fx 1.2.15`
 - Manifest version: `3`
 - Gecko ID: `ba-click-fx-extension@cialloking.top`
 - Minimum Firefox Desktop version: `140.0`
@@ -48,14 +48,14 @@ Add configurable click rings, particles, and cursor trails to ordinary webpages.
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
 
-It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D or WebGL2. Quick controls are available in the toolbar popup, while full settings also manages render mode, maximum DPR, and every ring, shard, Bloom, Hit/Flare, and trail parameter exposed by the upstream demo.
+It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D or WebGL2. Quick controls are available in the toolbar popup, while full settings also manages full WebGL2 and fallback render modes, maximum DPR, compositing, timing, and all 65 public upstream effect parameters.
 
 Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
 • Choose Classic, Soft, or Power-saving appearance presets
 • Switch among Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom quality; Highest falls back to software Bloom when WebGL2 is unavailable
-• Adjust theme color, opacity, effect size, raw render mode, maximum DPR, and every ring, shard, Bloom, Hit/Flare, and trail parameter
+• Adjust theme color, opacity, effect size, full WebGL2 or fallback render modes, maximum DPR, output compositing, light-background contrast, timing, and all 65 public effect parameters
 • Follow the system language or choose Simplified Chinese or English
 • Follow the system reduced-motion preference or choose full/reduced continuous motion
 • Search, remove, or clear locally saved website rules
@@ -95,14 +95,14 @@ BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or
 ```text
 BA Click FX 是一个非官方的网页视觉特效扩展。
 
-安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 或 WebGL2 在本地渲染。工具栏弹窗提供常用开关，完整设置页还可管理渲染模式、最大 DPR，以及展示页提供的圆环、碎片、Bloom、Hit/Flare 和拖尾参数。
+安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D 或 WebGL2 在本地渲染。工具栏弹窗提供常用开关，完整设置页还可管理完整 WebGL2 与回退渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率，以及上游参数 Schema 中全部 65 个公开特效参数。
 
 主要功能：
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
 • 可选择经典、柔和或省电外观预设
 • 可切换均衡/Legacy、高级/原生辉光和最高画质/WebGL2 Bloom；WebGL2 不可用时，最高画质自动回退软件 Bloom
-• 可调整主题颜色、不透明度、特效大小、原始渲染模式、最大 DPR，以及全部圆环、碎片、Bloom、Hit/Flare 和拖尾参数
+• 可调整主题颜色、不透明度、特效大小、完整 WebGL2 或回退渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 65 个公开特效参数
 • 可跟随系统语言，或指定简体中文/英文
 • 可跟随系统减少动态偏好，或指定完整/减少持续动态
 • 可搜索、移除或清空本机网站规则

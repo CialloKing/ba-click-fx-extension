@@ -181,6 +181,11 @@ for (const requiredControlId of [
   'quality',
   'render-mode',
   'max-dpr',
+  'output-compositing',
+  'isolated-compositing',
+  'light-background-contrast-alpha',
+  'click-time-scale',
+  'trail-time-scale',
   'click-fx-groups',
   'trail-fx-groups',
 ])
@@ -190,6 +195,15 @@ for (const requiredControlId of [
     `完整设置页缺少 ${requiredControlId} 控件。`,
   );
 }
+
+const renderModeOptions = optionsHtml.match(
+  /<select\b[^>]*\bid=["']render-mode["'][^>]*>([\s\S]*?)<\/select>/i,
+)?.[1] || '';
+
+assert(
+  /<option\b[^>]*\bvalue=["']full-webgl2["'][^>]*>/i.test(renderModeOptions),
+  '完整设置页渲染模式缺少完整 WebGL2。',
+);
 
 assert(
   /<input\b[^>]*\bid=["']scale["'][^>]*\bmin=["']0\.01["'][^>]*\bmax=["']5["'][^>]*\bstep=["']0\.01["'][^>]*>/i

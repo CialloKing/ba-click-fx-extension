@@ -4,6 +4,15 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.7` to `1.2.15` and adopted its versioned 65-parameter Schema, atomic parameter patch API, mode-specific reset baselines, and backend status events.
+- Full settings now includes full WebGL2 rendering, output and isolated compositing, light-background contrast, click/trail timing, and every public upstream effect parameter.
+
+### Migration
+
+- Stored Schema 0 effect overrides migrate atomically to Schema 1; the removed `bloom.scatter` path is replaced by the current `bloom.diffusion` default while rejected values remain reportable.
+
 ## [1.1.3] - 2026-07-21
 
 ### Changed

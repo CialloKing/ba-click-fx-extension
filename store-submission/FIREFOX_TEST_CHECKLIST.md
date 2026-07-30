@@ -26,13 +26,13 @@ Complete this checklist before creating the `v1.1.3` Tag and GitHub Release.
 - [ ] Test global, current-site, click, trail, continuous-trail, and preview controls.
 - [ ] Open Full settings and test Classic, Soft, Power-saving, and Custom appearance states.
 - [ ] Test Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom; confirm Highest falls back to software Bloom when WebGL2 is unavailable.
-- [ ] Test the raw render-mode and maximum-DPR selectors plus every ring, shard, Bloom, Hit/Flare, and trail control copied from the demo panel.
+- [ ] Test full WebGL2 and fallback render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public upstream Schema controls.
 - [ ] Reset visual settings and confirm every advanced value returns to its upstream default while website rules remain intact.
 - [ ] Test system, Simplified Chinese, and English language modes.
 - [ ] Test system, full, and reduced continuous-motion modes.
 - [ ] Disable `https://example.com`, confirm the Canvas is removed, then restore the site rule.
 - [ ] Confirm visual settings persist through a Firefox restart when installed through a persistent test profile or signed build.
-- [ ] Confirm local website rules remain in `storage.local` and schema v2 migration does not duplicate or delete rules.
+- [ ] Confirm local website rules remain in `storage.local`, storage schema v5 does not duplicate or delete rules, and effect-parameter Schema 0 migrates atomically to Schema 1.
 - [ ] Confirm the repository, privacy, support, and demo links open the expected HTTPS pages.
 
 ## Restrictions and optional checks

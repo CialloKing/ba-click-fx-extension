@@ -4,7 +4,7 @@
 
 - Extension version: `1.1.3`
 - Review package: `ba-click-fx-extension-v1.1.3-chromium.zip`
-- Core dependency: `ba-click-fx 1.2.7`
+- Core dependency: `ba-click-fx 1.2.15`
 - No test account or credentials required
 
 ```text
@@ -16,7 +16,7 @@ Testing steps:
 3. Click the page to see a ring and particle effect.
 4. Move the pointer to see the cursor trail.
 5. Open the toolbar popup. Verify the global, current-website, click-effect, trail, and preview controls.
-6. Select “Full settings”. Change the appearance preset, color, opacity, size, quality, render mode, maximum DPR, or an advanced ring/shard/Bloom/Hit/Flare/trail parameter and verify the webpage updates.
+6. Select “Full settings”. Change the appearance preset, full WebGL2 or fallback render mode, maximum DPR, output compositing, light-background contrast, timing, or one of the 65 advanced effect parameters and verify the webpage updates.
 7. In Full settings, select “Reduce continuous motion”. Verify click effects remain available while the always-moving trail is suppressed.
 8. Turn off the current website in the popup. Verify the Canvas overlay is removed only for that origin and the origin appears under Disabled websites in Full settings.
 9. Re-enable or remove that website rule and use “Preview click effect”.
@@ -49,7 +49,7 @@ BA Click FX 为普通网页添加可配置的点击特效和鼠标光标拖尾�
 3. 点击网页，确认显示圆环和粒子。
 4. 移动鼠标，确认显示拖尾。
 5. 打开工具栏弹窗，验证全局、当前网站、点击、拖尾和预览控件。
-6. 打开“完整设置”，修改预设、颜色、不透明度、大小、画质、渲染模式、最大 DPR，或圆环/碎片/Bloom/Hit/Flare/拖尾高级参数，确认网页效果更新。
+6. 打开“完整设置”，修改预设、完整 WebGL2 或回退渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率，或 65 个高级特效参数中的任意一项，确认网页效果更新。
 7. 选择“减少持续动态”，确认点击特效仍可使用，但不再持续显示移动拖尾。
 8. 在弹窗中关闭当前网站，确认 Canvas 只从该 origin 移除，并且该 origin 出现在完整设置的已禁用网站列表中。
 9. 重新启用或移除该网站规则，并测试“预览点击特效”。

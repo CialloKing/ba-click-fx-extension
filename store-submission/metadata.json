@@ -1,7 +1,7 @@
 ﻿{
   "extensionVersion": "1.1.3",
   "corePackage": "ba-click-fx",
-  "coreVersion": "1.2.7",
+  "coreVersion": "1.2.15",
   "chromiumPackage": "release/ba-click-fx-extension-v1.1.3-chromium.zip",
   "chromiumSha256": "36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA",
   "firefoxPackage": "release/ba-click-fx-extension-v1.1.3-firefox.zip",
