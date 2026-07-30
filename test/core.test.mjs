@@ -1,8 +1,12 @@
 ﻿import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { BAClickFX } from 'ba-click-fx';
-import { expandFxParams } from '../src/shared/fx-settings.js';
+import {
+  BAClickFX,
+  BLOOM_BACKEND_CHANGE_EVENT,
+  EFFECT_BACKEND_CHANGE_EVENT,
+  FX_PARAM_SCHEMA_VERSION,
+} from 'ba-click-fx';
 
 class MockHTMLElement
 {
@@ -10,6 +14,7 @@ class MockHTMLElement
   {
     this.attributes = new Map();
     this.children = [];
+    this.eventListeners = new Map();
     this.parentNode = null;
     this.style =
     {
@@ -42,6 +47,39 @@ class MockHTMLElement
   remove()
   {
     this.parentNode?.removeChild(this);
+  }
+
+  addEventListener(type, listener)
+  {
+    const listeners = this.eventListeners.get(type) || new Set();
+
+    listeners.add(listener);
+    this.eventListeners.set(type, listeners);
+  }
+
+  removeEventListener(type, listener)
+  {
+    const listeners = this.eventListeners.get(type);
+
+    listeners?.delete(listener);
+
+    if (listeners?.size === 0)
+    {
+      this.eventListeners.delete(type);
+    }
+  }
+
+  dispatchEvent(event)
+  {
+    event.target = this;
+    event.currentTarget = this;
+
+    for (const listener of this.eventListeners.get(event.type) || [])
+    {
+      listener.call(this, event);
+    }
+
+    return true;
   }
 
   getBoundingClientRect()
@@ -93,6 +131,7 @@ function installDomMock()
     window: globalThis.window,
     requestAnimationFrame: globalThis.requestAnimationFrame,
     cancelAnimationFrame: globalThis.cancelAnimationFrame,
+    CustomEvent: globalThis.CustomEvent,
   };
   const listeners = new Map();
 
@@ -140,6 +179,16 @@ function installDomMock()
   globalThis.cancelAnimationFrame = () =>
   {
   };
+  globalThis.CustomEvent = class
+  {
+    constructor(type, options = {})
+    {
+      this.type = type;
+      this.detail = options.detail;
+      this.target = null;
+      this.currentTarget = null;
+    }
+  };
 
   return {
     listeners,
@@ -161,6 +210,7 @@ function installDomMock()
       globalThis.window = previous.window;
       globalThis.requestAnimationFrame = previous.requestAnimationFrame;
       globalThis.cancelAnimationFrame = previous.cancelAnimationFrame;
+      globalThis.CustomEvent = previous.CustomEvent;
     },
   };
 }
@@ -172,12 +222,19 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
 
   try
   {
-    const effect = new BAClickFX({ target: canvas });
+    const effect = new BAClickFX(
+    {
+      target: canvas,
+      themeColor: '#1996ff',
+      effectBackend: 'canvas2d',
+      bloomBackend: 'webgl2',
+    });
 
-    effect.setThemeColor('#1996ff');
-    effect.updateConfig({ trailAlways: true });
     effect.updateConfig(
     {
+      themeColor: '#4ca7ff',
+      trailAlways: true,
+      effectBackend: 'canvas2d',
       renderingMode: 'enhanced',
       bloomBackend: 'webgl2',
       maxDpr: 1,
@@ -186,6 +243,8 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
     const config = effect.getConfig();
 
     assert.equal(config.trailAlways, true);
+    assert.equal(config.themeColor, '#4ca7ff');
+    assert.equal(config.effectBackend, 'canvas2d');
     assert.equal(config.renderingMode, 'enhanced');
     assert.equal(config.bloomBackend, 'webgl2');
     assert.equal(config.softwareBloomEnabled, true);
@@ -201,6 +260,69 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
   }
   finally
   {
+    environment.restore();
+  }
+});
+
+test('后端事件报告 requested 与 resolved 状态且允许监听器清理', () =>
+{
+  const environment = installDomMock();
+  const effect = new BAClickFX(
+  {
+    target: new MockHTMLElement(),
+    effectBackend: 'canvas2d',
+    bloomBackend: 'native',
+  });
+  const effectEvents = [];
+  const bloomEvents = [];
+  const handleEffect = (event) => effectEvents.push(event.detail);
+  const handleBloom = (event) => bloomEvents.push(event.detail);
+
+  try
+  {
+    const initialConfig = effect.getConfig();
+
+    assert.equal(initialConfig.effectBackend, 'canvas2d');
+    assert.equal(initialConfig.resolvedEffectBackend, 'canvas2d');
+    assert.equal(initialConfig.bloomBackend, 'native');
+    assert.equal(initialConfig.resolvedBloomBackend, 'native');
+
+    effect.canvas.addEventListener(EFFECT_BACKEND_CHANGE_EVENT, handleEffect);
+    effect.canvas.addEventListener(BLOOM_BACKEND_CHANGE_EVENT, handleBloom);
+    effect.updateConfig(
+    {
+      effectBackend: 'webgl2',
+      bloomBackend: 'webgl2',
+    });
+
+    assert.deepEqual(effectEvents.at(-1),
+    {
+      requestedEffectBackend: 'webgl2',
+      resolvedEffectBackend: 'pending',
+    });
+    assert.deepEqual(bloomEvents.at(-1),
+    {
+      requestedBloomBackend: 'webgl2',
+      resolvedBloomBackend: 'pending',
+    });
+
+    effect.canvas.removeEventListener(EFFECT_BACKEND_CHANGE_EVENT, handleEffect);
+    effect.canvas.removeEventListener(BLOOM_BACKEND_CHANGE_EVENT, handleBloom);
+    const previousEffectEventCount = effectEvents.length;
+    const previousBloomEventCount = bloomEvents.length;
+
+    effect.updateConfig(
+    {
+      effectBackend: 'canvas2d',
+      bloomBackend: 'software',
+    });
+
+    assert.equal(effectEvents.length, previousEffectEventCount);
+    assert.equal(bloomEvents.length, previousBloomEventCount);
+  }
+  finally
+  {
+    effect.destroy();
     environment.restore();
   }
 });
@@ -256,13 +378,13 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
 
   try
   {
-    const fxParams = expandFxParams(
+    const fxParams =
     {
       'rings.hdrIntensity': 7,
       'bloom.trailEmissionAlpha': 0.5,
       'bloom.trailAlpha': 0.09,
       'hit.enabled': true,
-    });
+    };
 
     effect.updateConfig(
     {
@@ -270,30 +392,20 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
       bloomBackend: 'native',
       maxDpr: 1,
     });
-    effect.resetFxConfig();
-    effect.updateConfig(
+    const legacyResult = effect.setFxParams(fxParams,
     {
-      renderingMode: 'enhanced',
-      bloomBackend: 'native',
-      maxDpr: 1,
-    });
-    effect.updateConfig(
-    {
-      renderingMode: 'legacy',
-      bloomBackend: 'native',
-      maxDpr: 1,
+      reset: true,
+      strict: true,
+      schemaVersion: FX_PARAM_SCHEMA_VERSION,
     });
 
-    for (const [path, value] of Object.entries(fxParams))
-    {
-      effect.setFxParam(path, value);
-    }
-
+    assert.equal(legacyResult.committed, true);
     assert.equal(effect.getConfig().renderingMode, 'legacy');
     assert.equal(effect.getConfig().maxDpr, 1);
     assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);
     // 未覆盖参数必须恢复上游公开的 Legacy 模式基线。
     assert.equal(effect.getFxConfig().rings.widthStart, 1);
+    assert.equal(effect.getFxConfig().trail.width, 4);
     assert.equal(effect.getFxConfig().bloom.trailEmissionAlpha, 0.5);
     assert.equal(effect.getFxConfig().bloom.trailAlpha, 0.09);
     assert.equal(effect.getFxConfig().hit.enabled, true);
@@ -306,28 +418,45 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
       bloomBackend: 'webgl2',
       maxDpr: 2,
     });
-    effect.resetFxConfig();
-
-    for (const [path, value] of Object.entries(fxParams))
+    const enhancedResult = effect.setFxParams(fxParams,
     {
-      effect.setFxParam(path, value);
-    }
+      reset: true,
+      strict: true,
+      schemaVersion: FX_PARAM_SCHEMA_VERSION,
+    });
 
+    assert.equal(enhancedResult.committed, true);
     assert.equal(effect.getConfig().renderingMode, 'enhanced');
     assert.equal(effect.getConfig().bloomBackend, 'webgl2');
     assert.equal(effect.getConfig().maxDpr, 2);
     assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);
     assert.equal(effect.getFxConfig().rings.rotationDirection, -1);
+    assert.equal(effect.getFxConfig().trail.width, 2.7);
+
+    const beforeRejectedPatch = effect.getFxConfig();
+    const rejectedResult = effect.setFxParams(
+    {
+      'rings.hdrIntensity': 2,
+      'rings.notReal': 1,
+    },
+    {
+      reset: true,
+      strict: true,
+      schemaVersion: FX_PARAM_SCHEMA_VERSION,
+    });
+
+    assert.equal(rejectedResult.committed, false);
+    assert.deepEqual(effect.getFxConfig(), beforeRejectedPatch);
 
     // 从稀疏覆盖中删除字段时，内容脚本会先重置，不能遗留旧实例参数。
-    effect.updateConfig(
+    const resetResult = effect.setFxParams({},
     {
-      renderingMode: 'enhanced',
-      bloomBackend: 'webgl2',
-      maxDpr: 2,
+      reset: true,
+      strict: true,
+      schemaVersion: FX_PARAM_SCHEMA_VERSION,
     });
-    effect.resetFxConfig();
 
+    assert.equal(resetResult.committed, true);
     assert.equal(effect.getFxConfig().rings.hdrIntensity, 5.992157);
     assert.equal(effect.getFxConfig().hit.enabled, false);
   }
