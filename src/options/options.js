@@ -3,6 +3,7 @@ import {
   FX_CONTROL_DEFINITIONS,
   FX_CONTROL_GROUPS,
   flattenFxParams,
+  getFxParamDefault,
 } from '../shared/fx-settings.js';
 import {
   APPEARANCE_PRESETS,
@@ -32,15 +33,34 @@ const VISUAL_DEFAULTS =
   renderMode: DEFAULT_SETTINGS.renderMode,
   maxDpr: DEFAULT_SETTINGS.maxDpr,
   fxParams: DEFAULT_SETTINGS.fxParams,
+  clickTimeScale: DEFAULT_SETTINGS.clickTimeScale,
+  trailTimeScale: DEFAULT_SETTINGS.trailTimeScale,
+  outputCompositing: DEFAULT_SETTINGS.outputCompositing,
+  isolatedCompositing: DEFAULT_SETTINGS.isolatedCompositing,
+  lightBackgroundContrastAlpha: DEFAULT_SETTINGS.lightBackgroundContrastAlpha,
   preset: DEFAULT_SETTINGS.preset,
 };
 
 const CLICK_GROUP_NAMES = new Set([
-  'clickRings',
-  'clickShards',
-  'clickBloom',
-  'hitFlare',
+  'hit',
+  'flare',
+  'disk',
+  'rings',
 ]);
+
+const UNIT_MESSAGE_KEYS = Object.freeze(
+{
+  count: 'unitCount',
+  'gamma-hdr': 'unitGammaHdr',
+  'linear-hdr': 'unitLinearHdr',
+  ms: 'unitMilliseconds',
+  multiplier: 'unitMultiplier',
+  px: 'unitPixels',
+  'px-per-second': 'unitPixelsPerSecond',
+  ratio: 'unitRatio',
+  samples: 'unitSamples',
+  scalar: 'unitScalar',
+});
 
 const elements =
 {
@@ -55,9 +75,17 @@ const elements =
   renderMode: document.querySelector('#render-mode'),
   maxDpr: document.querySelector('#max-dpr'),
   maxDprValue: document.querySelector('#max-dpr-value'),
+  outputCompositing: document.querySelector('#output-compositing'),
+  isolatedCompositing: document.querySelector('#isolated-compositing'),
+  lightBackgroundContrastAlpha: document.querySelector('#light-background-contrast-alpha'),
+  lightBackgroundContrastAlphaValue: document.querySelector('#light-background-contrast-alpha-value'),
   clickEnabled: document.querySelector('#click-enabled'),
+  clickTimeScale: document.querySelector('#click-time-scale'),
+  clickTimeScaleValue: document.querySelector('#click-time-scale-value'),
   trailEnabled: document.querySelector('#trail-enabled'),
   trailAlways: document.querySelector('#trail-always'),
+  trailTimeScale: document.querySelector('#trail-time-scale'),
+  trailTimeScaleValue: document.querySelector('#trail-time-scale-value'),
   clickFxGroups: document.querySelector('#click-fx-groups'),
   trailFxGroups: document.querySelector('#trail-fx-groups'),
   languageMode: document.querySelector('#language-mode'),
@@ -80,6 +108,30 @@ let i18n = createI18n(settings.languageMode);
 let statusTimer = 0;
 const fxControls = new Map();
 
+function countDecimalPlaces(value)
+{
+  const text = String(value).toLowerCase();
+
+  if (text.includes('e-'))
+  {
+    return Number(text.split('e-')[1]) || 0;
+  }
+
+  return text.includes('.') ? text.split('.')[1].length : 0;
+}
+
+function getDirectionMessageKey(path, value)
+{
+  if (path === 'rings.rotationDirection')
+  {
+    return Number(value) < 0
+      ? 'rotationCounterclockwise'
+      : 'rotationClockwise';
+  }
+
+  return Number(value) < 0 ? 'directionNegative' : 'directionPositive';
+}
+
 function formatFxValue(definition, value)
 {
   if (definition.type === 'boolean')
@@ -87,20 +139,17 @@ function formatFxValue(definition, value)
     return value ? i18n.getMessage('enabledLabel') : i18n.getMessage('disabledLabel');
   }
 
-  if (definition.path === 'rings.rotationDirection')
+  if (definition.unit === 'direction')
   {
-    return Number(value) < 0
-      ? i18n.getMessage('rotationCounterclockwise')
-      : i18n.getMessage('rotationClockwise');
+    return i18n.getMessage(getDirectionMessageKey(definition.path, value));
   }
 
-  const decimalPlaces = String(definition.step).split('.')[1]?.length || 0;
-  const formatted = Number(value).toFixed(
-    definition.type === 'integer' ? 0 : Math.min(decimalPlaces, 2),
-  );
+  const decimalPlaces = Math.min(4, countDecimalPlaces(definition.step));
+  const formatted = Number(value).toFixed(decimalPlaces);
+  const unitKey = UNIT_MESSAGE_KEYS[definition.unit] || definition.unitKey;
 
-  return definition.unitKey
-    ? `${formatted} ${i18n.getMessage(definition.unitKey)}`
+  return unitKey
+    ? `${formatted} ${i18n.getMessage(unitKey)}`
     : formatted;
 }
 
@@ -110,7 +159,9 @@ function createFxControl(definition)
   const heading = document.createElement('span');
   const title = document.createElement('span');
   const output = document.createElement('output');
-  const input = document.createElement('input');
+  const input = document.createElement(
+    definition.unit === 'direction' ? 'select' : 'input',
+  );
 
   label.className = definition.type === 'boolean'
     ? 'fx-toggle-field'
@@ -124,7 +175,20 @@ function createFxControl(definition)
   input.id = definition.id;
   input.dataset.fxPath = definition.path;
 
-  if (definition.type === 'boolean')
+  if (definition.unit === 'direction')
+  {
+    for (const value of [-1, 1])
+    {
+      const option = document.createElement('option');
+      const messageKey = getDirectionMessageKey(definition.path, value);
+
+      option.value = String(value);
+      option.dataset.i18n = messageKey;
+      option.textContent = i18n.getMessage(messageKey);
+      input.appendChild(option);
+    }
+  }
+  else if (definition.type === 'boolean')
   {
     input.type = 'checkbox';
   }
@@ -151,7 +215,7 @@ function createFxGroup(group)
   const definitions = FX_CONTROL_DEFINITIONS.filter((item) => item.group === group.id);
 
   details.className = 'fx-group';
-  details.open = group.id === 'clickRings' || group.id === 'trailLayer';
+  details.open = group.id === 'rings' || group.id === 'trail';
   summary.dataset.i18n = group.i18nKey;
   summary.textContent = i18n.getMessage(group.i18nKey);
   grid.className = 'fx-grid';
@@ -183,7 +247,7 @@ function buildFxControls()
 
 function renderFxControls()
 {
-  const values = flattenFxParams(settings.fxParams);
+  const values = flattenFxParams(settings.fxParams, settings.renderMode);
 
   for (const [path, control] of fxControls)
   {
@@ -267,10 +331,21 @@ function render()
   elements.renderMode.value = settings.renderMode;
   elements.maxDpr.value = String(settings.maxDpr);
   elements.maxDprValue.textContent = String(settings.maxDpr);
+  elements.outputCompositing.value = settings.outputCompositing;
+  elements.isolatedCompositing.checked = settings.isolatedCompositing;
+  elements.lightBackgroundContrastAlpha.value = String(
+    settings.lightBackgroundContrastAlpha,
+  );
+  elements.lightBackgroundContrastAlphaValue.textContent =
+    `${Math.round(settings.lightBackgroundContrastAlpha * 100)}%`;
   elements.clickEnabled.checked = settings.clickEnabled;
+  elements.clickTimeScale.value = String(settings.clickTimeScale);
+  elements.clickTimeScaleValue.textContent = `${settings.clickTimeScale.toFixed(2)}×`;
   elements.trailEnabled.checked = settings.trailEnabled;
   elements.trailAlways.checked = settings.trailAlways;
   elements.trailAlways.disabled = !settings.trailEnabled;
+  elements.trailTimeScale.value = String(settings.trailTimeScale);
+  elements.trailTimeScaleValue.textContent = `${settings.trailTimeScale.toFixed(2)}×`;
   elements.languageMode.value = settings.languageMode;
   elements.motionMode.value = settings.motionMode;
   elements.version.textContent = chrome.runtime.getManifest().version;
@@ -398,9 +473,41 @@ function bindEvents()
     saveRenderCombination({ maxDpr: Number(elements.maxDpr.value) });
   });
 
+  elements.outputCompositing.addEventListener('change', () =>
+  {
+    void savePatch({ outputCompositing: elements.outputCompositing.value });
+  });
+
+  elements.isolatedCompositing.addEventListener('change', () =>
+  {
+    void savePatch({ isolatedCompositing: elements.isolatedCompositing.checked });
+  });
+
+  elements.lightBackgroundContrastAlpha.addEventListener('input', () =>
+  {
+    elements.lightBackgroundContrastAlphaValue.textContent =
+      `${Math.round(Number(elements.lightBackgroundContrastAlpha.value) * 100)}%`;
+  });
+  elements.lightBackgroundContrastAlpha.addEventListener('change', () =>
+  {
+    void savePatch(
+    {
+      lightBackgroundContrastAlpha: Number(elements.lightBackgroundContrastAlpha.value),
+    });
+  });
+
   elements.clickEnabled.addEventListener('change', () =>
   {
     void savePatch({ clickEnabled: elements.clickEnabled.checked });
+  });
+  elements.clickTimeScale.addEventListener('input', () =>
+  {
+    elements.clickTimeScaleValue.textContent =
+      `${Number(elements.clickTimeScale.value).toFixed(2)}×`;
+  });
+  elements.clickTimeScale.addEventListener('change', () =>
+  {
+    void savePatch({ clickTimeScale: Number(elements.clickTimeScale.value) });
   });
   elements.trailEnabled.addEventListener('change', () =>
   {
@@ -409,6 +516,15 @@ function bindEvents()
   elements.trailAlways.addEventListener('change', () =>
   {
     void savePatch({ trailAlways: elements.trailAlways.checked });
+  });
+  elements.trailTimeScale.addEventListener('input', () =>
+  {
+    elements.trailTimeScaleValue.textContent =
+      `${Number(elements.trailTimeScale.value).toFixed(2)}×`;
+  });
+  elements.trailTimeScale.addEventListener('change', () =>
+  {
+    void savePatch({ trailTimeScale: Number(elements.trailTimeScale.value) });
   });
 
   const handleFxInput = (event) =>
@@ -441,14 +557,22 @@ function bindEvents()
     const value = control.definition.type === 'boolean'
       ? input.checked
       : Number(input.value);
+    const path = input.dataset.fxPath;
+    const fxParams = { ...settings.fxParams };
+    const baseline = getFxParamDefault(path, settings.renderMode);
+
+    if (Object.is(value, baseline))
+    {
+      delete fxParams[path];
+    }
+    else
+    {
+      fxParams[path] = value;
+    }
 
     void savePatch(
     {
-      fxParams:
-      {
-        ...settings.fxParams,
-        [input.dataset.fxPath]: value,
-      },
+      fxParams,
     });
   };
 
