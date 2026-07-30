@@ -128,6 +128,12 @@ test('三档画质映射 Legacy、原生辉光与 WebGL2 Bloom', () =>
     maxDpr: 1,
   });
   assert.equal(detectQualityProfile('software-bloom', 2), 'custom');
+  assert.equal(detectQualityProfile('webgl2-bloom', 1.5), 'custom');
+  assert.equal(normalizeSettings(
+  {
+    renderMode: 'webgl2-bloom',
+    maxDpr: 1.5,
+  }).maxDpr, 1.5);
   assert.deepEqual(normalizeSettings(
   {
     quality: 'ultra',
