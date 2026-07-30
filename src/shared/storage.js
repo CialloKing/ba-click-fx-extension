@@ -89,6 +89,15 @@ function getStoredFxParamSchemaVersion(values)
   return Number.isInteger(version) && version >= 0 ? version : 0;
 }
 
+function hasLegacyFxParamPath(value)
+{
+  const params = value && typeof value === 'object' ? value : {};
+
+  // 增量事件不总是包含未变化的版本键；只有旧 Schema 独占路径能安全判为 v0。
+  return Object.hasOwn(params, 'bloom.scatter') ||
+    Object.hasOwn(params, 'rootDurationMs');
+}
+
 function haveSameEntries(left, right)
 {
   const leftEntries = Object.entries(left || {});
@@ -313,7 +322,7 @@ export function applyStorageChanges(settings, changes, areaName)
   {
     const incomingVersion = Object.hasOwn(expandedPatch, 'fxParamSchemaVersion')
       ? expandedPatch.fxParamSchemaVersion
-      : Object.hasOwn(expandedPatch.fxParams || {}, 'bloom.scatter')
+      : hasLegacyFxParamPath(expandedPatch.fxParams)
         ? 0
         : settings.fxParamSchemaVersion;
     const result = prepareFxParams(expandedPatch.fxParams,
