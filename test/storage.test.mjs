@@ -629,3 +629,64 @@ test('读取时修复旧设备留下的画质与渲染组合不一致', async ()
   assert.equal(state.settings.maxDpr, 1);
   assert.equal(mock.setCalls.sync.length, 0);
 });
+
+test('参数增量事件只在可证明为旧 Schema 时迁移', () =>
+{
+  const current = normalizeSettings(
+  {
+    fxParams: {},
+    fxParamSchemaVersion: 1,
+  });
+  const ambiguous = applyStorageChanges(current,
+  {
+    fxParams:
+    {
+      newValue:
+      {
+        'bloom.trailEmissionAlpha': 0.5,
+      },
+    },
+  }, 'sync');
+  const legacyByScatter = applyStorageChanges(current,
+  {
+    fxParams:
+    {
+      newValue:
+      {
+        'bloom.scatter': 0.35,
+        'bloom.trailEmissionAlpha': 0.5,
+      },
+    },
+  }, 'sync');
+  const legacyByMetadata = applyStorageChanges(current,
+  {
+    fxParams:
+    {
+      newValue:
+      {
+        rootDurationMs: 1500,
+        'bloom.trailEmissionAlpha': 0.5,
+      },
+    },
+  }, 'sync');
+  const explicitLegacy = applyStorageChanges(current,
+  {
+    fxParams:
+    {
+      newValue:
+      {
+        'bloom.trailEmissionAlpha': 0.5,
+      },
+    },
+    fxParamSchemaVersion: { newValue: 0 },
+  }, 'sync');
+
+  assert.deepEqual(ambiguous.fxParams,
+  {
+    'bloom.trailEmissionAlpha': 0.5,
+  });
+  assert.equal(legacyByScatter.fxParams['bloom.diffusion'], 7);
+  assert.equal(legacyByScatter.fxParams['bloom.trailAlpha'], 0.09);
+  assert.equal(legacyByMetadata.fxParams['bloom.trailAlpha'], 0.09);
+  assert.equal(explicitLegacy.fxParams['bloom.trailAlpha'], 0.09);
+});
