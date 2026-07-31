@@ -71,6 +71,10 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   clickTimeScale: 1,
   trailTimeScale: 1,
   outputCompositing: 'scene',
+  overlayAlphaPolicy: 'coverage',
+  overlayColorCompensation: 'none',
+  overlayAlphaLimit: 250 / 255,
+  hostCompositing: 'source-over',
   isolatedCompositing: false,
   lightBackgroundContrastAlpha: 0,
   languageMode: 'system',
@@ -139,7 +143,10 @@ const PREVIOUS_CLASSIC_DEFAULTS = Object.freeze([
 
 const LANGUAGE_MODES = new Set(['system', 'zh_CN', 'en']);
 const MOTION_MODES = new Set(['system', 'full', 'reduced']);
-const OUTPUT_COMPOSITING_MODES = new Set(['scene', 'transparent-overlay']);
+const OUTPUT_COMPOSITING_MODES = new Set(['scene', 'browser-overlay']);
+const OVERLAY_ALPHA_POLICIES = new Set(['coverage', 'visual-max']);
+const OVERLAY_COLOR_COMPENSATIONS = new Set(['none', 'bright-core']);
+const HOST_COMPOSITING_MODES = new Set(['source-over', 'plus-lighter']);
 const PRESET_NAMES = new Set([...Object.keys(APPEARANCE_PRESETS), 'custom']);
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
 const MAX_SITE_KEY_LENGTH = 512;
@@ -290,9 +297,45 @@ export function getSettingsMigrationPatch(value)
   const source = value && typeof value === 'object' ? value : {};
   const classicPatch = getClassicDefaultsMigrationPatch(source);
   const migratedSource = { ...source, ...classicPatch };
+  const compositingPatch = {};
+  const hasCompositingContract = [
+    'outputCompositing',
+    'overlayAlphaPolicy',
+    'overlayColorCompensation',
+    'overlayAlphaLimit',
+    'hostCompositing',
+  ].some((key) => Object.hasOwn(source, key));
+
+  // 1.2.17 将透明覆盖层拆成独立合同；旧值只在读取迁移时转换，
+  // 避免后续同步设备继续写回已删除的 transparent-overlay 名称。
+  if (hasCompositingContract && source.outputCompositing === 'transparent-overlay')
+  {
+    compositingPatch.outputCompositing = 'browser-overlay';
+  }
+  else if (hasCompositingContract && !Object.hasOwn(source, 'outputCompositing'))
+  {
+    compositingPatch.outputCompositing = DEFAULT_SETTINGS.outputCompositing;
+  }
+
+  if (hasCompositingContract)
+  {
+    for (const [key, fallback] of [
+      ['overlayAlphaPolicy', DEFAULT_SETTINGS.overlayAlphaPolicy],
+      ['overlayColorCompensation', DEFAULT_SETTINGS.overlayColorCompensation],
+      ['overlayAlphaLimit', DEFAULT_SETTINGS.overlayAlphaLimit],
+      ['hostCompositing', DEFAULT_SETTINGS.hostCompositing],
+    ])
+    {
+      if (!Object.hasOwn(source, key))
+      {
+        compositingPatch[key] = fallback;
+      }
+    }
+  }
 
   return {
     ...classicPatch,
+    ...compositingPatch,
     ...getRenderDefaultsMigrationPatch(migratedSource),
   };
 }
@@ -406,9 +449,28 @@ export function normalizeSettings(value = {})
       4,
       DEFAULT_SETTINGS.trailTimeScale,
     ),
-    outputCompositing: OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
-      ? source.outputCompositing
-      : DEFAULT_SETTINGS.outputCompositing,
+    outputCompositing: source.outputCompositing === 'transparent-overlay'
+      ? 'browser-overlay'
+      : OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
+        ? source.outputCompositing
+        : DEFAULT_SETTINGS.outputCompositing,
+    overlayAlphaPolicy: OVERLAY_ALPHA_POLICIES.has(source.overlayAlphaPolicy)
+      ? source.overlayAlphaPolicy
+      : DEFAULT_SETTINGS.overlayAlphaPolicy,
+    overlayColorCompensation: OVERLAY_COLOR_COMPENSATIONS.has(
+      source.overlayColorCompensation,
+    )
+      ? source.overlayColorCompensation
+      : DEFAULT_SETTINGS.overlayColorCompensation,
+    overlayAlphaLimit: clamp(
+      source.overlayAlphaLimit,
+      0,
+      1,
+      DEFAULT_SETTINGS.overlayAlphaLimit,
+    ),
+    hostCompositing: HOST_COMPOSITING_MODES.has(source.hostCompositing)
+      ? source.hostCompositing
+      : DEFAULT_SETTINGS.hostCompositing,
     isolatedCompositing: source.isolatedCompositing === undefined
       ? DEFAULT_SETTINGS.isolatedCompositing
       : source.isolatedCompositing === true,
