@@ -51,12 +51,12 @@ Update highlights:
 ## Prepared update — v1.1.3
 
 - Extension version: `1.1.3`
-- Core dependency: `ba-click-fx 1.2.15`
+- Core dependency: `ba-click-fx 1.2.16`
 - Package: `ba-click-fx-extension-v1.1.3-chromium.zip`
 - SHA-256: `36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA`
 - Submission status: Prepared; not yet uploaded
 
-The prepared build uses `ba-click-fx 1.2.15`, adds full WebGL2 rendering, and exposes all 65 public Schema parameters plus compositing and timing controls in Full settings. Rendering remains local with Canvas 2D or WebGL2; permissions, network behavior, and disclosed data categories do not change.
+The prepared build uses `ba-click-fx 1.2.16`, adds full WebGL2 rendering, and exposes all 65 public Schema parameters plus compositing and timing controls in Full settings. Rendering remains local with Canvas 2D or WebGL2; permissions, network behavior, and disclosed data categories do not change.
 
 ### v1.1.3 listing-description replacement — prepared, not yet submitted
 
