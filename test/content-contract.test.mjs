@@ -16,7 +16,7 @@ function countMatches(source, pattern)
   return [...source.matchAll(pattern)].length;
 }
 
-test('内容脚本使用 1.2.15 原子参数协议与后端状态事件', () =>
+test('内容脚本使用 1.2.16 原子参数协议与后端状态事件', () =>
 {
   assert.equal(countMatches(contentSource, /\bengine\.setFxParams\(/g), 1);
   assert.match(contentSource, /reset:\s*true[\s\S]*strict:\s*true[\s\S]*schemaVersion:/);
