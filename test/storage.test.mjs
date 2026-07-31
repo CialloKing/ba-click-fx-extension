@@ -238,7 +238,7 @@ test('schema v5 原子持久化旧版默认值、渲染配置和参数版本', a
     quality: 'ultra',
     preset: 'classic',
     trailAlways: false,
-    renderMode: 'webgl2-bloom',
+    renderMode: 'full-webgl2',
     maxDpr: 2,
     fxParams: {},
     fxParamSchemaVersion: 1,
@@ -602,6 +602,31 @@ test('旧设备只同步 quality 时当前页与重新加载均保持档位', as
   assert.equal(reloaded.settings.quality, 'balanced');
   assert.equal(reloaded.settings.renderMode, 'legacy');
   assert.equal(reloaded.settings.maxDpr, 1);
+  assert.equal(mock.setCalls.sync.length, 0);
+});
+
+test('旧最高画质映射在读取时切换到完整 WebGL2', async () =>
+{
+  const mock = createStorageMock(
+  {
+    sync:
+    {
+      quality: 'ultra',
+      renderMode: 'webgl2-bloom',
+      maxDpr: 2,
+      fxParamSchemaVersion: 1,
+    },
+    local:
+    {
+      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
+    },
+  });
+
+  const state = await loadStorageState(mock.chromeApi);
+
+  assert.equal(state.settings.quality, 'ultra');
+  assert.equal(state.settings.renderMode, 'full-webgl2');
+  assert.equal(state.settings.maxDpr, 2);
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
