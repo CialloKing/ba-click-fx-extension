@@ -435,6 +435,29 @@ test('视觉偏好写入 sync，网站规则只写入 local', async () =>
   });
 });
 
+test('1.2.17 透明合同字段原子写入并可重新读取', async () =>
+{
+  const mock = createStorageMock();
+  const patch =
+  {
+    outputCompositing: 'browser-overlay',
+    overlayAlphaPolicy: 'visual-max',
+    overlayColorCompensation: 'bright-core',
+    overlayAlphaLimit: 0.7,
+    hostCompositing: 'plus-lighter',
+  };
+
+  await writeSettingsPatch(patch, mock.chromeApi);
+
+  assert.deepEqual(mock.setCalls.sync, [patch]);
+  const state = await loadStorageState(mock.chromeApi);
+
+  for (const [key, value] of Object.entries(patch))
+  {
+    assert.equal(state.settings[key], value);
+  }
+});
+
 test('自定义渲染组合将画质、模式与 DPR 原子写入 sync', async () =>
 {
   const mock = createStorageMock();

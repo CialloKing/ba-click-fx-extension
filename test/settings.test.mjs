@@ -34,6 +34,10 @@ test('缺省设置与上游演示页一致', () =>
   assert.equal(settings.clickTimeScale, 1);
   assert.equal(settings.trailTimeScale, 1);
   assert.equal(settings.outputCompositing, 'scene');
+  assert.equal(settings.overlayAlphaPolicy, 'coverage');
+  assert.equal(settings.overlayColorCompensation, 'none');
+  assert.equal(settings.overlayAlphaLimit, 250 / 255);
+  assert.equal(settings.hostCompositing, 'source-over');
   assert.equal(settings.isolatedCompositing, false);
   assert.equal(settings.lightBackgroundContrastAlpha, 0);
   assert.equal(settings.languageMode, 'system');
@@ -74,6 +78,38 @@ test('时间倍率与上游共享 0.01 的最低有效值', () =>
 
   assert.equal(settings.clickTimeScale, 0.01);
   assert.equal(settings.trailTimeScale, 0.01);
+});
+
+test('1.2.17 透明合同拆分并兼容旧覆盖层值', () =>
+{
+  const migrated = normalizeSettings(
+  {
+    outputCompositing: 'transparent-overlay',
+    overlayAlphaPolicy: 'visual-max',
+    overlayColorCompensation: 'bright-core',
+    overlayAlphaLimit: 0.7,
+    hostCompositing: 'plus-lighter',
+  });
+
+  assert.equal(migrated.outputCompositing, 'browser-overlay');
+  assert.equal(migrated.overlayAlphaPolicy, 'visual-max');
+  assert.equal(migrated.overlayColorCompensation, 'bright-core');
+  assert.equal(migrated.overlayAlphaLimit, 0.7);
+  assert.equal(migrated.hostCompositing, 'plus-lighter');
+
+  const invalid = normalizeSettings(
+  {
+    outputCompositing: 'browser-overlay',
+    overlayAlphaPolicy: 'invalid',
+    overlayColorCompensation: 'invalid',
+    overlayAlphaLimit: 4,
+    hostCompositing: 'invalid',
+  });
+
+  assert.equal(invalid.overlayAlphaPolicy, 'coverage');
+  assert.equal(invalid.overlayColorCompensation, 'none');
+  assert.equal(invalid.overlayAlphaLimit, 1);
+  assert.equal(invalid.hostCompositing, 'source-over');
 });
 
 test('站点禁用规则只保留明确的 true 值', () =>
