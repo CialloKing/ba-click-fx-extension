@@ -4,7 +4,7 @@
 
 - Extension version: `1.1.3`
 - Review package: `ba-click-fx-extension-v1.1.3-chromium.zip`
-- Core dependency: `ba-click-fx 1.2.15`
+- Core dependency: `ba-click-fx 1.2.16`
 - No test account or credentials required
 
 ```text

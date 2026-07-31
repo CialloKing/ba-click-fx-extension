@@ -106,7 +106,7 @@ Chrome 和 Edge 可复用 Chromium ZIP；Firefox 必须使用独立 Firefox ZIP�
 
 ## 核心依赖与更新
 
-项目通过 npm 精确依赖 `ba-click-fx 1.2.15`，不在仓库内维护核心源码副本。esbuild 会在构建阶段把依赖打进 `dist/content.js`，因此发布后的插件不依赖 npm、CDN 或网络运行。
+项目通过 npm 精确依赖 `ba-click-fx 1.2.16`，不在仓库内维护核心源码副本。esbuild 会在构建阶段把依赖打进 `dist/content.js`，因此发布后的插件不依赖 npm、CDN 或网络运行。
 
 `package.json` 与 `package-lock.json` 固定实际构建版本，保证依赖私有状态的适配代码不会被静默升级破坏；`.github/dependabot.yml` 每周检查 npm 新版本并创建带测试的升级 PR。也可以手动更新：
 
