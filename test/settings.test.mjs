@@ -64,6 +64,18 @@ test('无效设置会回退或裁剪到安全范围', () =>
   assert.equal(settings.motionMode, DEFAULT_SETTINGS.motionMode);
 });
 
+test('时间倍率与上游共享 0.01 的最低有效值', () =>
+{
+  const settings = normalizeSettings(
+  {
+    clickTimeScale: 0.01,
+    trailTimeScale: 0.001,
+  });
+
+  assert.equal(settings.clickTimeScale, 0.01);
+  assert.equal(settings.trailTimeScale, 0.01);
+});
+
 test('站点禁用规则只保留明确的 true 值', () =>
 {
   const settings = normalizeSettings(

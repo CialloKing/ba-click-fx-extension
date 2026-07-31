@@ -11,6 +11,7 @@ import {
 
 export const STORAGE_SCHEMA_VERSION = 5;
 export const LEGACY_DISABLED_SITES_KEY = 'disabledSites';
+const MIN_TIME_SCALE = 0.01;
 
 export const RENDER_MODE_PROFILES = Object.freeze(
 {
@@ -395,13 +396,13 @@ export function normalizeSettings(value = {})
     fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
     clickTimeScale: clamp(
       source.clickTimeScale,
-      0.25,
+      MIN_TIME_SCALE,
       4,
       DEFAULT_SETTINGS.clickTimeScale,
     ),
     trailTimeScale: clamp(
       source.trailTimeScale,
-      0.25,
+      MIN_TIME_SCALE,
       4,
       DEFAULT_SETTINGS.trailTimeScale,
     ),
