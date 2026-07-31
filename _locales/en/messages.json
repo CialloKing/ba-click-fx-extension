@@ -392,9 +392,53 @@
   {
     "message": "Scene"
   },
-  "outputCompositingTransparentOverlay":
+  "outputCompositingBrowserOverlay":
   {
-    "message": "Transparent overlay"
+    "message": "Browser overlay"
+  },
+  "overlayAlphaPolicy":
+  {
+    "message": "Overlay Alpha policy"
+  },
+  "overlayAlphaPolicyCoverage":
+  {
+    "message": "Coverage"
+  },
+  "overlayAlphaPolicyVisualMax":
+  {
+    "message": "Visual max"
+  },
+  "overlayColorCompensation":
+  {
+    "message": "Unknown-background color compensation"
+  },
+  "overlayColorCompensationNone":
+  {
+    "message": "Off"
+  },
+  "overlayColorCompensationBrightCore":
+  {
+    "message": "Bright core"
+  },
+  "overlayAlphaLimit":
+  {
+    "message": "Overlay Alpha limit"
+  },
+  "overlayAlphaLimitDescription":
+  {
+    "message": "Only controls browser-overlay source-over capacity."
+  },
+  "hostCompositing":
+  {
+    "message": "Host compositing"
+  },
+  "hostCompositingSourceOver":
+  {
+    "message": "Source-over"
+  },
+  "hostCompositingPlusLighter":
+  {
+    "message": "Plus-lighter"
   },
   "isolatedCompositing":
   {
@@ -410,7 +454,7 @@
   },
   "lightBackgroundContrastAlphaDescription":
   {
-    "message": "Add a subtle cyan outline outside Bloom; transparent-overlay mode ignores this option."
+    "message": "Add a subtle cyan outline outside Bloom; browser-overlay mode ignores this option."
   },
   "clickTimeScale":
   {

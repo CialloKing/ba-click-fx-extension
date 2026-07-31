@@ -95,7 +95,40 @@
           <span data-i18n="outputCompositing">输出合成</span>
           <select id="output-compositing">
             <option value="scene" data-i18n="outputCompositingScene">场景合成</option>
-            <option value="transparent-overlay" data-i18n="outputCompositingTransparentOverlay">透明覆盖层</option>
+            <option value="browser-overlay" data-i18n="outputCompositingBrowserOverlay">网页透明覆盖层</option>
+          </select>
+        </label>
+
+        <label class="field" for="overlay-alpha-policy">
+          <span data-i18n="overlayAlphaPolicy">覆盖层 Alpha 策略</span>
+          <select id="overlay-alpha-policy">
+            <option value="coverage" data-i18n="overlayAlphaPolicyCoverage">Coverage</option>
+            <option value="visual-max" data-i18n="overlayAlphaPolicyVisualMax">视觉最大值</option>
+          </select>
+        </label>
+
+        <label class="field" for="overlay-color-compensation">
+          <span data-i18n="overlayColorCompensation">未知背景颜色补偿</span>
+          <select id="overlay-color-compensation">
+            <option value="none" data-i18n="overlayColorCompensationNone">关闭</option>
+            <option value="bright-core" data-i18n="overlayColorCompensationBrightCore">高能核心</option>
+          </select>
+        </label>
+
+        <label class="field field-wide" for="overlay-alpha-limit">
+          <span class="field-label">
+            <span data-i18n="overlayAlphaLimit">覆盖层 Alpha 上限</span>
+            <output id="overlay-alpha-limit-value" for="overlay-alpha-limit">98%</output>
+          </span>
+          <input id="overlay-alpha-limit" type="range" min="0" max="1" step="0.00392156862745098">
+          <small class="field-description" data-i18n="overlayAlphaLimitDescription">仅影响 source-over 网页覆盖层容量。</small>
+        </label>
+
+        <label class="field" for="host-compositing">
+          <span data-i18n="hostCompositing">宿主混合</span>
+          <select id="host-compositing">
+            <option value="source-over" data-i18n="hostCompositingSourceOver">Source-over</option>
+            <option value="plus-lighter" data-i18n="hostCompositingPlusLighter">Plus-lighter</option>
           </select>
         </label>
 
