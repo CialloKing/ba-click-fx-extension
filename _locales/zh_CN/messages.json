@@ -392,9 +392,53 @@
   {
     "message": "场景合成"
   },
-  "outputCompositingTransparentOverlay":
+  "outputCompositingBrowserOverlay":
   {
-    "message": "透明覆盖层"
+    "message": "网页透明覆盖层"
+  },
+  "overlayAlphaPolicy":
+  {
+    "message": "覆盖层 Alpha 策略"
+  },
+  "overlayAlphaPolicyCoverage":
+  {
+    "message": "Coverage"
+  },
+  "overlayAlphaPolicyVisualMax":
+  {
+    "message": "视觉最大值"
+  },
+  "overlayColorCompensation":
+  {
+    "message": "未知背景颜色补偿"
+  },
+  "overlayColorCompensationNone":
+  {
+    "message": "关闭"
+  },
+  "overlayColorCompensationBrightCore":
+  {
+    "message": "高能核心"
+  },
+  "overlayAlphaLimit":
+  {
+    "message": "覆盖层 Alpha 上限"
+  },
+  "overlayAlphaLimitDescription":
+  {
+    "message": "仅影响 source-over 网页覆盖层容量。"
+  },
+  "hostCompositing":
+  {
+    "message": "宿主混合"
+  },
+  "hostCompositingSourceOver":
+  {
+    "message": "Source-over"
+  },
+  "hostCompositingPlusLighter":
+  {
+    "message": "Plus-lighter"
   },
   "isolatedCompositing":
   {
@@ -410,7 +454,7 @@
   },
   "lightBackgroundContrastAlphaDescription":
   {
-    "message": "增加不参与 Bloom 的淡青色轮廓；透明覆盖层模式会忽略此项。"
+    "message": "增加不参与 Bloom 的淡青色轮廓；网页透明覆盖层模式会忽略此项。"
   },
   "clickTimeScale":
   {

@@ -36,6 +36,10 @@ const VISUAL_DEFAULTS =
   clickTimeScale: DEFAULT_SETTINGS.clickTimeScale,
   trailTimeScale: DEFAULT_SETTINGS.trailTimeScale,
   outputCompositing: DEFAULT_SETTINGS.outputCompositing,
+  overlayAlphaPolicy: DEFAULT_SETTINGS.overlayAlphaPolicy,
+  overlayColorCompensation: DEFAULT_SETTINGS.overlayColorCompensation,
+  overlayAlphaLimit: DEFAULT_SETTINGS.overlayAlphaLimit,
+  hostCompositing: DEFAULT_SETTINGS.hostCompositing,
   isolatedCompositing: DEFAULT_SETTINGS.isolatedCompositing,
   lightBackgroundContrastAlpha: DEFAULT_SETTINGS.lightBackgroundContrastAlpha,
   preset: DEFAULT_SETTINGS.preset,
@@ -76,6 +80,11 @@ const elements =
   maxDpr: document.querySelector('#max-dpr'),
   maxDprValue: document.querySelector('#max-dpr-value'),
   outputCompositing: document.querySelector('#output-compositing'),
+  overlayAlphaPolicy: document.querySelector('#overlay-alpha-policy'),
+  overlayColorCompensation: document.querySelector('#overlay-color-compensation'),
+  overlayAlphaLimit: document.querySelector('#overlay-alpha-limit'),
+  overlayAlphaLimitValue: document.querySelector('#overlay-alpha-limit-value'),
+  hostCompositing: document.querySelector('#host-compositing'),
   isolatedCompositing: document.querySelector('#isolated-compositing'),
   lightBackgroundContrastAlpha: document.querySelector('#light-background-contrast-alpha'),
   lightBackgroundContrastAlphaValue: document.querySelector('#light-background-contrast-alpha-value'),
@@ -109,6 +118,25 @@ let statusTimer = 0;
 let updateRevision = 0;
 const fxControls = new Map();
 const queueSettingsWrite = createSettingsWriteQueue();
+
+function syncCompositingControlState()
+{
+  const overlayEnabled = settings.outputCompositing === 'browser-overlay';
+  const sourceOverEnabled = overlayEnabled &&
+    settings.hostCompositing === 'source-over';
+  const controls = [
+    elements.overlayAlphaPolicy,
+    elements.overlayColorCompensation,
+    elements.overlayAlphaLimit,
+  ];
+
+  for (const control of controls)
+  {
+    control.disabled = !sourceOverEnabled;
+  }
+
+  elements.hostCompositing.disabled = !overlayEnabled;
+}
 
 function countDecimalPlaces(value)
 {
@@ -334,6 +362,12 @@ function render()
   elements.maxDpr.value = String(settings.maxDpr);
   elements.maxDprValue.textContent = String(settings.maxDpr);
   elements.outputCompositing.value = settings.outputCompositing;
+  elements.overlayAlphaPolicy.value = settings.overlayAlphaPolicy;
+  elements.overlayColorCompensation.value = settings.overlayColorCompensation;
+  elements.overlayAlphaLimit.value = String(settings.overlayAlphaLimit);
+  elements.overlayAlphaLimitValue.textContent =
+    `${Math.round(settings.overlayAlphaLimit * 100)}%`;
+  elements.hostCompositing.value = settings.hostCompositing;
   elements.isolatedCompositing.checked = settings.isolatedCompositing;
   elements.lightBackgroundContrastAlpha.value = String(
     settings.lightBackgroundContrastAlpha,
@@ -351,6 +385,7 @@ function render()
   elements.languageMode.value = settings.languageMode;
   elements.motionMode.value = settings.motionMode;
   elements.version.textContent = chrome.runtime.getManifest().version;
+  syncCompositingControlState();
   renderFxControls();
   renderSites();
 }
@@ -486,6 +521,33 @@ function bindEvents()
   elements.outputCompositing.addEventListener('change', () =>
   {
     void savePatch({ outputCompositing: elements.outputCompositing.value });
+  });
+
+  elements.overlayAlphaPolicy.addEventListener('change', () =>
+  {
+    void savePatch({ overlayAlphaPolicy: elements.overlayAlphaPolicy.value });
+  });
+
+  elements.overlayColorCompensation.addEventListener('change', () =>
+  {
+    void savePatch({
+      overlayColorCompensation: elements.overlayColorCompensation.value,
+    });
+  });
+
+  elements.overlayAlphaLimit.addEventListener('input', () =>
+  {
+    elements.overlayAlphaLimitValue.textContent =
+      `${Math.round(Number(elements.overlayAlphaLimit.value) * 100)}%`;
+  });
+  elements.overlayAlphaLimit.addEventListener('change', () =>
+  {
+    void savePatch({ overlayAlphaLimit: Number(elements.overlayAlphaLimit.value) });
+  });
+
+  elements.hostCompositing.addEventListener('change', () =>
+  {
+    void savePatch({ hostCompositing: elements.hostCompositing.value });
   });
 
   elements.isolatedCompositing.addEventListener('change', () =>
