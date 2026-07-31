@@ -25,7 +25,7 @@ Complete this checklist before creating the `v1.1.3` Tag and GitHub Release.
 
 - [ ] Test global, current-site, click, trail, continuous-trail, and preview controls.
 - [ ] Open Full settings and test Classic, Soft, Power-saving, and Custom appearance states.
-- [ ] Test Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom; confirm Highest falls back to software Bloom when WebGL2 is unavailable.
+- [ ] Test Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2; confirm Highest enters the Canvas 2D fallback chain when Full WebGL2 is unavailable.
 - [ ] Test full WebGL2 and fallback render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public upstream Schema controls.
 - [ ] Reset visual settings and confirm every advanced value returns to its upstream default while website rules remain intact.
 - [ ] Test system, Simplified Chinese, and English language modes.

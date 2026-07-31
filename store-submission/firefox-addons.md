@@ -54,7 +54,7 @@ Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
 • Choose Classic, Soft, or Power-saving appearance presets
-• Switch among Balanced/Legacy, Advanced/native glow, and Highest/WebGL2 Bloom quality; Highest falls back to software Bloom when WebGL2 is unavailable
+• Switch among Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2 quality; Highest automatically enters the Canvas 2D fallback chain when Full WebGL2 is unavailable
 • Adjust theme color, opacity, effect size, full WebGL2 or fallback render modes, maximum DPR, output compositing, light-background contrast, timing, and all 65 public effect parameters
 • Follow the system language or choose Simplified Chinese or English
 • Follow the system reduced-motion preference or choose full/reduced continuous motion
@@ -101,7 +101,7 @@ BA Click FX 是一个非官方的网页视觉特效扩展。
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
 • 可选择经典、柔和或省电外观预设
-• 可切换均衡/Legacy、高级/原生辉光和最高画质/WebGL2 Bloom；WebGL2 不可用时，最高画质自动回退软件 Bloom
+• 可切换均衡/Legacy、高级/原生辉光和最高画质/完整 WebGL2；完整 WebGL2 不可用时，最高画质自动进入 Canvas 2D 回退链
 • 可调整主题颜色、不透明度、特效大小、完整 WebGL2 或回退渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 65 个公开特效参数
 • 可跟随系统语言，或指定简体中文/英文
 • 可跟随系统减少动态偏好，或指定完整/减少持续动态

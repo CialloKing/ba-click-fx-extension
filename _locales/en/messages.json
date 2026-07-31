@@ -92,7 +92,7 @@
   },
   "qualityDescription":
   {
-    "message": "Balanced: Legacy; Advanced: native glow; Highest: WebGL2 Bloom with automatic software fallback"
+    "message": "Balanced: Legacy; Advanced: native glow; Highest: Full WebGL2 with automatic fallback"
   },
   "qualityBalanced":
   {
