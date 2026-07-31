@@ -51,7 +51,7 @@ const QUALITY_PROFILES = Object.freeze(
 {
   balanced: Object.freeze({ renderMode: 'legacy', maxDpr: 1 }),
   high: Object.freeze({ renderMode: 'native-bloom', maxDpr: 2 }),
-  ultra: Object.freeze({ renderMode: 'webgl2-bloom', maxDpr: 2 }),
+  ultra: Object.freeze({ renderMode: 'full-webgl2', maxDpr: 2 }),
 });
 
 export const DEFAULT_SYNC_SETTINGS = Object.freeze(

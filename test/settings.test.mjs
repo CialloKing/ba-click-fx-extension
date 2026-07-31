@@ -27,7 +27,7 @@ test('缺省设置与上游演示页一致', () =>
   assert.equal(settings.opacity, 1);
   assert.equal(settings.scale, 1);
   assert.equal(settings.quality, 'ultra');
-  assert.equal(settings.renderMode, 'webgl2-bloom');
+  assert.equal(settings.renderMode, 'full-webgl2');
   assert.equal(settings.maxDpr, 2);
   assert.deepEqual(settings.fxParams, {});
   assert.equal(settings.fxParamSchemaVersion, 1);
@@ -103,7 +103,7 @@ test('站点键按源隔离，并为本地文件提供稳定键', () =>
   assert.equal(getSiteKey('not a url'), null);
 });
 
-test('三档画质映射 Legacy、原生辉光与 WebGL2 Bloom', () =>
+test('三档画质映射 Legacy、原生辉光与完整 WebGL2', () =>
 {
   assert.deepEqual(getQualityProfile('balanced'),
   {
@@ -117,7 +117,7 @@ test('三档画质映射 Legacy、原生辉光与 WebGL2 Bloom', () =>
   });
   assert.deepEqual(getQualityProfile('ultra'),
   {
-    renderMode: 'webgl2-bloom',
+    renderMode: 'full-webgl2',
     maxDpr: 2,
   });
   assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('ultra'));
@@ -139,6 +139,8 @@ test('三档画质映射 Legacy、原生辉光与 WebGL2 Bloom', () =>
     renderMode: 'legacy',
     maxDpr: 1,
   });
+  assert.equal(detectQualityProfile('full-webgl2', 2), 'ultra');
+  assert.equal(detectQualityProfile('webgl2-bloom', 2), 'custom');
   assert.equal(detectQualityProfile('software-bloom', 2), 'custom');
   assert.equal(detectQualityProfile('webgl2-bloom', 1.5), 'custom');
   assert.equal(normalizeSettings(
