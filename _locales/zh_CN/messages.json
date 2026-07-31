@@ -92,7 +92,7 @@
   },
   "qualityDescription":
   {
-    "message": "均衡：Legacy；高级：原生辉光；最高画质：WebGL2 Bloom（不可用时自动使用软件 Bloom）"
+    "message": "均衡：Legacy；高级：原生辉光；最高画质：完整 WebGL2（不可用时自动回退）"
   },
   "qualityBalanced":
   {
