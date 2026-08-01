@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
 import { DEFAULT_SETTINGS } from '../src/shared/settings.js';
@@ -36,4 +37,15 @@ test('DOM Add 只启用当前有效的合成控件', () =>
     isolatedCompositingEnabled: true,
     lightBackgroundContrastEnabled: false,
   });
+});
+
+test('商店完整设置预览不覆盖扩展默认值', () =>
+{
+  const source = readFileSync(
+    new URL('../store-assets/source/options-mock.js', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(source, /const syncValues = \{\};/);
+  assert.doesNotMatch(source, /\b(?:color|opacity|scale|quality|preset|renderMode):/);
 });

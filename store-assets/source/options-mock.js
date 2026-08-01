@@ -8,19 +8,8 @@
   messagesRequest.send();
 
   const messages = JSON.parse(messagesRequest.responseText.replace(/^\uFEFF/, ''));
-  const syncValues =
-  {
-    color: '#8edcff',
-    opacity: 0.35,
-    scale: 0.9,
-    quality: 'balanced',
-    preset: 'soft',
-    languageMode: locale,
-    motionMode: 'system',
-    renderMode: 'legacy',
-    maxDpr: 1,
-    fxParams: {},
-  };
+  // 保持同步存储为空，让预览和真实新安装都从扩展共享默认模型初始化。
+  const syncValues = {};
   const localValues =
   {
     disabledSites:
@@ -28,7 +17,6 @@
       'https://example.com': true,
       'https://news.example': true,
     },
-    storageSchemaVersion: 4,
   };
 
   function getMessage(key, substitutions = [])
