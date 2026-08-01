@@ -9,6 +9,7 @@ import {
   getSiteKey,
   shouldReduceMotion,
 } from './shared/settings.js';
+import { getSurfaceBlendMode } from './shared/compositing.js';
 import {
   applyStorageChanges,
   readSettings,
@@ -36,7 +37,16 @@ function setImportantStyle(element, property, value)
   element.style.setProperty(property, value, 'important');
 }
 
-function createSurface()
+function applySurfaceCompositing(targetSurface, settings)
+{
+  setImportantStyle(
+    targetSurface.host,
+    'mix-blend-mode',
+    getSurfaceBlendMode(settings),
+  );
+}
+
+function createSurface(settings)
 {
   const host = document.createElement('div');
 
@@ -77,10 +87,15 @@ function createSurface()
 
   parent.appendChild(host);
 
-  return {
+  const targetSurface = {
     host,
     container,
   };
+
+  // fixed + z-index 会让外层宿主建立独立层叠上下文；最终宿主混合必须提升
+  // 到这个上下文的根节点，才能真正读取网页作为 backdrop。
+  applySurfaceCompositing(targetSurface, settings);
+  return targetSurface;
 }
 
 function getEffectiveTrailAlways(settings)
@@ -223,7 +238,19 @@ function applySettings(settings)
     !hasSameFxParams(appliedSettings, settings),
   );
 
+  const surfaceBlendChanged = Boolean(
+    appliedSettings &&
+    getSurfaceBlendMode(appliedSettings) !== getSurfaceBlendMode(settings),
+  );
+
+  if (surfaceBlendChanged)
+  {
+    // 旧帧使用的是另一种宿主载荷，先清除再切换最外层混合，避免短暂误合成。
+    engine.clear();
+  }
+
   engine.updateConfig(getEngineOptions(settings));
+  applySurfaceCompositing(surface, settings);
 
   if (fxParamsMustBeApplied)
   {
@@ -242,7 +269,7 @@ function createEngine()
     return;
   }
 
-  surface = createSurface();
+  surface = createSurface(currentSettings);
 
   try
   {

@@ -70,3 +70,15 @@ test('弹窗与内容脚本使用相同的消息协议版本', () =>
   assert.match(contentSource, protocolPattern);
   assert.match(popupSource, protocolPattern);
 });
+
+test('内容脚本在扩展最外层执行独立宿主混合', () =>
+{
+  assert.match(
+    contentSource,
+    /setImportantStyle\([\s\S]*?'mix-blend-mode',[\s\S]*?getSurfaceBlendMode\(settings\)/,
+  );
+  assert.match(
+    contentSource,
+    /surfaceBlendChanged[\s\S]*?engine\.clear\(\)[\s\S]*?engine\.updateConfig\([\s\S]*?applySurfaceCompositing\(surface, settings\)/,
+  );
+});
