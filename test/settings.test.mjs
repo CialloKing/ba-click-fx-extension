@@ -112,6 +112,17 @@ test('1.2.17 透明合同拆分并兼容旧覆盖层值', () =>
   assert.equal(invalid.hostCompositing, 'source-over');
 });
 
+test('1.2.19 保留 Screen 宿主混合模式', () =>
+{
+  const settings = normalizeSettings(
+  {
+    outputCompositing: 'browser-overlay',
+    hostCompositing: 'screen',
+  });
+
+  assert.equal(settings.hostCompositing, 'screen');
+});
+
 test('站点禁用规则只保留明确的 true 值', () =>
 {
   const settings = normalizeSettings(

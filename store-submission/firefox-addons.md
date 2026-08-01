@@ -3,7 +3,7 @@
 ## Prepared release
 
 - Extension version: `1.1.3`
-- Core dependency: `ba-click-fx 1.2.16`
+- Core dependency: `ba-click-fx 1.2.19`
 - Manifest version: `3`
 - Gecko ID: `ba-click-fx-extension@cialloking.top`
 - Minimum Firefox Desktop version: `140.0`

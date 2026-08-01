@@ -35,6 +35,7 @@ const ADVANCED_SETTING_KEYS = Object.freeze([
   'overlayAlphaLimitDescription',
   'hostCompositing',
   'hostCompositingSourceOver',
+  'hostCompositingScreen',
   'hostCompositingPlusLighter',
   'isolatedCompositing',
   'isolatedCompositingDescription',

@@ -6,7 +6,8 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ### Changed
 
-- Upgraded `ba-click-fx` from `1.2.7` to `1.2.16` and adopted its versioned 65-parameter Schema, atomic parameter patch API, mode-specific reset baselines, backend status events, and compositing-reference fixes.
+- Upgraded `ba-click-fx` from `1.2.7` to `1.2.19` and adopted its versioned 65-parameter Schema, atomic parameter patch API, mode-specific reset baselines, backend status events, and compositing-reference fixes.
+- Browser-overlay host compositing now exposes the upstream `screen` option for light or changing web backgrounds.
 - Full settings now includes full WebGL2 rendering, output and isolated compositing, light-background contrast, click/trail timing, and every public upstream effect parameter.
 - Click and trail timing controls now expose the upstream minimum multiplier of `0.01`.
 - Highest quality now requests Full WebGL2 and automatically enters the Canvas 2D fallback chain when unavailable; Balanced remains Legacy and Advanced remains native glow.

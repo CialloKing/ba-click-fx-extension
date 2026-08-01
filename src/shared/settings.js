@@ -146,7 +146,12 @@ const MOTION_MODES = new Set(['system', 'full', 'reduced']);
 const OUTPUT_COMPOSITING_MODES = new Set(['scene', 'browser-overlay']);
 const OVERLAY_ALPHA_POLICIES = new Set(['coverage', 'visual-max']);
 const OVERLAY_COLOR_COMPENSATIONS = new Set(['none', 'bright-core']);
-const HOST_COMPOSITING_MODES = new Set(['source-over', 'plus-lighter']);
+// 核心 v1.2.19 提供 screen；保留它可避免有效的同步设置被降级为默认混合模式。
+const HOST_COMPOSITING_MODES = new Set([
+  'source-over',
+  'screen',
+  'plus-lighter',
+]);
 const PRESET_NAMES = new Set([...Object.keys(APPEARANCE_PRESETS), 'custom']);
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
 const MAX_SITE_KEY_LENGTH = 512;

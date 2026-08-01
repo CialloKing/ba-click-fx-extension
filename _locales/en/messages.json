@@ -436,6 +436,10 @@
   {
     "message": "Source-over"
   },
+  "hostCompositingScreen":
+  {
+    "message": "Screen"
+  },
   "hostCompositingPlusLighter":
   {
     "message": "Plus-lighter"
