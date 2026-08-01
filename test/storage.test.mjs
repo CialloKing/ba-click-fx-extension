@@ -435,7 +435,7 @@ test('视觉偏好写入 sync，网站规则只写入 local', async () =>
   });
 });
 
-test('1.2.17 透明合同字段原子写入并可重新读取', async () =>
+test('透明合同字段与 1.2.19 Screen 混合模式原子写入并可重新读取', async () =>
 {
   const mock = createStorageMock();
   const patch =
@@ -444,7 +444,7 @@ test('1.2.17 透明合同字段原子写入并可重新读取', async () =>
     overlayAlphaPolicy: 'visual-max',
     overlayColorCompensation: 'bright-core',
     overlayAlphaLimit: 0.7,
-    hostCompositing: 'plus-lighter',
+    hostCompositing: 'screen',
   };
 
   await writeSettingsPatch(patch, mock.chromeApi);
