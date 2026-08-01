@@ -1,4 +1,4 @@
-import { flattenFxParams } from '../shared/fx-settings.js';
+﻿import { flattenFxParams } from '../shared/fx-settings.js';
 import {
   DEFAULT_SETTINGS,
   DEFAULT_SYNC_SETTINGS,
