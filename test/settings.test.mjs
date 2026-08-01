@@ -15,7 +15,7 @@ import {
   shouldReduceMotion,
 } from '../src/shared/settings.js';
 
-test('缺省设置与上游演示页一致', () =>
+test('扩展缺省设置使用 DOM Add 而不是上游展示页合成', () =>
 {
   const settings = normalizeSettings();
 
@@ -33,11 +33,11 @@ test('缺省设置与上游演示页一致', () =>
   assert.equal(settings.fxParamSchemaVersion, 1);
   assert.equal(settings.clickTimeScale, 1);
   assert.equal(settings.trailTimeScale, 1);
-  assert.equal(settings.outputCompositing, 'scene');
+  assert.equal(settings.outputCompositing, 'browser-overlay');
   assert.equal(settings.overlayAlphaPolicy, 'coverage');
   assert.equal(settings.overlayColorCompensation, 'none');
   assert.equal(settings.overlayAlphaLimit, 250 / 255);
-  assert.equal(settings.hostCompositing, 'source-over');
+  assert.equal(settings.hostCompositing, 'screen');
   assert.equal(settings.isolatedCompositing, false);
   assert.equal(settings.lightBackgroundContrastAlpha, 0);
   assert.equal(settings.languageMode, 'system');
@@ -109,7 +109,7 @@ test('1.2.17 透明合同拆分并兼容旧覆盖层值', () =>
   assert.equal(invalid.overlayAlphaPolicy, 'coverage');
   assert.equal(invalid.overlayColorCompensation, 'none');
   assert.equal(invalid.overlayAlphaLimit, 1);
-  assert.equal(invalid.hostCompositing, 'source-over');
+  assert.equal(invalid.hostCompositing, DEFAULT_SETTINGS.hostCompositing);
 });
 
 test('1.2.19 保留 Screen 宿主混合模式', () =>
