@@ -13,6 +13,10 @@ All notable changes to BA Click FX Extension are documented in this file.
 - Click and trail timing controls now expose the upstream minimum multiplier of `0.01`.
 - Highest quality now requests Full WebGL2 and automatically enters the Canvas 2D fallback chain when unavailable; Balanced remains Legacy and Advanced remains native glow.
 
+### Fixed
+
+- DOM Add now applies `screen` or `plus-lighter` to the extension's outer fixed host, so the final layer group blends with the web page instead of being isolated inside the host and composited back with an opaque-looking source-over result.
+
 ### Migration
 
 - Stored Schema 0 effect overrides migrate atomically to Schema 1; the removed `bloom.scatter` path is replaced by the current `bloom.diffusion` default while rejected values remain reportable.
