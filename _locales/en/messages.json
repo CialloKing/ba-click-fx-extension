@@ -438,7 +438,7 @@
   },
   "hostCompositingScreen":
   {
-    "message": "Screen"
+    "message": "DOM Add (approximate)"
   },
   "hostCompositingPlusLighter":
   {

@@ -3,7 +3,6 @@ import {
   FX_CONTROL_DEFINITIONS,
   FX_CONTROL_GROUPS,
   flattenFxParams,
-  getFxParamDefault,
 } from '../shared/fx-settings.js';
 import {
   APPEARANCE_PRESETS,
@@ -14,36 +13,16 @@ import {
   normalizeSettings,
 } from '../shared/settings.js';
 import {
+  DEFAULT_EFFECT_SETTINGS,
+  getCompositingControlState,
+  getDefaultFxParam,
+} from './defaults.js';
+import {
   applyStorageChanges,
   createSettingsWriteQueue,
   loadStorageState,
   removeLegacyDisabledSites,
 } from '../shared/storage.js';
-
-const VISUAL_DEFAULTS =
-{
-  enabled: DEFAULT_SETTINGS.enabled,
-  clickEnabled: DEFAULT_SETTINGS.clickEnabled,
-  trailEnabled: DEFAULT_SETTINGS.trailEnabled,
-  trailAlways: DEFAULT_SETTINGS.trailAlways,
-  color: DEFAULT_SETTINGS.color,
-  opacity: DEFAULT_SETTINGS.opacity,
-  scale: DEFAULT_SETTINGS.scale,
-  quality: DEFAULT_SETTINGS.quality,
-  renderMode: DEFAULT_SETTINGS.renderMode,
-  maxDpr: DEFAULT_SETTINGS.maxDpr,
-  fxParams: DEFAULT_SETTINGS.fxParams,
-  clickTimeScale: DEFAULT_SETTINGS.clickTimeScale,
-  trailTimeScale: DEFAULT_SETTINGS.trailTimeScale,
-  outputCompositing: DEFAULT_SETTINGS.outputCompositing,
-  overlayAlphaPolicy: DEFAULT_SETTINGS.overlayAlphaPolicy,
-  overlayColorCompensation: DEFAULT_SETTINGS.overlayColorCompensation,
-  overlayAlphaLimit: DEFAULT_SETTINGS.overlayAlphaLimit,
-  hostCompositing: DEFAULT_SETTINGS.hostCompositing,
-  isolatedCompositing: DEFAULT_SETTINGS.isolatedCompositing,
-  lightBackgroundContrastAlpha: DEFAULT_SETTINGS.lightBackgroundContrastAlpha,
-  preset: DEFAULT_SETTINGS.preset,
-};
 
 const CLICK_GROUP_NAMES = new Set([
   'hit',
@@ -121,21 +100,33 @@ const queueSettingsWrite = createSettingsWriteQueue();
 
 function syncCompositingControlState()
 {
-  const overlayEnabled = settings.outputCompositing === 'browser-overlay';
-  const sourceOverEnabled = overlayEnabled &&
-    settings.hostCompositing === 'source-over';
-  const controls = [
+  const state = getCompositingControlState(settings);
+  const alphaControls = [
     elements.overlayAlphaPolicy,
     elements.overlayColorCompensation,
     elements.overlayAlphaLimit,
   ];
 
-  for (const control of controls)
+  for (const control of alphaControls)
   {
-    control.disabled = !sourceOverEnabled;
+    setControlEnabled(control, state.alphaControlsEnabled);
   }
 
-  elements.hostCompositing.disabled = !overlayEnabled;
+  setControlEnabled(elements.hostCompositing, state.hostCompositingEnabled);
+  setControlEnabled(elements.isolatedCompositing, state.isolatedCompositingEnabled);
+  setControlEnabled(
+    elements.lightBackgroundContrastAlpha,
+    state.lightBackgroundContrastEnabled,
+  );
+}
+
+function setControlEnabled(control, enabled)
+{
+  const field = control.closest('label');
+
+  control.disabled = !enabled;
+  field?.classList.toggle('control-disabled', !enabled);
+  field?.setAttribute('aria-disabled', String(!enabled));
 }
 
 function countDecimalPlaces(value)
@@ -631,7 +622,7 @@ function bindEvents()
       : Number(input.value);
     const path = input.dataset.fxPath;
     const fxParams = { ...settings.fxParams };
-    const baseline = getFxParamDefault(path, settings.renderMode);
+    const baseline = getDefaultFxParam(path, settings.renderMode);
 
     if (Object.is(value, baseline))
     {
@@ -669,7 +660,7 @@ function bindEvents()
 
   elements.resetVisual.addEventListener('click', () =>
   {
-    void savePatch(VISUAL_DEFAULTS, 'statusVisualReset');
+    void savePatch(DEFAULT_EFFECT_SETTINGS, 'statusVisualReset');
   });
 
   elements.siteSearch.addEventListener('input', renderSites);
@@ -753,6 +744,9 @@ async function initialize()
   buildFxControls();
   bindEvents();
   bindStorageChanges();
+  // 先按扩展默认模型完成首帧，再用异步存储覆盖，避免 HTML 占位值漂移。
+  localize();
+  render();
 
   try
   {
@@ -765,8 +759,6 @@ async function initialize()
   }
   catch (error)
   {
-    localize();
-    render();
     showStatus('statusInitFailed', 'error', [error.message]);
   }
 }

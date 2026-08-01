@@ -50,7 +50,7 @@
             <span data-i18n="opacity">不透明度</span>
             <output id="opacity-value" for="opacity">100%</output>
           </span>
-          <input id="opacity" type="range" min="0" max="1" step="0.01">
+          <input id="opacity" type="range" min="0" max="1" step="0.01" value="1">
         </label>
 
         <label class="field field-wide" for="scale">
@@ -59,7 +59,7 @@
             <output id="scale-value" for="scale">1.00×</output>
           </span>
           <!-- 展示页的 0.05 步进无法表示 0.90/1.00 预设；细分步进保留同一范围与精确默认值。 -->
-          <input id="scale" type="range" min="0.01" max="5" step="0.01">
+          <input id="scale" type="range" min="0.01" max="5" step="0.01" value="1">
         </label>
 
         <label class="field" for="quality">
@@ -88,39 +88,39 @@
             <span data-i18n="maxDpr">最大 DPR</span>
             <output id="max-dpr-value" for="max-dpr">2</output>
           </span>
-          <input id="max-dpr" type="range" min="1" max="3" step="0.1">
+          <input id="max-dpr" type="range" min="1" max="3" step="0.1" value="2">
         </label>
 
         <label class="field" for="output-compositing">
           <span data-i18n="outputCompositing">输出合成</span>
           <select id="output-compositing">
             <option value="scene" data-i18n="outputCompositingScene">场景合成</option>
-            <option value="browser-overlay" data-i18n="outputCompositingBrowserOverlay">网页透明覆盖层</option>
+            <option value="browser-overlay" data-i18n="outputCompositingBrowserOverlay" selected>网页透明覆盖层</option>
           </select>
         </label>
 
-        <label class="field" for="overlay-alpha-policy">
+        <label class="field control-disabled" for="overlay-alpha-policy" aria-disabled="true">
           <span data-i18n="overlayAlphaPolicy">覆盖层 Alpha 策略</span>
-          <select id="overlay-alpha-policy">
+          <select id="overlay-alpha-policy" disabled>
             <option value="coverage" data-i18n="overlayAlphaPolicyCoverage">Coverage</option>
             <option value="visual-max" data-i18n="overlayAlphaPolicyVisualMax">视觉最大值</option>
           </select>
         </label>
 
-        <label class="field" for="overlay-color-compensation">
+        <label class="field control-disabled" for="overlay-color-compensation" aria-disabled="true">
           <span data-i18n="overlayColorCompensation">未知背景颜色补偿</span>
-          <select id="overlay-color-compensation">
+          <select id="overlay-color-compensation" disabled>
             <option value="none" data-i18n="overlayColorCompensationNone">关闭</option>
             <option value="bright-core" data-i18n="overlayColorCompensationBrightCore">高能核心</option>
           </select>
         </label>
 
-        <label class="field field-wide" for="overlay-alpha-limit">
+        <label class="field field-wide control-disabled" for="overlay-alpha-limit" aria-disabled="true">
           <span class="field-label">
             <span data-i18n="overlayAlphaLimit">覆盖层 Alpha 上限</span>
             <output id="overlay-alpha-limit-value" for="overlay-alpha-limit">98%</output>
           </span>
-          <input id="overlay-alpha-limit" type="range" min="0" max="1" step="0.00392156862745098">
+          <input id="overlay-alpha-limit" type="range" min="0" max="1" step="0.00392156862745098" value="0.9803921568627451" disabled>
           <small class="field-description" data-i18n="overlayAlphaLimitDescription">仅影响 source-over 网页覆盖层容量。</small>
         </label>
 
@@ -128,25 +128,25 @@
           <span data-i18n="hostCompositing">宿主混合</span>
           <select id="host-compositing">
             <option value="source-over" data-i18n="hostCompositingSourceOver">Source-over</option>
-            <option value="screen" data-i18n="hostCompositingScreen">Screen</option>
+            <option value="screen" data-i18n="hostCompositingScreen" selected>DOM Add（近似）</option>
             <option value="plus-lighter" data-i18n="hostCompositingPlusLighter">Plus-lighter</option>
           </select>
         </label>
 
-        <label class="switch-field" for="isolated-compositing">
+        <label class="switch-field control-disabled" for="isolated-compositing" aria-disabled="true">
           <span>
             <strong data-i18n="isolatedCompositing">隔离合成</strong>
             <small data-i18n="isolatedCompositingDescription">将特效合成限制在独立图层。</small>
           </span>
-          <input id="isolated-compositing" type="checkbox">
+          <input id="isolated-compositing" type="checkbox" disabled>
         </label>
 
-        <label class="field field-wide" for="light-background-contrast-alpha">
+        <label class="field field-wide control-disabled" for="light-background-contrast-alpha" aria-disabled="true">
           <span class="field-label">
             <span data-i18n="lightBackgroundContrastAlpha">浅色背景对比 Alpha</span>
             <output id="light-background-contrast-alpha-value" for="light-background-contrast-alpha">0%</output>
           </span>
-          <input id="light-background-contrast-alpha" type="range" min="0" max="1" step="0.01">
+          <input id="light-background-contrast-alpha" type="range" min="0" max="1" step="0.01" value="0" disabled>
           <small class="field-description" data-i18n="lightBackgroundContrastAlphaDescription">在浅色背景上增加轻微对比，不改变深色背景表现。</small>
         </label>
       </div>
@@ -166,7 +166,7 @@
           <strong data-i18n="clickEffect">点击特效</strong>
           <small data-i18n="clickEffectDescription">点击时显示圆环与碎片</small>
         </span>
-        <input id="click-enabled" type="checkbox">
+        <input id="click-enabled" type="checkbox" checked>
       </label>
 
       <label class="field timing-field" for="click-time-scale">
@@ -174,7 +174,7 @@
           <span data-i18n="clickTimeScale">点击时间倍率</span>
           <output id="click-time-scale-value" for="click-time-scale">1.00×</output>
         </span>
-        <input id="click-time-scale" type="range" min="0.01" max="4" step="0.01">
+        <input id="click-time-scale" type="range" min="0.01" max="4" step="0.01" value="1">
         <small class="field-description" data-i18n="timeScaleDescription">只改变动画速度，不改变特效形状。</small>
       </label>
 
@@ -195,7 +195,7 @@
             <strong data-i18n="cursorTrail">光标拖尾</strong>
             <small data-i18n="cursorTrailDescription">移动或拖动时显示主题色光轨</small>
           </span>
-          <input id="trail-enabled" type="checkbox">
+          <input id="trail-enabled" type="checkbox" checked>
         </label>
 
         <label class="switch-field" for="trail-always">
@@ -212,7 +212,7 @@
           <span data-i18n="trailTimeScale">轨迹时间倍率</span>
           <output id="trail-time-scale-value" for="trail-time-scale">1.00×</output>
         </span>
-        <input id="trail-time-scale" type="range" min="0.01" max="4" step="0.01">
+        <input id="trail-time-scale" type="range" min="0.01" max="4" step="0.01" value="1">
         <small class="field-description" data-i18n="timeScaleDescription">只改变动画速度，不改变特效形状。</small>
       </label>
 

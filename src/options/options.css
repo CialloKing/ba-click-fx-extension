@@ -256,6 +256,17 @@ input[type="checkbox"]
   font-weight: 650;
 }
 
+.control-disabled
+{
+  opacity: 0.48;
+}
+
+.control-disabled input,
+.control-disabled select
+{
+  cursor: not-allowed;
+}
+
 .field-wide
 {
   grid-column: 1 / -1;

@@ -104,6 +104,18 @@ function createDeferred()
   return { promise, resolve };
 }
 
+test('空存储读取扩展 DOM Add 默认值', async () =>
+{
+  const mock = createStorageMock();
+  const state = await loadStorageState(mock.chromeApi);
+
+  assert.equal(state.settings.outputCompositing, 'browser-overlay');
+  assert.equal(state.settings.hostCompositing, 'screen');
+  // 缺省值无需伪装成用户选择；只有参数 Schema 元数据需要迁移写回。
+  assert.equal(Object.hasOwn(mock.records.sync, 'outputCompositing'), false);
+  assert.equal(Object.hasOwn(mock.records.sync, 'hostCompositing'), false);
+});
+
 test('设置写入队列等待前一项完成并保持提交顺序', async () =>
 {
   const firstGate = createDeferred();
