@@ -5,7 +5,7 @@
 - Extension version: `1.1.3`
 - Package: `release/ba-click-fx-extension-v1.1.3-chromium.zip`
 - SHA-256: `36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA`
-- Core dependency: `ba-click-fx 1.2.19`
+- Core dependency: `ba-click-fx 1.2.20`
 - Submission status: Prepared; not yet uploaded
 - Website: https://ba-click-fx.cialloking.top/
 - Microsoft Edge privacy policy: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
@@ -15,7 +15,7 @@
 - Markets: all markets
 - Mature content: no
 
-The prepared build uses `ba-click-fx 1.2.19`, adds full WebGL2 rendering, and exposes the complete 65-parameter upstream Schema without changing permissions or network behavior.
+The prepared build uses `ba-click-fx 1.2.20`, adds optional experimental WebGPU HDR and full WebGL2 rendering, and exposes the complete 65-parameter upstream Schema without changing permissions or network behavior.
 
 ## English listing (`en-US`)
 
