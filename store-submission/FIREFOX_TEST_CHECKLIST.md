@@ -1,6 +1,6 @@
-﻿# Firefox v1.1.3 Runtime Checklist
+﻿# Firefox v1.1.13 Runtime Checklist
 
-Complete this checklist before creating the `v1.1.3` Tag and GitHub Release.
+Complete this checklist before creating the `v1.1.13` Tag and GitHub Release.
 
 ## Temporary installation
 
@@ -8,7 +8,7 @@ Complete this checklist before creating the `v1.1.3` Tag and GitHub Release.
 - [ ] Run `npm ci`, `npm test`, and `npm run package:all`.
 - [ ] Open `about:debugging#/runtime/this-firefox`.
 - [ ] Select **Load Temporary Add-on** and choose `dist-firefox/manifest.json`.
-- [ ] Confirm Firefox shows version `1.1.3` and Gecko ID `ba-click-fx-extension@cialloking.top`.
+- [ ] Confirm Firefox shows version `1.1.13` and Gecko ID `ba-click-fx-extension@cialloking.top`.
 - [ ] Confirm the extension console has no uncaught startup errors.
 
 ## Ordinary webpage behavior

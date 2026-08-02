@@ -4,6 +4,8 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.1.13] - 2026-08-02
+
 ### Changed
 
 - Upgraded `ba-click-fx` from `1.2.7` to `1.2.20` and adopted its versioned 65-parameter Schema, complete WebGPU backend, HDR output status, host-surface capability contract, atomic parameter patch API, mode-specific reset baselines, and compositing-reference fixes.

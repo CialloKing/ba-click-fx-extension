@@ -48,19 +48,19 @@ Update highlights:
 
 `v1.0.6` adds the separate Firefox/AMO build, source package, validation, and submission materials. Chromium permissions, runtime behavior, storage schema, and listing copy are unchanged from `v1.0.5`. If Chrome has not yet received the v1.0.5 update, upload the newer v1.0.6 Chromium package and use the v1.0.5 description below. Do not upload the Firefox ZIP to Chrome Web Store.
 
-## Prepared update — v1.1.3
+## Prepared update — v1.1.13
 
-- Extension version: `1.1.3`
+- Extension version: `1.1.13`
 - Core dependency: `ba-click-fx 1.2.20`
-- Package: `ba-click-fx-extension-v1.1.3-chromium.zip`
+- Package: `ba-click-fx-extension-v1.1.13-chromium.zip`
 - SHA-256: `36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA`
 - Submission status: Prepared; not yet uploaded
 
 The prepared build uses `ba-click-fx 1.2.20`, adds experimental WebGPU HDR and Full WebGL2 rendering, and exposes all 65 public Schema parameters plus HDR presentation, compositing, and timing controls in Full settings. Rendering remains local with Canvas 2D, WebGL2, or WebGPU; permissions, network behavior, and disclosed data categories do not change.
 
-### v1.1.3 listing-description replacement — prepared, not yet submitted
+### v1.1.13 listing-description replacement — prepared, not yet submitted
 
-Use these blocks to replace the currently saved dashboard descriptions when uploading `v1.1.3`. After submission, relabel them as the actual submitted version and copy back any dashboard edits.
+Use these blocks to replace the currently saved dashboard descriptions when uploading `v1.1.13`. After submission, relabel them as the actual submitted version and copy back any dashboard edits.
 
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
@@ -324,7 +324,7 @@ The disclosed values are processed locally or stored through chrome.storage.sync
 
 ## Store assets
 
-Regenerate the localized screenshots from the final `v1.1.3` build before upload. Screenshot 1 must represent the current WebGL2 Bloom-capable runtime, and screenshot 4 must show the complete Full settings control panel; do not reuse the earlier “runtime unchanged” justification.
+Regenerate the localized screenshots from the final `v1.1.13` build before upload. Screenshot 1 must represent the current WebGL2 Bloom-capable runtime, and screenshot 4 must show the complete Full settings control panel; do not reuse the earlier “runtime unchanged” justification.
 
 - Chrome Web Store icon: `icons/icon-128.png`
 - Small promo: `store-assets/common/promo-small-440x280.png`
