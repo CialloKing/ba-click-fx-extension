@@ -53,6 +53,11 @@ function readArchiveJson(archive, path)
 assert(tag, '缺少待发布的 Git 标签。');
 assert(tag === `v${packageJson.version}`, `标签 ${tag} 与 package.json 版本不一致。`);
 assert(manifest.version === packageJson.version, '公共 Manifest 与 package.json 版本不一致。');
+assert(metadata.extensionVersion === packageJson.version, '商店元数据与 package.json 版本不一致。');
+assert(
+  metadata.coreVersion === packageJson.dependencies['ba-click-fx'],
+  '商店元数据与核心依赖版本不一致。',
+);
 assert(
   changelog.includes(`## [${packageJson.version}]`),
   `CHANGELOG.md 缺少 ${packageJson.version} 正式版本记录。`,
