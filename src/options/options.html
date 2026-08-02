@@ -75,7 +75,8 @@
         <label class="field" for="render-mode">
           <span data-i18n="renderMode">原始渲染模式</span>
           <select id="render-mode">
-            <option value="full-webgl2" data-i18n="renderFullWebGL2">完整 WebGL2</option>
+            <option value="full-webgpu" data-i18n="renderFullWebGPU">WebGPU HDR（实验）</option>
+            <option value="full-webgl2" data-i18n="renderFullWebGL2" selected>完整 WebGL2</option>
             <option value="software-bloom" data-i18n="renderSoftwareBloom">软件 Bloom</option>
             <option value="webgl2-bloom" data-i18n="renderWebGL2Bloom">WebGL2 Bloom</option>
             <option value="native-bloom" data-i18n="renderNativeBloom">原生辉光</option>
@@ -89,6 +90,56 @@
             <output id="max-dpr-value" for="max-dpr">2</output>
           </span>
           <input id="max-dpr" type="range" min="1" max="3" step="0.1" value="2">
+        </label>
+
+        <h3 class="settings-subheading field-wide" data-i18n="webgpuHdrSettingsTitle">WebGPU HDR 显示</h3>
+
+        <label class="field control-disabled" for="webgpu-hdr-peak" aria-disabled="true">
+          <span class="field-label">
+            <span data-i18n="webgpuHdrPeak">线性峰值</span>
+            <output id="webgpu-hdr-peak-value" for="webgpu-hdr-peak">3.00</output>
+          </span>
+          <input id="webgpu-hdr-peak" type="range" min="2" max="4" step="0.01" value="3" disabled>
+        </label>
+
+        <label class="field control-disabled" for="webgpu-hdr-brightness" aria-disabled="true">
+          <span class="field-label">
+            <span data-i18n="webgpuHdrBrightness">HDR 整体亮度</span>
+            <output id="webgpu-hdr-brightness-value" for="webgpu-hdr-brightness">1.00×</output>
+          </span>
+          <input id="webgpu-hdr-brightness" type="range" min="0" max="32" step="0.1" value="1" disabled>
+        </label>
+
+        <label class="field control-disabled" for="webgpu-hdr-color-preservation" aria-disabled="true">
+          <span class="field-label">
+            <span data-i18n="webgpuHdrColorPreservation">HDR 色相保持</span>
+            <output id="webgpu-hdr-color-preservation-value" for="webgpu-hdr-color-preservation">0%</output>
+          </span>
+          <input id="webgpu-hdr-color-preservation" type="range" min="0" max="1" step="0.01" value="0" disabled>
+        </label>
+
+        <label class="field control-disabled" for="webgpu-hdr-white-core" aria-disabled="true">
+          <span class="field-label">
+            <span data-i18n="webgpuHdrWhiteCore">白核强度</span>
+            <output id="webgpu-hdr-white-core-value" for="webgpu-hdr-white-core">60%</output>
+          </span>
+          <input id="webgpu-hdr-white-core" type="range" min="0" max="1" step="0.01" value="0.6" disabled>
+        </label>
+
+        <label class="field control-disabled" for="webgpu-hdr-white-start" aria-disabled="true">
+          <span class="field-label">
+            <span data-i18n="webgpuHdrWhiteStart">白核起点</span>
+            <output id="webgpu-hdr-white-start-value" for="webgpu-hdr-white-start">1.00</output>
+          </span>
+          <input id="webgpu-hdr-white-start" type="range" min="0" max="15.99" step="0.01" value="1" disabled>
+        </label>
+
+        <label class="field control-disabled" for="webgpu-hdr-white-end" aria-disabled="true">
+          <span class="field-label">
+            <span data-i18n="webgpuHdrWhiteEnd">白核终点</span>
+            <output id="webgpu-hdr-white-end-value" for="webgpu-hdr-white-end">5.00</output>
+          </span>
+          <input id="webgpu-hdr-white-end" type="range" min="0.01" max="16" step="0.01" value="5" disabled>
         </label>
 
         <label class="field" for="output-compositing">

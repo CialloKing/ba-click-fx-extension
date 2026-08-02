@@ -447,7 +447,7 @@ test('视觉偏好写入 sync，网站规则只写入 local', async () =>
   });
 });
 
-test('透明合同字段与 1.2.19 Screen 混合模式原子写入并可重新读取', async () =>
+test('透明合同字段与 Screen 混合模式原子写入并可重新读取', async () =>
 {
   const mock = createStorageMock();
   const patch =
@@ -468,6 +468,39 @@ test('透明合同字段与 1.2.19 Screen 混合模式原子写入并可重新�
   {
     assert.equal(state.settings[key], value);
   }
+});
+
+test('WebGPU HDR 展示设置原子写入并使用核心有效范围', async () =>
+{
+  const mock = createStorageMock();
+  const patch =
+  {
+    quality: 'custom',
+    renderMode: 'full-webgpu',
+    webgpuHdrPeak: 3.5,
+    webgpuHdrBrightness: 12,
+    webgpuHdrColorPreservation: 0.75,
+    webgpuHdrWhiteCore: 0.4,
+    webgpuHdrWhiteStart: 6,
+    webgpuHdrWhiteEnd: 4,
+  };
+
+  await writeSettingsPatch(patch, mock.chromeApi);
+
+  assert.deepEqual(mock.setCalls.sync,
+  [{
+    ...patch,
+    webgpuHdrWhiteEnd: 6.01,
+  }]);
+  const state = await loadStorageState(mock.chromeApi);
+
+  assert.equal(state.settings.renderMode, 'full-webgpu');
+  assert.equal(state.settings.webgpuHdrPeak, 3.5);
+  assert.equal(state.settings.webgpuHdrBrightness, 12);
+  assert.equal(state.settings.webgpuHdrColorPreservation, 0.75);
+  assert.equal(state.settings.webgpuHdrWhiteCore, 0.4);
+  assert.equal(state.settings.webgpuHdrWhiteStart, 6);
+  assert.equal(state.settings.webgpuHdrWhiteEnd, 6.01);
 });
 
 test('自定义渲染组合将画质、模式与 DPR 原子写入 sync', async () =>

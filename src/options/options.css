@@ -272,6 +272,16 @@ input[type="checkbox"]
   grid-column: 1 / -1;
 }
 
+.settings-subheading
+{
+  margin: 4px 0 -2px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(122, 182, 222, 0.14);
+  color: #a9e9ff;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
 .field-description
 {
   color: #7892a9;

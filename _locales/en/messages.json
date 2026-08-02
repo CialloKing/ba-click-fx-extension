@@ -364,6 +364,10 @@
   {
     "message": "Raw render mode"
   },
+  "renderFullWebGPU":
+  {
+    "message": "WebGPU HDR (experimental)"
+  },
   "renderFullWebGL2":
   {
     "message": "Full WebGL2"
@@ -383,6 +387,34 @@
   "renderLegacy":
   {
     "message": "Legacy"
+  },
+  "webgpuHdrSettingsTitle":
+  {
+    "message": "WebGPU HDR presentation"
+  },
+  "webgpuHdrPeak":
+  {
+    "message": "Linear peak"
+  },
+  "webgpuHdrBrightness":
+  {
+    "message": "HDR overall brightness"
+  },
+  "webgpuHdrColorPreservation":
+  {
+    "message": "HDR hue preservation"
+  },
+  "webgpuHdrWhiteCore":
+  {
+    "message": "White-core strength"
+  },
+  "webgpuHdrWhiteStart":
+  {
+    "message": "White-core start"
+  },
+  "webgpuHdrWhiteEnd":
+  {
+    "message": "White-core end"
   },
   "outputCompositing":
   {

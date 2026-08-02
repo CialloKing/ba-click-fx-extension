@@ -1,6 +1,7 @@
 ﻿import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import { CONFIG } from 'ba-click-fx';
 import {
   APPEARANCE_PRESETS,
   DEFAULT_SETTINGS,
@@ -29,6 +30,12 @@ test('扩展缺省设置使用 DOM Add 而不是上游展示页合成', () =>
   assert.equal(settings.quality, 'ultra');
   assert.equal(settings.renderMode, 'full-webgl2');
   assert.equal(settings.maxDpr, 2);
+  assert.equal(settings.webgpuHdrPeak, 3);
+  assert.equal(settings.webgpuHdrBrightness, 1);
+  assert.equal(settings.webgpuHdrColorPreservation, 0);
+  assert.equal(settings.webgpuHdrWhiteCore, 0.6);
+  assert.equal(settings.webgpuHdrWhiteStart, 1);
+  assert.equal(settings.webgpuHdrWhiteEnd, 5);
   assert.deepEqual(settings.fxParams, {});
   assert.equal(settings.fxParamSchemaVersion, 1);
   assert.equal(settings.clickTimeScale, 1);
@@ -78,6 +85,38 @@ test('时间倍率与上游共享 0.01 的最低有效值', () =>
 
   assert.equal(settings.clickTimeScale, 0.01);
   assert.equal(settings.trailTimeScale, 0.01);
+});
+
+test('WebGPU HDR 使用扩展固定基线并保持有效白核区间', () =>
+{
+  for (const key of [
+    'webgpuHdrPeak',
+    'webgpuHdrBrightness',
+    'webgpuHdrColorPreservation',
+    'webgpuHdrWhiteCore',
+    'webgpuHdrWhiteStart',
+    'webgpuHdrWhiteEnd',
+  ])
+  {
+    assert.equal(DEFAULT_SETTINGS[key], CONFIG[key]);
+  }
+
+  const settings = normalizeSettings(
+  {
+    webgpuHdrPeak: 9,
+    webgpuHdrBrightness: -1,
+    webgpuHdrColorPreservation: 2,
+    webgpuHdrWhiteCore: -1,
+    webgpuHdrWhiteStart: 15.99,
+    webgpuHdrWhiteEnd: 0.01,
+  });
+
+  assert.equal(settings.webgpuHdrPeak, 4);
+  assert.equal(settings.webgpuHdrBrightness, 0);
+  assert.equal(settings.webgpuHdrColorPreservation, 1);
+  assert.equal(settings.webgpuHdrWhiteCore, 0);
+  assert.equal(settings.webgpuHdrWhiteStart, 15.99);
+  assert.equal(settings.webgpuHdrWhiteEnd, 16);
 });
 
 test('1.2.17 透明合同拆分并兼容旧覆盖层值', () =>
@@ -180,6 +219,12 @@ test('三档画质映射 Legacy、原生辉光与完整 WebGL2', () =>
     renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   });
+  assert.deepEqual(getRenderModeProfile('full-webgpu'),
+  {
+    effectBackend: 'webgpu',
+    renderingMode: 'enhanced',
+    bloomBackend: 'webgl2',
+  });
   assert.deepEqual(getQualitySettingsPatch('balanced'),
   {
     quality: 'balanced',
@@ -187,6 +232,7 @@ test('三档画质映射 Legacy、原生辉光与完整 WebGL2', () =>
     maxDpr: 1,
   });
   assert.equal(detectQualityProfile('full-webgl2', 2), 'ultra');
+  assert.equal(detectQualityProfile('full-webgpu', 2), 'custom');
   assert.equal(detectQualityProfile('webgl2-bloom', 2), 'custom');
   assert.equal(detectQualityProfile('software-bloom', 2), 'custom');
   assert.equal(detectQualityProfile('webgl2-bloom', 1.5), 'custom');

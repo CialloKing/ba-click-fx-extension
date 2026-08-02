@@ -15,6 +15,12 @@ const MIN_TIME_SCALE = 0.01;
 
 export const RENDER_MODE_PROFILES = Object.freeze(
 {
+  'full-webgpu': Object.freeze(
+  {
+    effectBackend: 'webgpu',
+    renderingMode: 'enhanced',
+    bloomBackend: 'webgl2',
+  }),
   'full-webgl2': Object.freeze(
   {
     effectBackend: 'webgl2',
@@ -66,6 +72,13 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   quality: 'ultra',
   renderMode: QUALITY_PROFILES.ultra.renderMode,
   maxDpr: QUALITY_PROFILES.ultra.maxDpr,
+  // 固定扩展采用的 1.2.20 核心基线，不继承展示页的 HDR 演示预设。
+  webgpuHdrPeak: 3,
+  webgpuHdrBrightness: 1,
+  webgpuHdrColorPreservation: 0,
+  webgpuHdrWhiteCore: 0.6,
+  webgpuHdrWhiteStart: 1,
+  webgpuHdrWhiteEnd: 5,
   fxParams: Object.freeze({}),
   fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
   clickTimeScale: 1,
@@ -167,6 +180,52 @@ function clamp(value, min, max, fallback)
   }
 
   return Math.max(min, Math.min(max, number));
+}
+
+function normalizeWebGPUHdrSettings(source)
+{
+  const webgpuHdrWhiteStart = clamp(
+    source.webgpuHdrWhiteStart,
+    0,
+    15.99,
+    DEFAULT_SETTINGS.webgpuHdrWhiteStart,
+  );
+  const requestedWhiteEnd = clamp(
+    source.webgpuHdrWhiteEnd,
+    0.01,
+    16,
+    DEFAULT_SETTINGS.webgpuHdrWhiteEnd,
+  );
+
+  // 与核心保留同一个 0.01 最小区间，避免 HDR smoothstep 起止点退化。
+  return {
+    webgpuHdrPeak: clamp(
+      source.webgpuHdrPeak,
+      2,
+      4,
+      DEFAULT_SETTINGS.webgpuHdrPeak,
+    ),
+    webgpuHdrBrightness: clamp(
+      source.webgpuHdrBrightness,
+      0,
+      32,
+      DEFAULT_SETTINGS.webgpuHdrBrightness,
+    ),
+    webgpuHdrColorPreservation: clamp(
+      source.webgpuHdrColorPreservation,
+      0,
+      1,
+      DEFAULT_SETTINGS.webgpuHdrColorPreservation,
+    ),
+    webgpuHdrWhiteCore: clamp(
+      source.webgpuHdrWhiteCore,
+      0,
+      1,
+      DEFAULT_SETTINGS.webgpuHdrWhiteCore,
+    ),
+    webgpuHdrWhiteStart,
+    webgpuHdrWhiteEnd: Math.max(webgpuHdrWhiteStart + 0.01, requestedWhiteEnd),
+  };
 }
 
 function normalizeQuality(quality)
@@ -436,6 +495,7 @@ export function normalizeSettings(value = {})
     quality,
     renderMode,
     maxDpr,
+    ...normalizeWebGPUHdrSettings(source),
     fxParams: normalizeFxParams(source.fxParams,
     {
       schemaVersion: source.fxParamSchemaVersion === 0
