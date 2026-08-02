@@ -36,7 +36,7 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - Four English screenshots: `store-assets/en/`
 - Four Simplified Chinese screenshots: `store-assets/zh_CN/`
 
-The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.3`, regenerate the localized screenshots from the final build: the effect screenshot must show the current WebGL2-capable runtime, and the settings screenshot must show the complete 65-parameter upstream Schema panel and host controls.
+The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.3`, regenerate the localized screenshots from the final build: the effect screenshot must show the current GPU-capable runtime, and the settings screenshot must show the WebGPU HDR presentation controls, complete 65-parameter upstream Schema panel, and host controls.
 
 ## Important disclosure decision
 

@@ -15,7 +15,7 @@
 - Markets: all markets
 - Mature content: no
 
-The prepared build uses `ba-click-fx 1.2.20`, adds optional experimental WebGPU HDR and full WebGL2 rendering, and exposes the complete 65-parameter upstream Schema without changing permissions or network behavior.
+The prepared build uses `ba-click-fx 1.2.20`, adds experimental WebGPU HDR and Full WebGL2 rendering, and exposes the complete 65-parameter upstream Schema without changing permissions or network behavior.
 
 ## English listing (`en-US`)
 
@@ -36,9 +36,9 @@ Add game-inspired click rings, particles, and cursor trails to ordinary websites
 ### Description
 
 ```text
-BA Click FX is an unofficial, fan-made visual-effects extension for Microsoft Edge. It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail to ordinary webpages. All effects are rendered locally with Canvas 2D or WebGL2.
+BA Click FX is an unofficial, fan-made visual-effects extension for Microsoft Edge. It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail to ordinary webpages. All effects are rendered locally with Canvas 2D, WebGL2, or WebGPU.
 
-Use the toolbar popup for quick effect, current-website, language, and quality controls. Balanced uses Legacy, Advanced uses native glow, and Highest uses Full WebGL2 with an automatic Canvas 2D fallback chain. Full settings provides appearance presets, full WebGL2 and fallback render modes, maximum DPR, compositing, light-background contrast, timing, all 65 public upstream effect parameters, reduced-motion preferences, and searchable local website-rule management. The extension releases rendering resources while tabs are in the background and works offline without a developer server.
+Use the toolbar popup for quick effect, current-website, language, and quality controls. Balanced uses Legacy, Advanced uses native glow, and Highest uses Full WebGL2 with a direct Canvas 2D native-glow fallback. Full settings provides appearance presets, experimental WebGPU HDR with six presentation controls, Full WebGL2 and explicit compatibility render modes, maximum DPR, compositing, light-background contrast, timing, all 65 public upstream effect parameters, reduced-motion preferences, and searchable local website-rule management. Real HDR requires an Extended WebGPU output; Standard output remains SDR. The extension releases rendering resources while tabs are in the background and works offline without a developer server.
 
 Pointer coordinates are processed temporarily in memory only to draw visible effects. The current website origin is processed locally for the site switch, and an origin is saved only when the user explicitly disables that website. Visual, interface, and motion preferences use Microsoft Edge browser sync storage; current website rules use local extension storage. The developer cannot access pointer data, browsing activity, or saved preferences.
 
@@ -70,9 +70,9 @@ BA Click FX
 ### 描述
 
 ```text
-BA Click FX 是一个适用于 Microsoft Edge 的非官方网页视觉特效扩展。它会为普通网页添加游戏风格的点击圆环、粒子碎片和主题色鼠标光标拖尾，所有效果均使用 Canvas 2D 或 WebGL2 在本地渲染。
+BA Click FX 是一个适用于 Microsoft Edge 的非官方网页视觉特效扩展。它会为普通网页添加游戏风格的点击圆环、粒子碎片和主题色鼠标光标拖尾，所有效果均使用 Canvas 2D、WebGL2 或 WebGPU 在本地渲染。
 
-用户可以通过工具栏弹窗快速控制点击特效、拖尾、当前网站、语言和画质。均衡使用 Legacy，高级使用原生辉光，最高画质使用完整 WebGL2，并在不可用时自动进入 Canvas 2D 回退链。完整设置页提供外观预设、完整 WebGL2 与回退渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率、上游全部 65 个公开特效参数、减少动态偏好和可搜索的本机网站规则管理。标签页进入后台时会释放渲染资源；扩展无需开发者服务器，离线也能使用。
+用户可以通过工具栏弹窗快速控制点击特效、拖尾、当前网站、语言和画质。均衡使用 Legacy，高级使用原生辉光，最高画质使用完整 WebGL2，并在不可用时直接回退 Canvas 2D 原生辉光。完整设置页提供外观预设、带六项展示参数的实验性 WebGPU HDR、完整 WebGL2 与显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率、上游全部 65 个公开特效参数、减少动态偏好和可搜索的本机网站规则管理。只有 WebGPU Extended 输出代表真实 HDR，Standard 输出仍是 SDR。标签页进入后台时会释放渲染资源；扩展无需开发者服务器，离线也能使用。
 
 鼠标坐标只在内存中临时处理，用于绘制用户可见的特效。当前网站 origin 只在本地用于站点开关，只有当用户主动关闭某个网站时才会保存。视觉、界面和动态偏好使用 Microsoft Edge 浏览器同步存储，当前网站规则使用本机扩展存储；开发者无法访问鼠标数据、浏览活动或保存的设置。
 
