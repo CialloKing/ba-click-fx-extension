@@ -53,7 +53,7 @@ Update highlights:
 - Extension version: `1.1.13`
 - Core dependency: `ba-click-fx 1.2.20`
 - Package: `ba-click-fx-extension-v1.1.13-chromium.zip`
-- SHA-256: `36B567E169B8858099EA77DE6A00F5099AFD77EC14408C603F8D58E6A37914BA`
+- SHA-256: `DF752301B47F9DD5E65EE571302E8B6D5AB0068CCC63CE29DC595E15AEB03F96`
 - Submission status: Prepared; not yet uploaded
 
 The prepared build uses `ba-click-fx 1.2.20`, adds experimental WebGPU HDR and Full WebGL2 rendering, and exposes all 65 public Schema parameters plus HDR presentation, compositing, and timing controls in Full settings. Rendering remains local with Canvas 2D, WebGL2, or WebGPU; permissions, network behavior, and disclosed data categories do not change.
