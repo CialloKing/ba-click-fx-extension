@@ -23,10 +23,11 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Global enable/disable applies immediately.
 - [ ] Click and trail switches work independently.
 - [ ] “Always show while moving” works as described.
-- [ ] The popup switches Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2 immediately; Highest enters the Canvas 2D fallback chain when Full WebGL2 is unavailable.
+- [ ] The popup switches Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2 immediately; Highest falls back to Canvas 2D native glow rather than enabling Software Bloom automatically.
 - [ ] The popup switches System, Simplified Chinese, and English immediately and keeps the selected language after reopening.
 - [ ] Color, opacity, size, and Classic/Soft/Power-saving presets apply immediately.
-- [ ] Full settings exposes full WebGL2 and fallback render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public Schema parameters; each applies after releasing the control and survives reopening the page.
+- [ ] Full settings exposes experimental WebGPU HDR, Full WebGL2, explicit Software Bloom, other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public Schema parameters; each applies after releasing the control and survives reopening the page.
+- [ ] The six WebGPU HDR presentation controls are enabled only in WebGPU mode and use the extension defaults `3 / 1 / 0 / 0.6 / 1 / 5`; Standard output is treated as SDR and HDR hardware is optional for this test.
 - [ ] Reset visual settings restores every advanced effect parameter, including Hit and Flare values, without clearing local website rules.
 - [ ] Current-site disable removes effects only for that origin.
 - [ ] Re-enabling the site removes the saved rule.
