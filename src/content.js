@@ -123,13 +123,19 @@ function getEngineOptions(settings)
     inputSource: 'dom',
     clickTimeScale: settings.clickTimeScale,
     trailTimeScale: settings.trailTimeScale,
+    webgpuHdrPeak: settings.webgpuHdrPeak,
+    webgpuHdrBrightness: settings.webgpuHdrBrightness,
+    webgpuHdrColorPreservation: settings.webgpuHdrColorPreservation,
+    webgpuHdrWhiteCore: settings.webgpuHdrWhiteCore,
+    webgpuHdrWhiteStart: settings.webgpuHdrWhiteStart,
+    webgpuHdrWhiteEnd: settings.webgpuHdrWhiteEnd,
     outputCompositing: settings.outputCompositing,
     overlayAlphaPolicy: settings.overlayAlphaPolicy,
     overlayColorCompensation: settings.overlayColorCompensation,
     overlayAlphaLimit: settings.overlayAlphaLimit,
     hostCompositing: settings.hostCompositing,
-    // 扩展最终与当前网页合成；不要让核心按透明窗口能力回退独立载荷。
-    hostCompositingSurface: 'dom-backdrop',
+    // 外层 fixed host 已接管最终 CSS 混合；核心只需向调用方宿主交付完整载荷。
+    hostCompositingSurface: 'native',
     isolatedCompositing: settings.isolatedCompositing,
     lightBackgroundContrastAlpha: settings.lightBackgroundContrastAlpha,
     ...getRenderProfile(settings),
@@ -181,8 +187,13 @@ function updateBackendStatus()
   backendStatus = {
     requestedEffectBackend: snapshot.effectBackend,
     resolvedEffectBackend: snapshot.resolvedEffectBackend,
+    resolvedWebGPUOutputMode: snapshot.resolvedWebGPUOutputMode,
     requestedBloomBackend: snapshot.bloomBackend,
     resolvedBloomBackend: snapshot.resolvedBloomBackend,
+    requestedHostCompositing: snapshot.requestedHostCompositing,
+    resolvedHostCompositing: snapshot.resolvedHostCompositing,
+    hostCompositingSurface: snapshot.hostCompositingSurface,
+    compositingWarning: snapshot.compositingWarning,
   };
 }
 
@@ -198,6 +209,7 @@ function handleHostCompositingChange()
   {
     // fixed 宿主是实际读取网页 backdrop 的边界，使用核心解析后的有效合同。
     applySurfaceCompositing(surface, engine);
+    updateBackendStatus();
   }
 }
 
@@ -235,8 +247,13 @@ function getBackendStatus()
   return {
     requestedEffectBackend: profile.effectBackend,
     resolvedEffectBackend: null,
+    resolvedWebGPUOutputMode: null,
     requestedBloomBackend: profile.bloomBackend,
     resolvedBloomBackend: null,
+    requestedHostCompositing: currentSettings.hostCompositing,
+    resolvedHostCompositing: null,
+    hostCompositingSurface: 'native',
+    compositingWarning: null,
   };
 }
 

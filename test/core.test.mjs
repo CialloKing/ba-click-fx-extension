@@ -6,6 +6,7 @@ import {
   BLOOM_BACKEND_CHANGE_EVENT,
   EFFECT_BACKEND_CHANGE_EVENT,
   FX_PARAM_SCHEMA_VERSION,
+  HOST_COMPOSITING_CHANGE_EVENT,
 } from 'ba-click-fx';
 
 class MockHTMLElement
@@ -323,6 +324,52 @@ test('后端事件报告 requested 与 resolved 状态且允许监听器清理',
   finally
   {
     effect.destroy();
+    environment.restore();
+  }
+});
+
+test('1.2.20 宿主表面解析公开有效混合与降级警告', () =>
+{
+  const environment = installDomMock();
+  const canvas = new MockCanvas();
+  const events = [];
+
+  try
+  {
+    const effect = new BAClickFX(
+    {
+      target: canvas,
+      effectBackend: 'canvas2d',
+      bloomBackend: 'native',
+      outputCompositing: 'browser-overlay',
+      hostCompositing: 'screen',
+      hostCompositingSurface: 'native',
+    });
+
+    effect.canvas.addEventListener(HOST_COMPOSITING_CHANGE_EVENT, (event) =>
+    {
+      events.push(event.detail);
+    });
+
+    assert.equal(effect.getEffectiveHostCompositing(), 'screen');
+    assert.equal(effect.getConfig().resolvedHostCompositing, 'screen');
+
+    effect.updateConfig({ hostCompositingSurface: 'transparent-window' });
+
+    assert.equal(effect.getEffectiveHostCompositing(), 'source-over');
+    assert.equal(effect.getConfig().compositingWarning, 'screen-requires-visible-backdrop');
+    assert.deepEqual(events.at(-1),
+    {
+      requestedHostCompositing: 'screen',
+      resolvedHostCompositing: 'source-over',
+      hostCompositingSurface: 'transparent-window',
+      compositingWarning: 'screen-requires-visible-backdrop',
+    });
+
+    effect.destroy();
+  }
+  finally
+  {
     environment.restore();
   }
 });

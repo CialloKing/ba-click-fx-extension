@@ -364,6 +364,10 @@
   {
     "message": "原始渲染模式"
   },
+  "renderFullWebGPU":
+  {
+    "message": "WebGPU HDR（实验）"
+  },
   "renderFullWebGL2":
   {
     "message": "纯 WebGL2"
@@ -383,6 +387,34 @@
   "renderLegacy":
   {
     "message": "Legacy"
+  },
+  "webgpuHdrSettingsTitle":
+  {
+    "message": "WebGPU HDR 显示"
+  },
+  "webgpuHdrPeak":
+  {
+    "message": "线性峰值"
+  },
+  "webgpuHdrBrightness":
+  {
+    "message": "HDR 整体亮度"
+  },
+  "webgpuHdrColorPreservation":
+  {
+    "message": "HDR 色相保持"
+  },
+  "webgpuHdrWhiteCore":
+  {
+    "message": "白核强度"
+  },
+  "webgpuHdrWhiteStart":
+  {
+    "message": "白核起点"
+  },
+  "webgpuHdrWhiteEnd":
+  {
+    "message": "白核终点"
   },
   "outputCompositing":
   {

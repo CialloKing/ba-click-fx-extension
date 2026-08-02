@@ -181,6 +181,12 @@ for (const requiredControlId of [
   'quality',
   'render-mode',
   'max-dpr',
+  'webgpu-hdr-peak',
+  'webgpu-hdr-brightness',
+  'webgpu-hdr-color-preservation',
+  'webgpu-hdr-white-core',
+  'webgpu-hdr-white-start',
+  'webgpu-hdr-white-end',
   'output-compositing',
   'isolated-compositing',
   'light-background-contrast-alpha',
@@ -201,8 +207,20 @@ const renderModeOptions = optionsHtml.match(
 )?.[1] || '';
 
 assert(
+  /<option\b[^>]*\bvalue=["']full-webgpu["'][^>]*>/i.test(renderModeOptions),
+  '完整设置页渲染模式缺少 WebGPU HDR。',
+);
+
+assert(
   /<option\b[^>]*\bvalue=["']full-webgl2["'][^>]*>/i.test(renderModeOptions),
   '完整设置页渲染模式缺少完整 WebGL2。',
+);
+
+assert(
+  /<option\b(?=[^>]*\bvalue=["']full-webgl2["'])(?=[^>]*\bselected\b)[^>]*>/i.test(
+    renderModeOptions,
+  ),
+  '完整设置页的静态渲染默认值必须是完整 WebGL2。',
 );
 
 assert(

@@ -58,6 +58,20 @@ const elements =
   renderMode: document.querySelector('#render-mode'),
   maxDpr: document.querySelector('#max-dpr'),
   maxDprValue: document.querySelector('#max-dpr-value'),
+  webgpuHdrPeak: document.querySelector('#webgpu-hdr-peak'),
+  webgpuHdrPeakValue: document.querySelector('#webgpu-hdr-peak-value'),
+  webgpuHdrBrightness: document.querySelector('#webgpu-hdr-brightness'),
+  webgpuHdrBrightnessValue: document.querySelector('#webgpu-hdr-brightness-value'),
+  webgpuHdrColorPreservation: document.querySelector('#webgpu-hdr-color-preservation'),
+  webgpuHdrColorPreservationValue: document.querySelector(
+    '#webgpu-hdr-color-preservation-value',
+  ),
+  webgpuHdrWhiteCore: document.querySelector('#webgpu-hdr-white-core'),
+  webgpuHdrWhiteCoreValue: document.querySelector('#webgpu-hdr-white-core-value'),
+  webgpuHdrWhiteStart: document.querySelector('#webgpu-hdr-white-start'),
+  webgpuHdrWhiteStartValue: document.querySelector('#webgpu-hdr-white-start-value'),
+  webgpuHdrWhiteEnd: document.querySelector('#webgpu-hdr-white-end'),
+  webgpuHdrWhiteEndValue: document.querySelector('#webgpu-hdr-white-end-value'),
   outputCompositing: document.querySelector('#output-compositing'),
   overlayAlphaPolicy: document.querySelector('#overlay-alpha-policy'),
   overlayColorCompensation: document.querySelector('#overlay-color-compensation'),
@@ -90,6 +104,19 @@ const elements =
   status: document.querySelector('#status'),
 };
 
+const WEBGPU_HDR_SETTING_KEYS = Object.freeze([
+  'webgpuHdrPeak',
+  'webgpuHdrBrightness',
+  'webgpuHdrColorPreservation',
+  'webgpuHdrWhiteCore',
+  'webgpuHdrWhiteStart',
+  'webgpuHdrWhiteEnd',
+]);
+const WEBGPU_HDR_THRESHOLD_KEYS = new Set([
+  'webgpuHdrWhiteStart',
+  'webgpuHdrWhiteEnd',
+]);
+
 let settings = DEFAULT_SETTINGS;
 let hasLegacyDisabledSites = false;
 let i18n = createI18n(settings.languageMode);
@@ -118,6 +145,42 @@ function syncCompositingControlState()
     elements.lightBackgroundContrastAlpha,
     state.lightBackgroundContrastEnabled,
   );
+}
+
+function syncWebGPUHdrControlState()
+{
+  const enabled = settings.renderMode === 'full-webgpu';
+
+  for (const key of WEBGPU_HDR_SETTING_KEYS)
+  {
+    setControlEnabled(elements[key], enabled);
+  }
+}
+
+function formatWebGPUHdrValue(key, value)
+{
+  if (key === 'webgpuHdrColorPreservation' || key === 'webgpuHdrWhiteCore')
+  {
+    return `${Math.round(value * 100)}%`;
+  }
+
+  if (key === 'webgpuHdrBrightness')
+  {
+    return `${value.toFixed(2)}×`;
+  }
+
+  return value.toFixed(2);
+}
+
+function renderWebGPUHdrControls()
+{
+  for (const key of WEBGPU_HDR_SETTING_KEYS)
+  {
+    elements[key].value = String(settings[key]);
+    elements[`${key}Value`].textContent = formatWebGPUHdrValue(key, settings[key]);
+  }
+
+  syncWebGPUHdrControlState();
 }
 
 function setControlEnabled(control, enabled)
@@ -352,6 +415,7 @@ function render()
   elements.renderMode.value = settings.renderMode;
   elements.maxDpr.value = String(settings.maxDpr);
   elements.maxDprValue.textContent = String(settings.maxDpr);
+  renderWebGPUHdrControls();
   elements.outputCompositing.value = settings.outputCompositing;
   elements.overlayAlphaPolicy.value = settings.overlayAlphaPolicy;
   elements.overlayColorCompensation.value = settings.overlayColorCompensation;
@@ -441,6 +505,21 @@ function saveRenderCombination(patch)
   });
 }
 
+function saveWebGPUHdrSetting(key, value)
+{
+  const normalized = normalizeSettings({ ...settings, [key]: value });
+  const patch = { [key]: normalized[key] };
+
+  if (WEBGPU_HDR_THRESHOLD_KEYS.has(key))
+  {
+    // 两个阈值共同形成 smoothstep 区间，跨设备同步时必须保持为一个原子组合。
+    patch.webgpuHdrWhiteStart = normalized.webgpuHdrWhiteStart;
+    patch.webgpuHdrWhiteEnd = normalized.webgpuHdrWhiteEnd;
+  }
+
+  void savePatch(patch);
+}
+
 function bindEvents()
 {
   elements.preset.addEventListener('change', () =>
@@ -508,6 +587,21 @@ function bindEvents()
   {
     saveRenderCombination({ maxDpr: Number(elements.maxDpr.value) });
   });
+
+  for (const key of WEBGPU_HDR_SETTING_KEYS)
+  {
+    elements[key].addEventListener('input', () =>
+    {
+      elements[`${key}Value`].textContent = formatWebGPUHdrValue(
+        key,
+        Number(elements[key].value),
+      );
+    });
+    elements[key].addEventListener('change', () =>
+    {
+      saveWebGPUHdrSetting(key, Number(elements[key].value));
+    });
+  }
 
   elements.outputCompositing.addEventListener('change', () =>
   {

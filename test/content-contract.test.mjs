@@ -36,7 +36,18 @@ test('内容脚本使用上游原子参数与运行时状态事件', () =>
   {
     assert.match(contentSource, new RegExp(`${field}:\\s*settings\.${field}`));
   }
-  assert.match(contentSource, /hostCompositingSurface:\s*'dom-backdrop'/);
+  assert.match(contentSource, /hostCompositingSurface:\s*'native'/);
+  for (const field of [
+    'webgpuHdrPeak',
+    'webgpuHdrBrightness',
+    'webgpuHdrColorPreservation',
+    'webgpuHdrWhiteCore',
+    'webgpuHdrWhiteStart',
+    'webgpuHdrWhiteEnd',
+  ])
+  {
+    assert.match(contentSource, new RegExp(`${field}:\\s*settings\.${field}`));
+  }
   assert.match(contentSource, /\.\.\.getEngineOptions\(currentSettings\)/);
 
   for (const eventName of [
@@ -59,6 +70,11 @@ test('内容脚本使用上游原子参数与运行时状态事件', () =>
     'resolvedEffectBackend',
     'requestedBloomBackend',
     'resolvedBloomBackend',
+    'resolvedWebGPUOutputMode',
+    'requestedHostCompositing',
+    'resolvedHostCompositing',
+    'hostCompositingSurface',
+    'compositingWarning',
   ])
   {
     assert.match(contentSource, new RegExp(`\\b${field}\\b`));
