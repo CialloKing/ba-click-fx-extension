@@ -1,6 +1,6 @@
 ﻿# Store Submission Kit
 
-This directory preserves the historical Chrome Web Store records and contains the current Chrome, Edge, and Firefox submission materials for BA Click FX `1.1.13`.
+This directory preserves the historical Chrome Web Store records and contains the current Chrome, Edge, and Firefox submission materials for BA Click FX `1.1.14`.
 
 ## Canonical public URLs
 
@@ -20,15 +20,15 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - [data-inventory.md](./data-inventory.md): code-to-disclosure inventory explaining every locally processed or stored value.
 - [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md): Chrome/Edge manual loading and regression steps.
 - [release-checklist.md](./release-checklist.md): ordered release and submission checklist.
-- [firefox-addons.md](./firefox-addons.md): prepared Firefox `1.1.13` package details, AMO listing copy, privacy answers, reviewer notes, and manual submission steps.
-- [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md): required Firefox runtime verification before creating the `v1.1.13` Tag.
+- [firefox-addons.md](./firefox-addons.md): prepared Firefox `1.1.14` package details, AMO listing copy, privacy answers, reviewer notes, and manual submission steps.
+- [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md): required Firefox runtime verification before creating the `v1.1.14` Tag.
 - [metadata.json](./metadata.json): machine-readable version, URL, locale, package, and asset inventory.
 
 ## Required upload files
 
-- Chromium ZIP: `release/ba-click-fx-extension-v1.1.13-chromium.zip`
-- Firefox ZIP: `release/ba-click-fx-extension-v1.1.13-firefox.zip`
-- Firefox source ZIP: `release/ba-click-fx-extension-v1.1.13-firefox-source.zip`
+- Chromium ZIP: `release/ba-click-fx-extension-v1.1.14-chromium.zip`
+- Firefox ZIP: `release/ba-click-fx-extension-v1.1.14-firefox.zip`
+- Firefox source ZIP: `release/ba-click-fx-extension-v1.1.14-firefox-source.zip`
 - SHA-256 inventory: `release/SHA256SUMS.txt`
 - Logo: `store-assets/common/logo-300.png`
 - Small promotional tile: `store-assets/common/promo-small-440x280.png`
@@ -38,7 +38,7 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 
 `metadata.json` 的扩展版本、核心版本、包名和 SHA-256 共同描述同一组已准备发布物。开发分支可以先升级核心依赖，但必须等下一扩展版本完成确定性打包后再同步这些字段；`npm run check:release` 会在创建标签前强制检查该合同。
 
-The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.13`, regenerate the localized screenshots from the final build: the effect screenshot must show the current GPU-capable runtime, and the settings screenshot must show the WebGPU HDR presentation controls, complete 65-parameter upstream Schema panel, and host controls.
+The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.14`, regenerate the localized screenshots from the final build: the effect screenshot must show the current GPU-capable runtime, and the settings screenshot must show the WebGPU HDR presentation controls, complete 65-parameter upstream Schema panel, and host controls.
 
 ## Important disclosure decision
 

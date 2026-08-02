@@ -2,20 +2,20 @@
 
 ## Prepared release
 
-- Extension version: `1.1.13`
-- Core dependency: `ba-click-fx 1.2.20`
+- Extension version: `1.1.14`
+- Core dependency: `ba-click-fx 1.2.21`
 - Manifest version: `3`
 - Gecko ID: `ba-click-fx-extension@cialloking.top`
 - Minimum Firefox Desktop version: `140.0`
 - Minimum Firefox for Android version declared for manifest validation: `142.0`
 - Submission platform: Firefox Desktop only
 - Submission status: Prepared; awaiting GitHub Release and AMO submission
-- GitHub Release: https://github.com/CialloKing/ba-click-fx-extension/releases/tag/v1.1.13
+- GitHub Release: https://github.com/CialloKing/ba-click-fx-extension/releases/tag/v1.1.14
 - Distribution: `On this site` / listed on AMO
 - Remote code: `No`
 - Data collection or transmission: `None`
-- Firefox package: `ba-click-fx-extension-v1.1.13-firefox.zip`
-- Firefox source package: `ba-click-fx-extension-v1.1.13-firefox-source.zip`
+- Firefox package: `ba-click-fx-extension-v1.1.14-firefox.zip`
+- Firefox source package: `ba-click-fx-extension-v1.1.14-firefox-source.zip`
 - Firefox SHA-256: `E0B8009E25AB2D730AED6E1252AA1CF6DFB5F4BE25172635DD503D2614FC668E`
 - Source SHA-256: `87549B2D6143673BED4D49C22EA5A91243D255783491E53A9F963BE9CECB5193`
 - No test account, credentials, payment, hardware, or external service required
@@ -206,17 +206,17 @@ Testing on file:// pages is optional and is not required to verify the extension
 
 ## Manual submission checklist
 
-1. Complete the Firefox runtime checklist before tagging `v1.1.13`.
+1. Complete the Firefox runtime checklist before tagging `v1.1.14`.
 2. Confirm the GitHub Release contains both Firefox archives and `SHA256SUMS.txt`.
 3. Log in to https://addons.mozilla.org/developers/ with a Mozilla Account.
 4. Choose **Submit a New Add-on** and **On this site**.
-5. Upload `ba-click-fx-extension-v1.1.13-firefox.zip`.
+5. Upload `ba-click-fx-extension-v1.1.14-firefox.zip`.
 6. Stop and fix the package if AMO reports an error or a security/privacy warning.
 7. Select Firefox Desktop as the compatible platform.
-8. Answer **Yes** to the source-code question and upload `ba-click-fx-extension-v1.1.13-firefox-source.zip`.
+8. Answer **Yes** to the source-code question and upload `ba-click-fx-extension-v1.1.14-firefox-source.zip`.
 9. Fill the listing fields from this document and add English and Simplified Chinese localizations.
 10. Upload the 128×128 icon and the current localized 1280×800 screenshots.
 11. Paste the English reviewer notes and submit the version.
 12. Record the AMO item URL, submission time, status, and final dashboard text after submission.
 
-Do not replace a submitted `v1.1.13` archive. Listing-only corrections may be made in AMO; code or package corrections require a new extension version.
+Do not replace a submitted `v1.1.14` archive. Listing-only corrections may be made in AMO; code or package corrections require a new extension version.
