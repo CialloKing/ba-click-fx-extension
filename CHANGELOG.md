@@ -4,6 +4,10 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.20` to `1.2.21`, inheriting its WebGPU Extended Surface pause/resume and stale output-state cleanup. The public Schema, extension defaults, DOM Add contract, and settings surface remain unchanged; the upstream demo-only CSS HDR UI is intentionally not bundled.
+
 ## [1.1.13] - 2026-08-02
 
 ### Changed
