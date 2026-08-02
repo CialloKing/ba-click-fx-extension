@@ -249,7 +249,7 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
     assert.equal(config.renderingMode, 'enhanced');
     assert.equal(config.bloomBackend, 'webgl2');
     assert.equal(config.softwareBloomEnabled, false);
-    // v1.2.20 只在显式请求时使用 Software Bloom，GPU 不可用时回退原生辉光。
+    // 当前核心只在显式请求时使用 Software Bloom，GPU 不可用时回退原生辉光。
     assert.equal(config.resolvedBloomBackend, 'native');
     assert.equal(config.maxDpr, 1);
     assert.ok(environment.listenerCount() > 0);
@@ -328,7 +328,7 @@ test('后端事件报告 requested 与 resolved 状态且允许监听器清理',
   }
 });
 
-test('1.2.20 宿主表面解析公开有效混合与降级警告', () =>
+test('当前核心宿主表面解析公开有效混合与降级警告', () =>
 {
   const environment = installDomMock();
   const canvas = new MockCanvas();

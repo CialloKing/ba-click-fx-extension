@@ -72,7 +72,7 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   quality: 'ultra',
   renderMode: QUALITY_PROFILES.ultra.renderMode,
   maxDpr: QUALITY_PROFILES.ultra.maxDpr,
-  // 固定扩展采用的 1.2.20 核心基线，不继承展示页的 HDR 演示预设。
+  // 固定扩展自己的核心 HDR 基线，不继承上游展示页的演示预设。
   webgpuHdrPeak: 3,
   webgpuHdrBrightness: 1,
   webgpuHdrColorPreservation: 0,
