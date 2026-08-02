@@ -16,7 +16,7 @@ function countMatches(source, pattern)
   return [...source.matchAll(pattern)].length;
 }
 
-test('内容脚本使用 1.2.17 原子参数协议与透明合同事件', () =>
+test('内容脚本使用上游原子参数与运行时状态事件', () =>
 {
   assert.equal(countMatches(contentSource, /\bengine\.setFxParams\(/g), 1);
   assert.match(contentSource, /reset:\s*true[\s\S]*strict:\s*true[\s\S]*schemaVersion:/);
@@ -36,20 +36,22 @@ test('内容脚本使用 1.2.17 原子参数协议与透明合同事件', () =>
   {
     assert.match(contentSource, new RegExp(`${field}:\\s*settings\.${field}`));
   }
+  assert.match(contentSource, /hostCompositingSurface:\s*'dom-backdrop'/);
   assert.match(contentSource, /\.\.\.getEngineOptions\(currentSettings\)/);
 
   for (const eventName of [
     'EFFECT_BACKEND_CHANGE_EVENT',
     'BLOOM_BACKEND_CHANGE_EVENT',
+    'HOST_COMPOSITING_CHANGE_EVENT',
   ])
   {
-    assert.match(contentSource, new RegExp(`addEventListener\\(${eventName}`));
-    assert.match(contentSource, new RegExp(`removeEventListener\\(${eventName}`));
+    assert.match(contentSource, new RegExp(`addEventListener\\(\\s*${eventName}`));
+    assert.match(contentSource, new RegExp(`removeEventListener\\(\\s*${eventName}`));
   }
 
   assert.match(
     contentSource,
-    /removeBackendListeners\(engine\);\s*engine\.destroy\(\)/,
+    /removeEngineListeners\(engine\);\s*engine\.destroy\(\)/,
   );
 
   for (const field of [
@@ -75,10 +77,10 @@ test('内容脚本在扩展最外层执行独立宿主混合', () =>
 {
   assert.match(
     contentSource,
-    /setImportantStyle\([\s\S]*?'mix-blend-mode',[\s\S]*?getSurfaceBlendMode\(settings\)/,
+    /getSurfaceBlendMode\(instance\.getEffectiveHostCompositing\(\)\)/,
   );
   assert.match(
     contentSource,
-    /surfaceBlendChanged[\s\S]*?engine\.clear\(\)[\s\S]*?engine\.updateConfig\([\s\S]*?applySurfaceCompositing\(surface, settings\)/,
+    /hostContractChanged[\s\S]*?engine\.clear\(\)[\s\S]*?engine\.updateConfig\([\s\S]*?applySurfaceCompositing\(surface, engine\)/,
   );
 });

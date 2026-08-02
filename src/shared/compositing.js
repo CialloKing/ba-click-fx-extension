@@ -3,14 +3,9 @@
   'plus-lighter',
 ]);
 
-export function getSurfaceBlendMode(settings)
+export function getSurfaceBlendMode(resolvedHostCompositing)
 {
-  if (settings?.outputCompositing !== 'browser-overlay')
-  {
-    return 'normal';
-  }
-
-  return INDEPENDENT_HOST_COMPOSITING_MODES.has(settings.hostCompositing)
-    ? settings.hostCompositing
+  return INDEPENDENT_HOST_COMPOSITING_MODES.has(resolvedHostCompositing)
+    ? resolvedHostCompositing
     : 'normal';
 }

@@ -2,6 +2,7 @@
   BAClickFX,
   BLOOM_BACKEND_CHANGE_EVENT,
   EFFECT_BACKEND_CHANGE_EVENT,
+  HOST_COMPOSITING_CHANGE_EVENT,
 } from 'ba-click-fx';
 import {
   DEFAULT_SETTINGS,
@@ -37,16 +38,16 @@ function setImportantStyle(element, property, value)
   element.style.setProperty(property, value, 'important');
 }
 
-function applySurfaceCompositing(targetSurface, settings)
+function applySurfaceCompositing(targetSurface, instance)
 {
   setImportantStyle(
     targetSurface.host,
     'mix-blend-mode',
-    getSurfaceBlendMode(settings),
+    getSurfaceBlendMode(instance.getEffectiveHostCompositing()),
   );
 }
 
-function createSurface(settings)
+function createSurface()
 {
   const host = document.createElement('div');
 
@@ -87,15 +88,10 @@ function createSurface(settings)
 
   parent.appendChild(host);
 
-  const targetSurface = {
+  return {
     host,
     container,
   };
-
-  // fixed + z-index 会让外层宿主建立独立层叠上下文；最终宿主混合必须提升
-  // 到这个上下文的根节点，才能真正读取网页作为 backdrop。
-  applySurfaceCompositing(targetSurface, settings);
-  return targetSurface;
 }
 
 function getEffectiveTrailAlways(settings)
@@ -132,6 +128,8 @@ function getEngineOptions(settings)
     overlayColorCompensation: settings.overlayColorCompensation,
     overlayAlphaLimit: settings.overlayAlphaLimit,
     hostCompositing: settings.hostCompositing,
+    // 扩展最终与当前网页合成；不要让核心按透明窗口能力回退独立载荷。
+    hostCompositingSurface: 'dom-backdrop',
     isolatedCompositing: settings.isolatedCompositing,
     lightBackgroundContrastAlpha: settings.lightBackgroundContrastAlpha,
     ...getRenderProfile(settings),
@@ -194,17 +192,35 @@ function handleBackendChange()
   updateBackendStatus();
 }
 
-function addBackendListeners()
+function handleHostCompositingChange()
+{
+  if (engine && surface)
+  {
+    // fixed 宿主是实际读取网页 backdrop 的边界，使用核心解析后的有效合同。
+    applySurfaceCompositing(surface, engine);
+  }
+}
+
+function addEngineListeners()
 {
   engine.canvas.addEventListener(EFFECT_BACKEND_CHANGE_EVENT, handleBackendChange);
   engine.canvas.addEventListener(BLOOM_BACKEND_CHANGE_EVENT, handleBackendChange);
+  engine.canvas.addEventListener(
+    HOST_COMPOSITING_CHANGE_EVENT,
+    handleHostCompositingChange,
+  );
   updateBackendStatus();
+  handleHostCompositingChange();
 }
 
-function removeBackendListeners(instance)
+function removeEngineListeners(instance)
 {
   instance.canvas.removeEventListener(EFFECT_BACKEND_CHANGE_EVENT, handleBackendChange);
   instance.canvas.removeEventListener(BLOOM_BACKEND_CHANGE_EVENT, handleBackendChange);
+  instance.canvas.removeEventListener(
+    HOST_COMPOSITING_CHANGE_EVENT,
+    handleHostCompositingChange,
+  );
 }
 
 function getBackendStatus()
@@ -238,19 +254,22 @@ function applySettings(settings)
     !hasSameFxParams(appliedSettings, settings),
   );
 
-  const surfaceBlendChanged = Boolean(
+  const hostContractChanged = Boolean(
     appliedSettings &&
-    getSurfaceBlendMode(appliedSettings) !== getSurfaceBlendMode(settings),
+    (
+      appliedSettings.outputCompositing !== settings.outputCompositing ||
+      appliedSettings.hostCompositing !== settings.hostCompositing
+    ),
   );
 
-  if (surfaceBlendChanged)
+  if (hostContractChanged)
   {
     // 旧帧使用的是另一种宿主载荷，先清除再切换最外层混合，避免短暂误合成。
     engine.clear();
   }
 
   engine.updateConfig(getEngineOptions(settings));
-  applySurfaceCompositing(surface, settings);
+  applySurfaceCompositing(surface, engine);
 
   if (fxParamsMustBeApplied)
   {
@@ -269,7 +288,7 @@ function createEngine()
     return;
   }
 
-  surface = createSurface(currentSettings);
+  surface = createSurface();
 
   try
   {
@@ -279,7 +298,7 @@ function createEngine()
       target: surface.container,
       ...getEngineOptions(currentSettings),
     });
-    addBackendListeners();
+    addEngineListeners();
     applyFxParams(currentSettings);
     appliedSettings = currentSettings;
     updateBackendStatus();
@@ -288,7 +307,7 @@ function createEngine()
   {
     if (engine)
     {
-      removeBackendListeners(engine);
+      removeEngineListeners(engine);
       engine.destroy();
       engine = null;
     }
@@ -306,7 +325,7 @@ function destroyEngine()
 {
   if (engine)
   {
-    removeBackendListeners(engine);
+    removeEngineListeners(engine);
     engine.destroy();
     engine = null;
   }

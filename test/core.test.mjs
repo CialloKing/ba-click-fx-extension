@@ -247,9 +247,9 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
     assert.equal(config.effectBackend, 'canvas2d');
     assert.equal(config.renderingMode, 'enhanced');
     assert.equal(config.bloomBackend, 'webgl2');
-    assert.equal(config.softwareBloomEnabled, true);
-    // 已有 Canvas 无法挂载 WebGL2 叠层，核心应立即选择软件 Bloom 作为回退。
-    assert.equal(config.resolvedBloomBackend, 'software');
+    assert.equal(config.softwareBloomEnabled, false);
+    // v1.2.20 只在显式请求时使用 Software Bloom，GPU 不可用时回退原生辉光。
+    assert.equal(config.resolvedBloomBackend, 'native');
     assert.equal(config.maxDpr, 1);
     assert.ok(environment.listenerCount() > 0);
 
