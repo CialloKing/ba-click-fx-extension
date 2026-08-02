@@ -59,7 +59,7 @@ npm test
 | `npm run build:all` | 构建 Chromium 与 Firefox 两个目标 |
 | `npm test` | 构建双目标并执行单元测试、Manifest、商店资源和编码校验 |
 | `npm run lint:firefox` | 使用 `web-ext` 校验 Firefox 包且将警告视为错误 |
-| `npm run check:release -- v1.1.13` | 打包后校验标签、版本、三个 ZIP 和全部哈希 |
+| `npm run check:release -- v1.1.14` | 打包后校验标签、版本、三个 ZIP 和全部哈希 |
 | `npm run check:store` | 检查版本、商店文案、链接和全部图片尺寸 |
 | `npm run package` | 构建并生成 Manifest 位于 ZIP 根目录的 Chromium 提交包 |
 | `npm run package:firefox` | 构建、lint 并生成 Firefox 提交包 |
@@ -91,9 +91,9 @@ npm run package:all
 输出文件包括：
 
 ```text
-release/ba-click-fx-extension-v1.1.13-chromium.zip
-release/ba-click-fx-extension-v1.1.13-firefox.zip
-release/ba-click-fx-extension-v1.1.13-firefox-source.zip
+release/ba-click-fx-extension-v1.1.14-chromium.zip
+release/ba-click-fx-extension-v1.1.14-firefox.zip
+release/ba-click-fx-extension-v1.1.14-firefox-source.zip
 release/SHA256SUMS.txt
 ```
 
