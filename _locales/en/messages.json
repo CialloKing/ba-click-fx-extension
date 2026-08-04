@@ -210,7 +210,7 @@
   },
   "appearanceOptionsDescription":
   {
-    "message": "Visual preferences are saved with browser-provided extension sync storage."
+    "message": "Effect presets manage appearance, rendering quality, and compositing together, then save through browser-provided extension sync storage."
   },
   "resetVisualSettings":
   {
@@ -218,11 +218,19 @@
   },
   "appearancePreset":
   {
-    "message": "Appearance preset"
+    "message": "Effect preset"
+  },
+  "appearancePresetDescription":
+  {
+    "message": "Set appearance, rendering quality, and compositing together."
   },
   "presetClassic":
   {
-    "message": "Classic"
+    "message": "Close to original"
+  },
+  "presetLightBackground":
+  {
+    "message": "Light background"
   },
   "presetSoft":
   {
@@ -318,7 +326,7 @@
   },
   "statusPresetApplied":
   {
-    "message": "Appearance preset applied"
+    "message": "Effect preset applied"
   },
   "statusVisualReset":
   {
@@ -518,7 +526,7 @@
   },
   "renderModeDescription":
   {
-    "message": "Quality presets set both the render mode and DPR; use these controls for a precise combination."
+    "message": "Effect presets include the render mode and DPR; precise changes here switch to Custom."
   },
   "clickSettingsTitle":
   {

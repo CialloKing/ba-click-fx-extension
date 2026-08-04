@@ -1,7 +1,7 @@
 ﻿import { createI18n } from '../shared/i18n.js';
 import {
   DEFAULT_SETTINGS,
-  getQualitySettingsPatch,
+  getAppearancePresetPatch,
   getSiteKey,
   normalizeSettings,
 } from '../shared/settings.js';
@@ -23,7 +23,7 @@ const elements =
   clickEnabled: document.querySelector('#click-enabled'),
   trailEnabled: document.querySelector('#trail-enabled'),
   trailAlways: document.querySelector('#trail-always'),
-  quality: document.querySelector('#quality'),
+  preset: document.querySelector('#preset'),
   languageMode: document.querySelector('#language-mode'),
   preview: document.querySelector('#preview'),
   openOptions: document.querySelector('#open-options'),
@@ -133,7 +133,7 @@ function render()
   elements.trailEnabled.checked = settings.trailEnabled;
   elements.trailAlways.checked = settings.trailAlways;
   elements.trailAlways.disabled = !settings.trailEnabled;
-  elements.quality.value = settings.quality;
+  elements.preset.value = settings.preset;
   elements.languageMode.value = settings.languageMode;
 
   const siteSupported = Boolean(activeSiteKey);
@@ -203,13 +203,16 @@ function bindEvents()
   bindToggle(elements.trailEnabled, 'trailEnabled');
   bindToggle(elements.trailAlways, 'trailAlways');
 
-  elements.quality.addEventListener('change', () =>
+  elements.preset.addEventListener('change', () =>
   {
-    void updateSettings(
+    const patch = getAppearancePresetPatch(elements.preset.value);
+
+    if (patch.preset === 'custom')
     {
-      ...getQualitySettingsPatch(elements.quality.value),
-      preset: 'custom',
-    });
+      return;
+    }
+
+    void updateSettings(patch, 'statusPresetApplied');
   });
 
   elements.languageMode.addEventListener('change', async () =>

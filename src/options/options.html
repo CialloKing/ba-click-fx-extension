@@ -28,12 +28,13 @@
 
       <div class="settings-grid">
         <label class="field" for="preset">
-          <span data-i18n="appearancePreset">外观预设</span>
+          <span data-i18n="appearancePreset">效果预设</span>
           <select id="preset">
-            <option value="classic" data-i18n="presetClassic">经典</option>
+            <option value="classic" data-i18n="presetClassic">贴近原版</option>
+            <option value="light-background" data-i18n="presetLightBackground">浅色背景优化</option>
             <option value="soft" data-i18n="presetSoft">柔和</option>
             <option value="performance" data-i18n="presetPerformance">省电</option>
-            <option value="custom" data-i18n="presetCustom">自定义</option>
+            <option value="custom" data-i18n="presetCustom" disabled>自定义</option>
           </select>
         </label>
 
@@ -60,16 +61,6 @@
           </span>
           <!-- 展示页的 0.05 步进无法表示 0.90/1.00 预设；细分步进保留同一范围与精确默认值。 -->
           <input id="scale" type="range" min="0.01" max="5" step="0.01" value="1">
-        </label>
-
-        <label class="field" for="quality">
-          <span data-i18n="quality">画质</span>
-          <select id="quality">
-            <option value="balanced" data-i18n="qualityBalanced">均衡</option>
-            <option value="high" data-i18n="qualityHigh">高级</option>
-            <option value="ultra" data-i18n="qualityUltra" selected>最高画质</option>
-            <option value="custom" data-i18n="qualityCustom" disabled>自定义</option>
-          </select>
         </label>
 
         <label class="field" for="render-mode">
