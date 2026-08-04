@@ -4,113 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BA Click FX Popup Preview</title>
-  <link rel="stylesheet" href="../../dist/popup/popup.css?v=1.1.14">
 </head>
 <body>
-  <main class="panel">
-    <header class="hero">
-      <div class="brand-mark" aria-hidden="true">
-        <span></span>
-      </div>
-      <div class="hero-copy">
-        <h1 data-i18n="extensionName">BA Click FX</h1>
-        <p data-i18n="popupTagline">蔚蓝档案风格鼠标特效</p>
-      </div>
-      <label class="switch power-switch" title="全局启用" data-i18n-title="globalEnable">
-        <input id="enabled" type="checkbox">
-        <span class="switch-track"></span>
-        <span class="sr-only" data-i18n="globalEnable">全局启用</span>
-      </label>
-    </header>
+  <script>
+    fetch('../../dist/popup/popup.html')
+      .then((response) => response.text())
+      .then((html) =>
+      {
+        const previewHtml = html
+          .replace('href="popup.css"', 'href="../../dist/popup/popup.css"')
+          .replace(
+            '<script src="popup.js"><\/script>',
+            '<script src="popup-mock.js"><\/script><script src="../../dist/popup/popup.js"><\/script>',
+          );
 
-    <section class="site-card" aria-labelledby="site-title">
-      <div class="site-copy">
-        <strong id="site-title" data-i18n="currentSite">当前网站</strong>
-        <span id="site-name" data-i18n="loading">正在读取…</span>
-      </div>
-      <label class="switch">
-        <input id="site-enabled" type="checkbox">
-        <span class="switch-track"></span>
-        <span class="sr-only" data-i18n="siteEnable">在当前网站启用</span>
-      </label>
-    </section>
-    <p class="site-note" data-i18n="siteStorageNotice">关闭当前网站时，仅会把该网站的 origin 保存到本机扩展存储。</p>
-
-    <section class="settings-card" aria-labelledby="effects-title">
-      <h2 id="effects-title" data-i18n="effectsTitle">效果</h2>
-
-      <label class="setting-row toggle-row">
-        <span>
-          <strong data-i18n="clickEffect">点击特效</strong>
-          <small data-i18n="clickEffectDescription">点击时显示圆环与碎片</small>
-        </span>
-        <span class="switch">
-          <input id="click-enabled" type="checkbox">
-          <span class="switch-track"></span>
-        </span>
-      </label>
-
-      <label class="setting-row toggle-row">
-        <span>
-          <strong data-i18n="cursorTrail">光标拖尾</strong>
-          <small data-i18n="cursorTrailDescription">移动或拖动时显示主题色光轨</small>
-        </span>
-        <span class="switch">
-          <input id="trail-enabled" type="checkbox">
-          <span class="switch-track"></span>
-        </span>
-      </label>
-
-      <label class="setting-row toggle-row nested-row">
-        <span>
-          <strong data-i18n="trailAlways">移动时始终显示</strong>
-          <small data-i18n="trailAlwaysDescription">关闭后仅按住鼠标时显示拖尾</small>
-        </span>
-        <span class="switch">
-          <input id="trail-always" type="checkbox">
-          <span class="switch-track"></span>
-        </span>
-      </label>
-
-      <label class="setting-row select-row" for="quality">
-        <span>
-          <strong data-i18n="quality">画质</strong>
-          <small data-i18n="qualityDescription">均衡：Legacy；高级：原生辉光；最高画质：WebGL2 Bloom（不可用时自动使用软件 Bloom）</small>
-        </span>
-        <select id="quality">
-          <option value="balanced" data-i18n="qualityBalanced">均衡</option>
-          <option value="high" data-i18n="qualityHigh">高级</option>
-          <option value="ultra" data-i18n="qualityUltra" selected>最高画质</option>
-          <option value="custom" data-i18n="qualityCustom" disabled>自定义</option>
-        </select>
-      </label>
-
-      <label class="setting-row select-row" for="language-mode">
-        <span>
-          <strong data-i18n="language">界面语言</strong>
-          <small data-i18n="preferencesDescription">可跟随系统，也可为扩展单独指定。</small>
-        </span>
-        <select id="language-mode">
-          <option value="system" data-i18n="followSystem">跟随系统</option>
-          <option value="zh_CN">简体中文</option>
-          <option value="en">English</option>
-        </select>
-      </label>
-    </section>
-
-    <div class="actions">
-      <button id="preview" class="primary-button" type="button" data-i18n="previewEffect">预览点击特效</button>
-      <button id="open-options" class="ghost-button" type="button" data-i18n="openSettings">完整设置</button>
-    </div>
-
-    <p id="status" class="status" role="status" aria-live="polite"></p>
-    <footer>
-      <span data-i18n="syncNotice">视觉偏好由浏览器保存；启用同步时可跨设备同步</span>
-      <a href="https://github.com/CialloKing/ba-click-fx-extension" target="_blank" rel="noreferrer" data-i18n="projectRepository">项目仓库</a>
-    </footer>
-  </main>
-
-  <script src="popup-mock.js"></script>
-  <script src="../../dist/popup/popup.js"></script>
+        document.open();
+        document.write(previewHtml);
+        document.close();
+      });
+  </script>
 </body>
 </html>

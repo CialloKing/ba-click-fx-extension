@@ -10,6 +10,11 @@ function readJson(path)
   return JSON.parse(readFileSync(path, 'utf8').replace(/^\uFEFF/, ''));
 }
 
+function readText(relativePath)
+{
+  return readFileSync(assertFile(relativePath), 'utf8').replace(/^\uFEFF/, '');
+}
+
 function assert(condition, message)
 {
   if (!condition)
@@ -122,12 +127,31 @@ for (const path of [
   'store-submission/firefox-addons.md',
   'store-submission/FIREFOX_TEST_CHECKLIST.md',
   'SOURCE_BUILD.md',
+  'store-assets/source/popup-preview.html',
+  'store-assets/source/popup-mock.js',
+  'store-assets/source/popup-showcase.html',
   'store-assets/source/options-preview.html',
   'store-assets/source/options-mock.js',
 ])
 {
   assertFile(path);
 }
+
+const popupPreview = readText('store-assets/source/popup-preview.html');
+const popupShowcase = readText('store-assets/source/popup-showcase.html');
+
+assert(
+  popupPreview.includes("fetch('../../dist/popup/popup.html')"),
+  '商店弹窗预览必须复用当前构建页面，不能复制第二份弹窗结构。',
+);
+assert(
+  !/(?:Three quality modes|三档画质)/.test(popupShowcase),
+  '商店宣传文案不应继续声明已移除的独立画质入口。',
+);
+assert(
+  /(?:Light-background preset|浅色背景优化)/.test(popupShowcase),
+  '商店宣传文案缺少浅色背景优化预设。',
+);
 
 assertPng(metadata.assets.chromeIcon, 128, 128);
 assertPng(metadata.assets.logo, 300, 300);

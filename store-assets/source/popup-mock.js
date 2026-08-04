@@ -106,7 +106,7 @@
         {
           callback(
           {
-            protocolVersion: 2,
+            protocolVersion: 3,
             state: 'ready',
             active: state !== 'site-off',
             siteKey: origin,
