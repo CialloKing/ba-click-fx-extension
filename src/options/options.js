@@ -7,7 +7,6 @@ import {
 import {
   DEFAULT_SETTINGS,
   detectAppearancePreset,
-  detectQualityProfile,
   getAppearancePresetPatch,
   normalizeSettings,
 } from '../shared/settings.js';
@@ -482,12 +481,11 @@ function saveRenderCombination(patch)
   const renderMode = patch.renderMode ?? settings.renderMode;
   const maxDpr = patch.maxDpr ?? settings.maxDpr;
 
-  // 画质由渲染模式与 DPR 派生；三者原子写入可避免跨设备同步到不一致的组合。
+  // 渲染模式与 DPR 共同决定预设状态；两者原子写入可避免跨设备同步到不一致的组合。
   saveCustomPreset(
   {
     renderMode,
     maxDpr,
-    quality: detectQualityProfile(renderMode, maxDpr),
   });
 }
 

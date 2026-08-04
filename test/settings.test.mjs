@@ -6,11 +6,7 @@ import {
   APPEARANCE_PRESETS,
   DEFAULT_SETTINGS,
   detectAppearancePreset,
-  detectQualityProfile,
   getAppearancePresetPatch,
-  getClassicDefaultsMigrationPatch,
-  getQualityProfile,
-  getQualitySettingsPatch,
   getRenderModeProfile,
   getSiteKey,
   normalizeSettings,
@@ -28,7 +24,6 @@ test('扩展缺省设置使用 DOM Add 而不是上游展示页合成', () =>
   assert.equal(settings.color, '#4ca7ff');
   assert.equal(settings.opacity, 1);
   assert.equal(settings.scale, 1);
-  assert.equal(settings.quality, 'ultra');
   assert.equal(settings.renderMode, 'full-webgl2');
   assert.equal(settings.maxDpr, 2);
   assert.equal(settings.webgpuHdrPeak, 3);
@@ -62,7 +57,8 @@ test('无效设置会回退或裁剪到安全范围', () =>
     color: 'blue',
     opacity: 99,
     scale: -20,
-    quality: 'cinematic',
+    renderMode: 'cinematic',
+    maxDpr: 99,
     languageMode: 'ja',
     motionMode: 'lots',
   });
@@ -71,7 +67,8 @@ test('无效设置会回退或裁剪到安全范围', () =>
   assert.equal(settings.color, DEFAULT_SETTINGS.color);
   assert.equal(settings.opacity, 1);
   assert.equal(settings.scale, 0.01);
-  assert.equal(settings.quality, DEFAULT_SETTINGS.quality);
+  assert.equal(settings.renderMode, DEFAULT_SETTINGS.renderMode);
+  assert.equal(settings.maxDpr, 3);
   assert.equal(settings.languageMode, DEFAULT_SETTINGS.languageMode);
   assert.equal(settings.motionMode, DEFAULT_SETTINGS.motionMode);
 });
@@ -190,24 +187,8 @@ test('站点键按源隔离，并为本地文件提供稳定键', () =>
   assert.equal(getSiteKey('not a url'), null);
 });
 
-test('三档画质映射 Legacy、原生辉光与完整 WebGL2', () =>
+test('渲染模式映射公开后端并允许自定义 DPR', () =>
 {
-  assert.deepEqual(getQualityProfile('balanced'),
-  {
-    renderMode: 'legacy',
-    maxDpr: 1,
-  });
-  assert.deepEqual(getQualityProfile('high'),
-  {
-    renderMode: 'native-bloom',
-    maxDpr: 2,
-  });
-  assert.deepEqual(getQualityProfile('ultra'),
-  {
-    renderMode: 'full-webgl2',
-    maxDpr: 2,
-  });
-  assert.deepEqual(getQualityProfile('unknown'), getQualityProfile('ultra'));
   assert.deepEqual(getRenderModeProfile('software-bloom'),
   {
     effectBackend: 'canvas2d',
@@ -226,17 +207,6 @@ test('三档画质映射 Legacy、原生辉光与完整 WebGL2', () =>
     renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   });
-  assert.deepEqual(getQualitySettingsPatch('balanced'),
-  {
-    quality: 'balanced',
-    renderMode: 'legacy',
-    maxDpr: 1,
-  });
-  assert.equal(detectQualityProfile('full-webgl2', 2), 'ultra');
-  assert.equal(detectQualityProfile('full-webgpu', 2), 'custom');
-  assert.equal(detectQualityProfile('webgl2-bloom', 2), 'custom');
-  assert.equal(detectQualityProfile('software-bloom', 2), 'custom');
-  assert.equal(detectQualityProfile('webgl2-bloom', 1.5), 'custom');
   assert.equal(normalizeSettings(
   {
     renderMode: 'webgl2-bloom',
@@ -244,63 +214,24 @@ test('三档画质映射 Legacy、原生辉光与完整 WebGL2', () =>
   }).maxDpr, 1.5);
   assert.deepEqual(normalizeSettings(
   {
-    quality: 'ultra',
     renderMode: 'software-bloom',
     maxDpr: 3,
   }),
   {
     ...DEFAULT_SETTINGS,
-    quality: 'custom',
     renderMode: 'software-bloom',
     maxDpr: 3,
     preset: 'custom',
   });
 });
 
-test('旧省电画质会迁移到新的均衡档', () =>
+test('旧 quality 字段不再进入设置模型', () =>
 {
-  assert.equal(normalizeSettings({ quality: 'performance' }).quality, 'balanced');
-});
+  const settings = normalizeSettings({ quality: 'balanced' });
 
-test('旧版经典默认参数生成持久化补丁且保留显式拖尾选择', () =>
-{
-  const migrated = getClassicDefaultsMigrationPatch(
-  {
-    preset: 'classic',
-    color: '#69a1ff',
-    opacity: 0.5,
-    scale: 1.1,
-    quality: 'balanced',
-  });
-  const explicitTrail = getClassicDefaultsMigrationPatch(
-  {
-    preset: 'classic',
-    color: '#69a1ff',
-    opacity: 0.5,
-    scale: 1.1,
-    quality: 'balanced',
-    trailAlways: true,
-  });
-  const custom = getClassicDefaultsMigrationPatch({ preset: 'custom' });
-
-  assert.deepEqual(migrated,
-  {
-    color: '#4ca7ff',
-    opacity: 1,
-    scale: 1,
-    quality: 'ultra',
-    preset: 'classic',
-    trailAlways: false,
-  });
-  assert.deepEqual(explicitTrail,
-  {
-    color: '#4ca7ff',
-    opacity: 1,
-    scale: 1,
-    quality: 'ultra',
-    preset: 'classic',
-  });
-  assert.deepEqual(custom, {});
+  assert.equal(Object.hasOwn(settings, 'quality'), false);
+  assert.equal(settings.renderMode, DEFAULT_SETTINGS.renderMode);
+  assert.equal(settings.maxDpr, DEFAULT_SETTINGS.maxDpr);
 });
 
 test('外观预设可识别，手动外观保持自定义状态', () =>
@@ -317,7 +248,6 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
     color: '#8edcff',
     opacity: 0.35,
     scale: 0.9,
-    quality: 'balanced',
     renderMode: 'legacy',
     maxDpr: 1,
     preset: 'soft',
@@ -334,7 +264,6 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
     color: '#4ca7ff',
     opacity: 1,
     scale: 1,
-    quality: 'ultra',
     renderMode: 'full-webgl2',
     maxDpr: 2,
     preset: 'light-background',
@@ -362,7 +291,6 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
   assert.equal(normalizeSettings(
   {
     ...getAppearancePresetPatch('classic'),
-    quality: 'balanced',
     renderMode: 'legacy',
     maxDpr: 1,
     preset: 'classic',

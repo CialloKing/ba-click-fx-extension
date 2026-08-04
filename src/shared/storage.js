@@ -5,8 +5,6 @@
   LOCAL_SETTING_KEYS,
   STORAGE_SCHEMA_VERSION,
   SYNC_SETTING_KEYS,
-  getQualityConsistencyPatch,
-  getQualitySettingsPatch,
   getSettingsMigrationPatch,
   mergeDisabledSites,
   normalizeDisabledSites,
@@ -184,9 +182,6 @@ export async function loadStorageState(chromeApi = globalThis.chrome)
     syncValues = { ...syncValues, ...migrationPatch };
   }
 
-  // 旧设备可能只更新 quality；读取时以该公共档位为准，避免异步回写覆盖用户的新选择。
-  syncValues = { ...syncValues, ...getQualityConsistencyPatch(syncValues) };
-
   if (storageSchemaVersion < STORAGE_SCHEMA_VERSION)
   {
     storageSchemaVersion = STORAGE_SCHEMA_VERSION;
@@ -220,9 +215,7 @@ export async function readSettings(chromeApi = globalThis.chrome)
 
 export async function writeSettingsPatch(patch, chromeApi = globalThis.chrome)
 {
-  let expandedPatch = Object.hasOwn(patch, 'quality')
-    ? { ...getQualitySettingsPatch(patch.quality), ...patch }
-    : patch;
+  let expandedPatch = { ...patch };
 
   if (Object.hasOwn(expandedPatch, 'fxParams'))
   {
@@ -309,14 +302,7 @@ export function applyStorageChanges(settings, changes, areaName)
     return settings;
   }
 
-  const expandedPatch = (
-    areaName === 'sync' &&
-    Object.hasOwn(patch, 'quality') &&
-    !Object.hasOwn(patch, 'renderMode') &&
-    !Object.hasOwn(patch, 'maxDpr')
-  )
-    ? { ...getQualitySettingsPatch(patch.quality), ...patch }
-    : patch;
+  const expandedPatch = patch;
 
   if (areaName === 'sync' && Object.hasOwn(expandedPatch, 'fxParams'))
   {
@@ -335,7 +321,6 @@ export function applyStorageChanges(settings, changes, areaName)
     expandedPatch.fxParamSchemaVersion = FX_PARAM_SCHEMA_VERSION;
   }
 
-  // 兼容尚未升级的设备：它们只写 quality，新字段仍应跟随该快捷档。
   return normalizeSettings({ ...settings, ...expandedPatch });
 }
 
