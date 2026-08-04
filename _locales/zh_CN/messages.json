@@ -86,26 +86,6 @@
   {
     "message": "特效大小"
   },
-  "quality":
-  {
-    "message": "画质"
-  },
-  "qualityDescription":
-  {
-    "message": "均衡：Legacy；高级：原生辉光；最高画质：完整 WebGL2（不可用时自动回退）"
-  },
-  "qualityBalanced":
-  {
-    "message": "均衡"
-  },
-  "qualityHigh":
-  {
-    "message": "高级"
-  },
-  "qualityUltra":
-  {
-    "message": "最高画质"
-  },
   "previewEffect":
   {
     "message": "预览点击特效"
@@ -210,7 +190,7 @@
   },
   "appearanceOptionsDescription":
   {
-    "message": "效果预设统一管理外观、渲染画质与合成方式，并使用浏览器扩展同步存储保存。"
+    "message": "效果预设统一管理外观、渲染模式、DPR 与合成方式，并使用浏览器扩展同步存储保存。"
   },
   "resetVisualSettings":
   {
@@ -222,7 +202,7 @@
   },
   "appearancePresetDescription":
   {
-    "message": "统一设置外观、渲染画质与合成方式。"
+    "message": "统一设置外观、渲染模式、DPR 与合成方式。"
   },
   "presetClassic":
   {
@@ -363,10 +343,6 @@
   "privacyPolicy":
   {
     "message": "隐私政策"
-  },
-  "qualityCustom":
-  {
-    "message": "自定义"
   },
   "renderMode":
   {

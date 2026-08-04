@@ -53,8 +53,8 @@ It adds game-inspired click rings, particle fragments, and a theme-colored curso
 Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
-• Choose Classic, Soft, or Power-saving appearance presets
-• Switch among Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2 quality; Highest falls back to Canvas 2D native glow when Full WebGL2 is unavailable
+• Choose Close to original, Light background, Soft, or Power-saving effect presets
+• Apply appearance, render mode, DPR, and compositing together through one preset; precise render controls remain available in Full settings
 • Explicitly select experimental WebGPU HDR in Full settings; real HDR requires an Extended output, while Standard output remains SDR
 • Adjust theme color, opacity, effect size, six HDR presentation controls, Full WebGL2 or explicit compatibility render modes, maximum DPR, output compositing, light-background contrast, timing, and all 65 public effect parameters
 • Follow the system language or choose Simplified Chinese or English
@@ -101,8 +101,8 @@ BA Click FX 是一个非官方的网页视觉特效扩展。
 主要功能：
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
-• 可选择经典、柔和或省电外观预设
-• 可切换均衡/Legacy、高级/原生辉光和最高画质/完整 WebGL2；完整 WebGL2 不可用时，最高画质直接回退 Canvas 2D 原生辉光
+• 可选择贴近原版、浅色背景优化、柔和或省电效果预设
+• 一个预设统一应用外观、渲染模式、DPR 与合成方式；完整设置仍可精确调整渲染参数
 • 可在完整设置中显式选择实验性 WebGPU HDR；只有 Extended 输出代表真实 HDR，Standard 输出仍是 SDR
 • 可调整主题颜色、不透明度、特效大小、六项 HDR 展示参数、完整 WebGL2 或显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 65 个公开特效参数
 • 可跟随系统语言，或指定简体中文/英文
@@ -153,7 +153,7 @@ Do not copy Chrome Web Store's conservative `Web history` and `User activity` ch
 `storage`:
 
 ```text
-Stores effect, appearance, quality, language, and motion preferences using Firefox-provided sync storage. Website origins explicitly disabled by the user are stored in local extension storage. Mozilla may synchronize sync-storage values when Firefox Sync is enabled. The developer has no server and cannot access any stored values.
+Stores effect, appearance, render mode, DPR, language, and motion preferences using Firefox-provided sync storage. Website origins explicitly disabled by the user are stored in local extension storage. Mozilla may synchronize sync-storage values when Firefox Sync is enabled. The developer has no server and cannot access any stored values.
 ```
 
 `activeTab`:
@@ -185,7 +185,7 @@ Testing steps:
 3. Click the page to see a ring and particle effect.
 4. Move the pointer to see the cursor trail.
 5. Open the toolbar popup. Verify the global, current-website, click-effect, trail, and preview controls.
-6. Select “Full settings”. Change the appearance preset, color, opacity, size, quality, render mode, maximum DPR, or an advanced ring/shard/Bloom/Hit/Flare/trail parameter and verify the webpage updates.
+6. Select “Full settings”. Change the effect preset, color, opacity, size, render mode, maximum DPR, compositing, or an advanced ring/shard/Bloom/Hit/Flare/trail parameter and verify the webpage updates.
 7. Select “Reduce continuous motion”. Verify click effects remain available while the always-moving trail is suppressed.
 8. Turn off the current website in the popup. Verify the Canvas overlay is removed only for that origin and the origin appears under Disabled websites in Full settings.
 9. Re-enable or remove that website rule and use “Preview click effect”.
