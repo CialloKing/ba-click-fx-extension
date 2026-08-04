@@ -280,6 +280,23 @@ export function getQualitySettingsPatch(quality)
   };
 }
 
+export function getAppearancePresetPatch(name)
+{
+  const preset = APPEARANCE_PRESETS[name];
+
+  if (!preset)
+  {
+    return { preset: 'custom' };
+  }
+
+  // 外观预设是唯一的快捷入口；画质只是预设内部携带的渲染组合。
+  return {
+    ...preset,
+    ...getQualitySettingsPatch(preset.quality),
+    preset: name,
+  };
+}
+
 export function getQualityConsistencyPatch(value)
 {
   const source = value && typeof value === 'object' ? value : {};
