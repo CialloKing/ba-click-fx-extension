@@ -307,6 +307,13 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
 {
   assert.deepEqual(getAppearancePresetPatch('soft'),
   {
+    outputCompositing: 'browser-overlay',
+    overlayAlphaPolicy: 'coverage',
+    overlayColorCompensation: 'none',
+    overlayAlphaLimit: 250 / 255,
+    hostCompositing: 'screen',
+    isolatedCompositing: false,
+    lightBackgroundContrastAlpha: 0,
     color: '#8edcff',
     opacity: 0.35,
     scale: 0.9,
@@ -315,17 +322,51 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
     maxDpr: 1,
     preset: 'soft',
   });
+  assert.deepEqual(getAppearancePresetPatch('light-background'),
+  {
+    outputCompositing: 'browser-overlay',
+    overlayAlphaPolicy: 'visual-max',
+    overlayColorCompensation: 'none',
+    overlayAlphaLimit: 0.85,
+    hostCompositing: 'source-over',
+    isolatedCompositing: false,
+    lightBackgroundContrastAlpha: 0,
+    color: '#4ca7ff',
+    opacity: 1,
+    scale: 1,
+    quality: 'ultra',
+    renderMode: 'full-webgl2',
+    maxDpr: 2,
+    preset: 'light-background',
+  });
   assert.deepEqual(getAppearancePresetPatch('unknown'), { preset: 'custom' });
-  assert.equal(detectAppearancePreset(APPEARANCE_PRESETS.soft), 'soft');
+  assert.equal(detectAppearancePreset(getAppearancePresetPatch('soft')), 'soft');
+  assert.equal(
+    detectAppearancePreset(getAppearancePresetPatch('light-background')),
+    'light-background',
+  );
   assert.equal(detectAppearancePreset(
   {
-    ...APPEARANCE_PRESETS.classic,
+    ...getAppearancePresetPatch('classic'),
     opacity: 0.6,
   }), 'custom');
   assert.equal(normalizeSettings(
   {
     ...APPEARANCE_PRESETS.soft,
   }).preset, 'soft');
+  assert.equal(normalizeSettings(
+  {
+    ...getAppearancePresetPatch('light-background'),
+    preset: 'classic',
+  }).preset, 'light-background');
+  assert.equal(normalizeSettings(
+  {
+    ...getAppearancePresetPatch('classic'),
+    quality: 'balanced',
+    renderMode: 'legacy',
+    maxDpr: 1,
+    preset: 'classic',
+  }).preset, 'custom');
 });
 
 test('减少动态只覆盖持续移动拖尾偏好', () =>

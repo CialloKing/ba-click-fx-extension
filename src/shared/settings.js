@@ -120,6 +120,13 @@ export const APPEARANCE_PRESETS = Object.freeze(
     scale: 1,
     quality: 'ultra',
   }),
+  'light-background': Object.freeze(
+  {
+    color: DEFAULT_THEME_COLOR,
+    opacity: 1,
+    scale: 1,
+    quality: 'ultra',
+  }),
   soft: Object.freeze(
   {
     color: '#8edcff',
@@ -133,6 +140,29 @@ export const APPEARANCE_PRESETS = Object.freeze(
     opacity: 0.45,
     scale: 1,
     quality: 'balanced',
+  }),
+});
+
+const DEFAULT_PRESET_COMPOSITING = Object.freeze(
+{
+  outputCompositing: DEFAULT_SYNC_SETTINGS.outputCompositing,
+  overlayAlphaPolicy: DEFAULT_SYNC_SETTINGS.overlayAlphaPolicy,
+  overlayColorCompensation: DEFAULT_SYNC_SETTINGS.overlayColorCompensation,
+  overlayAlphaLimit: DEFAULT_SYNC_SETTINGS.overlayAlphaLimit,
+  hostCompositing: DEFAULT_SYNC_SETTINGS.hostCompositing,
+  isolatedCompositing: DEFAULT_SYNC_SETTINGS.isolatedCompositing,
+  lightBackgroundContrastAlpha: DEFAULT_SYNC_SETTINGS.lightBackgroundContrastAlpha,
+});
+
+const APPEARANCE_PRESET_OVERRIDES = Object.freeze(
+{
+  'light-background': Object.freeze(
+  {
+    outputCompositing: 'browser-overlay',
+    overlayAlphaPolicy: 'visual-max',
+    overlayColorCompensation: 'none',
+    overlayAlphaLimit: 0.85,
+    hostCompositing: 'source-over',
   }),
 });
 
@@ -166,7 +196,6 @@ const HOST_COMPOSITING_MODES = new Set([
   'screen',
   'plus-lighter',
 ]);
-const PRESET_NAMES = new Set([...Object.keys(APPEARANCE_PRESETS), 'custom']);
 const HEX_COLOR_PATTERN = /^#[0-9a-f]{6}$/i;
 const MAX_SITE_KEY_LENGTH = 512;
 
@@ -225,6 +254,43 @@ function normalizeWebGPUHdrSettings(source)
     ),
     webgpuHdrWhiteStart,
     webgpuHdrWhiteEnd: Math.max(webgpuHdrWhiteStart + 0.01, requestedWhiteEnd),
+  };
+}
+
+function normalizeCompositingSettings(source)
+{
+  return {
+    outputCompositing: source.outputCompositing === 'transparent-overlay'
+      ? 'browser-overlay'
+      : OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
+        ? source.outputCompositing
+        : DEFAULT_SETTINGS.outputCompositing,
+    overlayAlphaPolicy: OVERLAY_ALPHA_POLICIES.has(source.overlayAlphaPolicy)
+      ? source.overlayAlphaPolicy
+      : DEFAULT_SETTINGS.overlayAlphaPolicy,
+    overlayColorCompensation: OVERLAY_COLOR_COMPENSATIONS.has(
+      source.overlayColorCompensation,
+    )
+      ? source.overlayColorCompensation
+      : DEFAULT_SETTINGS.overlayColorCompensation,
+    overlayAlphaLimit: clamp(
+      source.overlayAlphaLimit,
+      0,
+      1,
+      DEFAULT_SETTINGS.overlayAlphaLimit,
+    ),
+    hostCompositing: HOST_COMPOSITING_MODES.has(source.hostCompositing)
+      ? source.hostCompositing
+      : DEFAULT_SETTINGS.hostCompositing,
+    isolatedCompositing: source.isolatedCompositing === undefined
+      ? DEFAULT_SETTINGS.isolatedCompositing
+      : source.isolatedCompositing === true,
+    lightBackgroundContrastAlpha: clamp(
+      source.lightBackgroundContrastAlpha,
+      0,
+      1,
+      DEFAULT_SETTINGS.lightBackgroundContrastAlpha,
+    ),
   };
 }
 
@@ -291,7 +357,9 @@ export function getAppearancePresetPatch(name)
 
   // 外观预设是唯一的快捷入口；画质只是预设内部携带的渲染组合。
   return {
+    ...DEFAULT_PRESET_COMPOSITING,
     ...preset,
+    ...(APPEARANCE_PRESET_OVERRIDES[name] || {}),
     ...getQualitySettingsPatch(preset.quality),
     preset: name,
   };
@@ -455,14 +523,13 @@ export function mergeDisabledSites(...values)
 
 export function detectAppearancePreset(value)
 {
-  for (const [name, preset] of Object.entries(APPEARANCE_PRESETS))
+  for (const name of Object.keys(APPEARANCE_PRESETS))
   {
-    if (
-      value.color === preset.color &&
-      value.opacity === preset.opacity &&
-      value.scale === preset.scale &&
-      value.quality === preset.quality
-    )
+    const patch = getAppearancePresetPatch(name);
+    const matches = Object.entries(patch).every(([key, expected]) =>
+      key === 'preset' || value[key] === expected);
+
+    if (matches)
     {
       return name;
     }
@@ -492,10 +559,15 @@ export function normalizeSettings(value = {})
   const maxDpr = clamp(source.maxDpr, 1, 3, fallbackProfile.maxDpr);
   const renderMode = requestedRenderMode;
   const quality = detectQualityProfile(renderMode, maxDpr);
-  const inferredPreset = detectAppearancePreset({ ...appearance, quality });
-  const preset = PRESET_NAMES.has(source.preset)
-    ? source.preset
-    : inferredPreset;
+  const compositing = normalizeCompositingSettings(source);
+  const preset = detectAppearancePreset(
+  {
+    ...appearance,
+    quality,
+    renderMode,
+    maxDpr,
+    ...compositing,
+  });
 
   return {
     enabled: source.enabled === undefined ? DEFAULT_SETTINGS.enabled : source.enabled === true,
@@ -532,37 +604,7 @@ export function normalizeSettings(value = {})
       4,
       DEFAULT_SETTINGS.trailTimeScale,
     ),
-    outputCompositing: source.outputCompositing === 'transparent-overlay'
-      ? 'browser-overlay'
-      : OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
-        ? source.outputCompositing
-        : DEFAULT_SETTINGS.outputCompositing,
-    overlayAlphaPolicy: OVERLAY_ALPHA_POLICIES.has(source.overlayAlphaPolicy)
-      ? source.overlayAlphaPolicy
-      : DEFAULT_SETTINGS.overlayAlphaPolicy,
-    overlayColorCompensation: OVERLAY_COLOR_COMPENSATIONS.has(
-      source.overlayColorCompensation,
-    )
-      ? source.overlayColorCompensation
-      : DEFAULT_SETTINGS.overlayColorCompensation,
-    overlayAlphaLimit: clamp(
-      source.overlayAlphaLimit,
-      0,
-      1,
-      DEFAULT_SETTINGS.overlayAlphaLimit,
-    ),
-    hostCompositing: HOST_COMPOSITING_MODES.has(source.hostCompositing)
-      ? source.hostCompositing
-      : DEFAULT_SETTINGS.hostCompositing,
-    isolatedCompositing: source.isolatedCompositing === undefined
-      ? DEFAULT_SETTINGS.isolatedCompositing
-      : source.isolatedCompositing === true,
-    lightBackgroundContrastAlpha: clamp(
-      source.lightBackgroundContrastAlpha,
-      0,
-      1,
-      DEFAULT_SETTINGS.lightBackgroundContrastAlpha,
-    ),
+    ...compositing,
     languageMode: LANGUAGE_MODES.has(source.languageMode)
       ? source.languageMode
       : DEFAULT_SETTINGS.languageMode,
