@@ -13,6 +13,10 @@ const optionsHtml = readFileSync(
   new URL('../src/options/options.html', import.meta.url),
   'utf8',
 );
+const popupHtml = readFileSync(
+  new URL('../src/popup/popup.html', import.meta.url),
+  'utf8',
+);
 
 test('完整设置页恢复扩展默认值而不是上游展示页合成', () =>
 {
@@ -54,6 +58,16 @@ test('完整设置页加载存储前静态显示扩展默认渲染模式', () =>
     renderModeOptions,
     /<option\b(?=[^>]*\bvalue=["']full-webgpu["'])(?=[^>]*\bselected\b)[^>]*>/i,
   );
+});
+
+test('弹窗与完整设置页共用唯一的效果预设入口', () =>
+{
+  for (const html of [popupHtml, optionsHtml])
+  {
+    assert.match(html, /id=["']preset["']/);
+    assert.match(html, /value=["']light-background["']/);
+    assert.doesNotMatch(html, /id=["']quality["']/);
+  }
 });
 
 test('DOM Add 只启用当前有效的合成控件', () =>

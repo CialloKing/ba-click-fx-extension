@@ -5,11 +5,10 @@ import {
   flattenFxParams,
 } from '../shared/fx-settings.js';
 import {
-  APPEARANCE_PRESETS,
   DEFAULT_SETTINGS,
   detectAppearancePreset,
   detectQualityProfile,
-  getQualitySettingsPatch,
+  getAppearancePresetPatch,
   normalizeSettings,
 } from '../shared/settings.js';
 import {
@@ -54,7 +53,6 @@ const elements =
   opacityValue: document.querySelector('#opacity-value'),
   scale: document.querySelector('#scale'),
   scaleValue: document.querySelector('#scale-value'),
-  quality: document.querySelector('#quality'),
   renderMode: document.querySelector('#render-mode'),
   maxDpr: document.querySelector('#max-dpr'),
   maxDprValue: document.querySelector('#max-dpr-value'),
@@ -411,7 +409,6 @@ function render()
   elements.opacityValue.textContent = `${Math.round(settings.opacity * 100)}%`;
   elements.scale.value = String(settings.scale);
   elements.scaleValue.textContent = `${settings.scale.toFixed(2)}×`;
-  elements.quality.value = detectQualityProfile(settings.renderMode, settings.maxDpr);
   elements.renderMode.value = settings.renderMode;
   elements.maxDpr.value = String(settings.maxDpr);
   elements.maxDprValue.textContent = String(settings.maxDpr);
@@ -473,22 +470,11 @@ async function savePatch(patch, successMessageKey = 'statusSaved')
   }
 }
 
-function saveCustomAppearance(patch)
+function saveCustomPreset(patch)
 {
-  const appearance = { ...settings, ...patch };
+  const candidate = { ...settings, ...patch };
 
-  void savePatch({ ...patch, preset: detectAppearancePreset(appearance) });
-}
-
-function getPresetPatch(name, preset)
-{
-  const qualityPatch = getQualitySettingsPatch(preset.quality);
-
-  return {
-    ...preset,
-    ...qualityPatch,
-    preset: name,
-  };
+  void savePatch({ ...patch, preset: detectAppearancePreset(candidate) });
 }
 
 function saveRenderCombination(patch)
@@ -497,7 +483,7 @@ function saveRenderCombination(patch)
   const maxDpr = patch.maxDpr ?? settings.maxDpr;
 
   // 画质由渲染模式与 DPR 派生；三者原子写入可避免跨设备同步到不一致的组合。
-  saveCustomAppearance(
+  saveCustomPreset(
   {
     renderMode,
     maxDpr,
@@ -524,15 +510,15 @@ function bindEvents()
 {
   elements.preset.addEventListener('change', () =>
   {
-    const preset = APPEARANCE_PRESETS[elements.preset.value];
+    const patch = getAppearancePresetPatch(elements.preset.value);
 
-    if (!preset)
+    if (patch.preset === 'custom')
     {
       return;
     }
 
     void savePatch(
-      getPresetPatch(elements.preset.value, preset),
+      patch,
       'statusPresetApplied',
     );
   });
@@ -543,7 +529,7 @@ function bindEvents()
   });
   elements.color.addEventListener('change', () =>
   {
-    saveCustomAppearance({ color: elements.color.value });
+    saveCustomPreset({ color: elements.color.value });
   });
 
   elements.opacity.addEventListener('input', () =>
@@ -552,7 +538,7 @@ function bindEvents()
   });
   elements.opacity.addEventListener('change', () =>
   {
-    saveCustomAppearance({ opacity: Number(elements.opacity.value) });
+    saveCustomPreset({ opacity: Number(elements.opacity.value) });
   });
 
   elements.scale.addEventListener('input', () =>
@@ -561,17 +547,7 @@ function bindEvents()
   });
   elements.scale.addEventListener('change', () =>
   {
-    saveCustomAppearance({ scale: Number(elements.scale.value) });
-  });
-
-  elements.quality.addEventListener('change', () =>
-  {
-    if (elements.quality.value === 'custom')
-    {
-      return;
-    }
-
-    saveCustomAppearance(getQualitySettingsPatch(elements.quality.value));
+    saveCustomPreset({ scale: Number(elements.scale.value) });
   });
 
   elements.renderMode.addEventListener('change', () =>
@@ -605,17 +581,17 @@ function bindEvents()
 
   elements.outputCompositing.addEventListener('change', () =>
   {
-    void savePatch({ outputCompositing: elements.outputCompositing.value });
+    saveCustomPreset({ outputCompositing: elements.outputCompositing.value });
   });
 
   elements.overlayAlphaPolicy.addEventListener('change', () =>
   {
-    void savePatch({ overlayAlphaPolicy: elements.overlayAlphaPolicy.value });
+    saveCustomPreset({ overlayAlphaPolicy: elements.overlayAlphaPolicy.value });
   });
 
   elements.overlayColorCompensation.addEventListener('change', () =>
   {
-    void savePatch({
+    saveCustomPreset({
       overlayColorCompensation: elements.overlayColorCompensation.value,
     });
   });
@@ -627,17 +603,17 @@ function bindEvents()
   });
   elements.overlayAlphaLimit.addEventListener('change', () =>
   {
-    void savePatch({ overlayAlphaLimit: Number(elements.overlayAlphaLimit.value) });
+    saveCustomPreset({ overlayAlphaLimit: Number(elements.overlayAlphaLimit.value) });
   });
 
   elements.hostCompositing.addEventListener('change', () =>
   {
-    void savePatch({ hostCompositing: elements.hostCompositing.value });
+    saveCustomPreset({ hostCompositing: elements.hostCompositing.value });
   });
 
   elements.isolatedCompositing.addEventListener('change', () =>
   {
-    void savePatch({ isolatedCompositing: elements.isolatedCompositing.checked });
+    saveCustomPreset({ isolatedCompositing: elements.isolatedCompositing.checked });
   });
 
   elements.lightBackgroundContrastAlpha.addEventListener('input', () =>
@@ -647,7 +623,7 @@ function bindEvents()
   });
   elements.lightBackgroundContrastAlpha.addEventListener('change', () =>
   {
-    void savePatch(
+    saveCustomPreset(
     {
       lightBackgroundContrastAlpha: Number(elements.lightBackgroundContrastAlpha.value),
     });

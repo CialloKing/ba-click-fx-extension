@@ -72,16 +72,17 @@
         </span>
       </label>
 
-      <label class="setting-row select-row" for="quality">
+      <label class="setting-row select-row" for="preset">
         <span>
-          <strong data-i18n="quality">画质</strong>
-          <small data-i18n="qualityDescription">均衡：Legacy；高级：原生辉光；最高画质：完整 WebGL2（不可用时自动回退）</small>
+          <strong data-i18n="appearancePreset">效果预设</strong>
+          <small data-i18n="appearancePresetDescription">统一设置外观、渲染画质与合成方式。</small>
         </span>
-        <select id="quality">
-          <option value="balanced" data-i18n="qualityBalanced">均衡</option>
-          <option value="high" data-i18n="qualityHigh">高级</option>
-          <option value="ultra" data-i18n="qualityUltra" selected>最高画质</option>
-          <option value="custom" data-i18n="qualityCustom" disabled>自定义</option>
+        <select id="preset">
+          <option value="classic" data-i18n="presetClassic" selected>贴近原版</option>
+          <option value="light-background" data-i18n="presetLightBackground">浅色背景优化</option>
+          <option value="soft" data-i18n="presetSoft">柔和</option>
+          <option value="performance" data-i18n="presetPerformance">省电</option>
+          <option value="custom" data-i18n="presetCustom" disabled>自定义</option>
         </select>
       </label>
 

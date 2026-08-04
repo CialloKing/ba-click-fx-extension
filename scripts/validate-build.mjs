@@ -178,7 +178,7 @@ for (const requiredControlId of [
   'color',
   'opacity',
   'scale',
-  'quality',
+  'preset',
   'render-mode',
   'max-dpr',
   'webgpu-hdr-peak',
@@ -199,6 +199,25 @@ for (const requiredControlId of [
   assert(
     optionsHtml.includes(`id="${requiredControlId}"`),
     `完整设置页缺少 ${requiredControlId} 控件。`,
+  );
+}
+
+for (const [surface, html] of [
+  ['弹窗', popupHtml],
+  ['完整设置页', optionsHtml],
+])
+{
+  assert(
+    html.includes('id="preset"'),
+    `${surface}必须提供统一的效果预设入口。`,
+  );
+  assert(
+    !html.includes('id="quality"'),
+    `${surface}不应保留重复的画质快捷入口。`,
+  );
+  assert(
+    html.includes('value="light-background"'),
+    `${surface}缺少浅色背景优化预设。`,
   );
 }
 
