@@ -7,6 +7,7 @@ import {
   DEFAULT_SETTINGS,
   detectAppearancePreset,
   detectQualityProfile,
+  getAppearancePresetPatch,
   getClassicDefaultsMigrationPatch,
   getQualityProfile,
   getQualitySettingsPatch,
@@ -304,6 +305,17 @@ test('旧版经典默认参数生成持久化补丁且保留显式拖尾选择',
 
 test('外观预设可识别，手动外观保持自定义状态', () =>
 {
+  assert.deepEqual(getAppearancePresetPatch('soft'),
+  {
+    color: '#8edcff',
+    opacity: 0.35,
+    scale: 0.9,
+    quality: 'balanced',
+    renderMode: 'legacy',
+    maxDpr: 1,
+    preset: 'soft',
+  });
+  assert.deepEqual(getAppearancePresetPatch('unknown'), { preset: 'custom' });
   assert.equal(detectAppearancePreset(APPEARANCE_PRESETS.soft), 'soft');
   assert.equal(detectAppearancePreset(
   {
