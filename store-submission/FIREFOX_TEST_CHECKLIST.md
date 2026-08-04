@@ -24,8 +24,8 @@ Complete this checklist before creating the `v1.1.14` Tag and GitHub Release.
 ## Popup and full settings
 
 - [ ] Test global, current-site, click, trail, continuous-trail, and preview controls.
-- [ ] Open Full settings and test Classic, Soft, Power-saving, and Custom appearance states.
-- [ ] Test Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2; confirm Highest falls back to Canvas 2D native glow rather than enabling Software Bloom automatically.
+- [ ] Test Close to original, Light background, Soft, Power-saving, and Custom effect-preset states in both the popup and Full settings.
+- [ ] Test the four effect presets and confirm their render mode, DPR, and compositing values persist in the popup and Full settings.
 - [ ] Select experimental WebGPU HDR and confirm its six presentation controls become enabled and persist; confirm they are disabled in other modes. Treat Standard output as SDR and do not require HDR hardware for this test.
 - [ ] Test Full WebGL2, explicit Software Bloom, and the other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public upstream Schema controls.
 - [ ] Reset visual settings and confirm every advanced value returns to the extension defaults while website rules remain intact.

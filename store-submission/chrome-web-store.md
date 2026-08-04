@@ -65,13 +65,13 @@ Use these blocks to replace the currently saved dashboard descriptions when uplo
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
 
-It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D, WebGL2, or WebGPU. The toolbar popup provides quick effect, quality, language, and current-website controls, while Full settings exposes all 65 public upstream effect parameters.
+It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D, WebGL2, or WebGPU. The toolbar popup provides quick effect-preset, language, and current-website controls, while Full settings exposes all 65 public upstream effect parameters.
 
 Features:
 • Enable or disable click effects and cursor trails independently
 • Enable or disable the extension for the current website
-• Choose Classic, Soft, or Power-saving appearance presets
-• Switch among Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2 quality; Highest falls back to Canvas 2D native glow when Full WebGL2 is unavailable
+• Choose Close to original, Light background, Soft, or Power-saving effect presets
+• Apply appearance, render mode, DPR, and compositing together through one preset; precise render controls remain available in Full settings
 • Explicitly select experimental WebGPU HDR in Full settings; real HDR requires an Extended output, while Standard output remains SDR
 • Adjust theme color, opacity, effect size, six HDR presentation controls, Full WebGL2 or explicit compatibility render modes, maximum DPR, output compositing, light-background contrast, timing, and all 65 public effect parameters
 • Follow the system language or choose Simplified Chinese or English
@@ -105,13 +105,13 @@ BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or
 ```text
 BA Click FX 是一个非官方的网页视觉特效扩展。
 
-安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D、WebGL2 或 WebGPU 在本地渲染。工具栏弹窗提供特效、画质、语言和当前网站的快捷控制，完整设置页提供上游参数 Schema 中全部 65 个公开特效参数。
+安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D、WebGL2 或 WebGPU 在本地渲染。工具栏弹窗提供效果预设、语言和当前网站的快捷控制，完整设置页提供上游参数 Schema 中全部 65 个公开特效参数。
 
 主要功能：
 • 点击特效与光标拖尾可分别开关
 • 可为当前网站单独启用或禁用
-• 可选择经典、柔和或省电外观预设
-• 可切换均衡/Legacy、高级/原生辉光和最高画质/完整 WebGL2；完整 WebGL2 不可用时，最高画质直接回退 Canvas 2D 原生辉光
+• 可选择贴近原版、浅色背景优化、柔和或省电效果预设
+• 一个预设统一应用外观、渲染模式、DPR 与合成方式；完整设置仍可精确调整渲染参数
 • 可在完整设置中显式选择实验性 WebGPU HDR；只有 Extended 输出代表真实 HDR，Standard 输出仍是 SDR
 • 可调整主题颜色、不透明度、特效大小、六项 HDR 展示参数、完整 WebGL2 或显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 65 个公开特效参数
 • 可跟随系统语言，或指定简体中文/英文
@@ -253,7 +253,7 @@ Display configurable pointer click animations and cursor trails on ordinary webp
 `storage`:
 
 ```text
-Stores global effect settings, visual parameters, quality, language, and motion preferences using browser-provided sync storage. Website origins that the user explicitly disables are stored in local extension storage. During the v1.0.5 upgrade, existing legacy synced origins are copied to local storage and retained in sync storage until the user explicitly removes that legacy copy. If browser synchronization is enabled, the browser provider may synchronize sync-storage values between signed-in browser instances. The developer has no server and cannot access any stored values.
+Stores global effect settings, visual parameters, render mode, DPR, language, and motion preferences using browser-provided sync storage. Website origins that the user explicitly disables are stored in local extension storage. During the v1.0.5 upgrade, existing legacy synced origins are copied to local storage and retained in sync storage until the user explicitly removes that legacy copy. If browser synchronization is enabled, the browser provider may synchronize sync-storage values between signed-in browser instances. The developer has no server and cannot access any stored values.
 ```
 
 `activeTab`:
@@ -337,7 +337,7 @@ Screenshot order:
 1. Click rings, particles, and cursor trail
 2. Quick popup controls
 3. Per-site enable/disable control
-4. Full settings, appearance, and quality customization
+4. Full settings and unified effect-preset customization
 
 ## Distribution
 

@@ -23,9 +23,9 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Global enable/disable applies immediately.
 - [ ] Click and trail switches work independently.
 - [ ] “Always show while moving” works as described.
-- [ ] The popup switches Balanced/Legacy, Advanced/native glow, and Highest/Full WebGL2 immediately; Highest falls back to Canvas 2D native glow rather than enabling Software Bloom automatically.
+- [ ] The popup switches the four effect presets immediately; Close to original uses Full WebGL2, Light background uses the transparent-overlay visual-maximum contract, Soft and Power-saving use Legacy.
 - [ ] The popup switches System, Simplified Chinese, and English immediately and keeps the selected language after reopening.
-- [ ] Color, opacity, size, and Classic/Soft/Power-saving presets apply immediately.
+- [ ] Close to original, Light background, Soft, and Power-saving presets apply their appearance, render, DPR, and compositing values immediately.
 - [ ] Full settings exposes experimental WebGPU HDR, Full WebGL2, explicit Software Bloom, other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public Schema parameters; each applies after releasing the control and survives reopening the page.
 - [ ] The six WebGPU HDR presentation controls are enabled only in WebGPU mode and use the extension defaults `3 / 1 / 0 / 0.6 / 1 / 5`; Standard output is treated as SDR and HDR hardware is optional for this test.
 - [ ] Reset visual settings restores every advanced effect parameter, including Hit and Flare values, without clearing local website rules.
@@ -50,7 +50,7 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Back/forward cache navigation restores effects.
 - [ ] Single-page-app navigation does not create duplicate overlays.
 - [ ] Resizing and moving between normal/high-DPI monitors remains usable.
-- [ ] Highest quality on 2K/4K displays does not cause browser instability.
+- [ ] Close to original using Full WebGL2 on 2K/4K displays does not cause browser instability.
 - [ ] Offline operation remains fully functional.
 
 ## Expected restrictions

@@ -4,6 +4,16 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added a Light background effect preset using Full WebGL2, browser-overlay output, legacy visual-maximum Alpha, no color compensation, an `0.85` Alpha limit, Source-over host compositing, and the extension's implicit unknown-background reference.
+
+### Changed
+
+- Unified the toolbar popup and Full settings around one Effect preset selector. The duplicated visible quality selector and its underlying storage field were removed; render mode and DPR are now the single rendering source of truth.
+- Renamed the default visible preset from Classic to Close to original without changing its compatible `classic` storage identifier.
+- Effect preset state is now derived from the actual appearance, render, DPR, and compositing values, so partial sync updates cannot leave a stale preset label.
+
 ## [1.1.14] - 2026-08-02
 
 ### Changed

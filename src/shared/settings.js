@@ -286,7 +286,7 @@ export function getAppearancePresetPatch(name)
     return { preset: 'custom' };
   }
 
-  // 效果预设直接携带渲染与 DPR，不再维护第二套画质档位状态。
+  // 效果预设直接携带渲染与 DPR，不再维护第二套渲染档位状态。
   return {
     ...DEFAULT_PRESET_COMPOSITING,
     ...preset,

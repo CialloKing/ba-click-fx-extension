@@ -86,26 +86,6 @@
   {
     "message": "Effect size"
   },
-  "quality":
-  {
-    "message": "Quality"
-  },
-  "qualityDescription":
-  {
-    "message": "Balanced: Legacy; Advanced: native glow; Highest: Full WebGL2 with automatic fallback"
-  },
-  "qualityBalanced":
-  {
-    "message": "Balanced"
-  },
-  "qualityHigh":
-  {
-    "message": "Advanced"
-  },
-  "qualityUltra":
-  {
-    "message": "Highest"
-  },
   "previewEffect":
   {
     "message": "Preview click effect"
@@ -210,7 +190,7 @@
   },
   "appearanceOptionsDescription":
   {
-    "message": "Effect presets manage appearance, rendering quality, and compositing together, then save through browser-provided extension sync storage."
+    "message": "Effect presets manage appearance, render mode, DPR, and compositing together, then save through browser-provided extension sync storage."
   },
   "resetVisualSettings":
   {
@@ -222,7 +202,7 @@
   },
   "appearancePresetDescription":
   {
-    "message": "Set appearance, rendering quality, and compositing together."
+    "message": "Set appearance, render mode, DPR, and compositing together."
   },
   "presetClassic":
   {
@@ -363,10 +343,6 @@
   "privacyPolicy":
   {
     "message": "Privacy policy"
-  },
-  "qualityCustom":
-  {
-    "message": "Custom"
   },
   "renderMode":
   {
