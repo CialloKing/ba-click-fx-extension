@@ -53,13 +53,6 @@ export const RENDER_MODE_PROFILES = Object.freeze(
   }),
 });
 
-const QUALITY_PROFILES = Object.freeze(
-{
-  balanced: Object.freeze({ renderMode: 'legacy', maxDpr: 1 }),
-  high: Object.freeze({ renderMode: 'native-bloom', maxDpr: 2 }),
-  ultra: Object.freeze({ renderMode: 'full-webgl2', maxDpr: 2 }),
-});
-
 export const DEFAULT_SYNC_SETTINGS = Object.freeze(
 {
   enabled: true,
@@ -69,9 +62,8 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   color: DEFAULT_THEME_COLOR,
   opacity: 1,
   scale: 1,
-  quality: 'ultra',
-  renderMode: QUALITY_PROFILES.ultra.renderMode,
-  maxDpr: QUALITY_PROFILES.ultra.maxDpr,
+  renderMode: 'full-webgl2',
+  maxDpr: 2,
   // 固定扩展自己的核心 HDR 基线，不继承上游展示页的演示预设。
   webgpuHdrPeak: 3,
   webgpuHdrBrightness: 1,
@@ -118,28 +110,32 @@ export const APPEARANCE_PRESETS = Object.freeze(
     color: DEFAULT_THEME_COLOR,
     opacity: 1,
     scale: 1,
-    quality: 'ultra',
+    renderMode: 'full-webgl2',
+    maxDpr: 2,
   }),
   'light-background': Object.freeze(
   {
     color: DEFAULT_THEME_COLOR,
     opacity: 1,
     scale: 1,
-    quality: 'ultra',
+    renderMode: 'full-webgl2',
+    maxDpr: 2,
   }),
   soft: Object.freeze(
   {
     color: '#8edcff',
     opacity: 0.35,
     scale: 0.9,
-    quality: 'balanced',
+    renderMode: 'legacy',
+    maxDpr: 1,
   }),
   performance: Object.freeze(
   {
     color: DEFAULT_THEME_COLOR,
     opacity: 0.45,
     scale: 1,
-    quality: 'balanced',
+    renderMode: 'legacy',
+    maxDpr: 1,
   }),
 });
 
@@ -165,25 +161,6 @@ const APPEARANCE_PRESET_OVERRIDES = Object.freeze(
     hostCompositing: 'source-over',
   }),
 });
-
-const PREVIOUS_CLASSIC_DEFAULTS = Object.freeze([
-  Object.freeze(
-  {
-    color: '#69a1ff',
-    opacity: 0.5,
-    scale: 1.1,
-    quality: 'balanced',
-    preset: 'classic',
-  }),
-  Object.freeze(
-  {
-    color: '#69a1ff',
-    opacity: 1,
-    scale: 1,
-    quality: 'ultra',
-    preset: 'classic',
-  }),
-]);
 
 const LANGUAGE_MODES = new Set(['system', 'zh_CN', 'en']);
 const MOTION_MODES = new Set(['system', 'full', 'reduced']);
@@ -294,56 +271,10 @@ function normalizeCompositingSettings(source)
   };
 }
 
-function normalizeQuality(quality)
-{
-  if (quality === 'performance')
-  {
-    return 'balanced';
-  }
-
-  return quality === 'custom' || Object.hasOwn(QUALITY_PROFILES, quality)
-    ? quality
-    : DEFAULT_SETTINGS.quality;
-}
-
-export function getQualityProfile(quality)
-{
-  return QUALITY_PROFILES[quality] || QUALITY_PROFILES[DEFAULT_SETTINGS.quality];
-}
-
-export function detectQualityProfile(renderMode, maxDpr)
-{
-  for (const [quality, profile] of Object.entries(QUALITY_PROFILES))
-  {
-    if (profile.renderMode === renderMode && profile.maxDpr === maxDpr)
-    {
-      return quality;
-    }
-  }
-
-  return 'custom';
-}
-
 export function getRenderModeProfile(renderMode)
 {
   return RENDER_MODE_PROFILES[renderMode] ||
     RENDER_MODE_PROFILES[DEFAULT_SETTINGS.renderMode];
-}
-
-export function getQualitySettingsPatch(quality)
-{
-  const normalizedQuality = normalizeQuality(quality);
-  const profile = QUALITY_PROFILES[normalizedQuality];
-
-  if (!profile)
-  {
-    return { quality: 'custom' };
-  }
-
-  return {
-    quality: normalizedQuality,
-    ...profile,
-  };
 }
 
 export function getAppearancePresetPatch(name)
@@ -355,98 +286,18 @@ export function getAppearancePresetPatch(name)
     return { preset: 'custom' };
   }
 
-  // 外观预设是唯一的快捷入口；画质只是预设内部携带的渲染组合。
+  // 效果预设直接携带渲染与 DPR，不再维护第二套画质档位状态。
   return {
     ...DEFAULT_PRESET_COMPOSITING,
     ...preset,
     ...(APPEARANCE_PRESET_OVERRIDES[name] || {}),
-    ...getQualitySettingsPatch(preset.quality),
     preset: name,
   };
-}
-
-export function getQualityConsistencyPatch(value)
-{
-  const source = value && typeof value === 'object' ? value : {};
-  const profilePatch = getQualitySettingsPatch(source.quality);
-
-  if (profilePatch.quality === 'custom')
-  {
-    return {};
-  }
-
-  const patch = {};
-
-  if (source.renderMode !== profilePatch.renderMode)
-  {
-    patch.renderMode = profilePatch.renderMode;
-  }
-
-  if (source.maxDpr !== profilePatch.maxDpr)
-  {
-    patch.maxDpr = profilePatch.maxDpr;
-  }
-
-  return patch;
-}
-
-export function getRenderDefaultsMigrationPatch(value)
-{
-  const source = value && typeof value === 'object' ? value : {};
-  const quality = normalizeQuality(source.quality);
-  const profile = QUALITY_PROFILES[quality] || QUALITY_PROFILES[DEFAULT_SETTINGS.quality];
-  const patch = {};
-
-  // 旧版本只有 quality；只补缺失字段，绝不覆盖已同步的高级设置。
-  if (!Object.hasOwn(source, 'renderMode'))
-  {
-    patch.renderMode = profile.renderMode;
-  }
-
-  if (!Object.hasOwn(source, 'maxDpr'))
-  {
-    patch.maxDpr = profile.maxDpr;
-  }
-
-  return patch;
-}
-
-export function getClassicDefaultsMigrationPatch(value)
-{
-  const source = value && typeof value === 'object' ? value : {};
-  const color = typeof source.color === 'string' ? source.color.toLowerCase() : '';
-  const matchesPreviousDefaults = PREVIOUS_CLASSIC_DEFAULTS.some((defaults) =>
-    source.preset === defaults.preset &&
-    color === defaults.color &&
-    source.opacity === defaults.opacity &&
-    source.scale === defaults.scale &&
-    source.quality === defaults.quality);
-
-  if (!matchesPreviousDefaults)
-  {
-    return {};
-  }
-
-  const patch =
-  {
-    ...APPEARANCE_PRESETS.classic,
-    preset: 'classic',
-  };
-
-  // 缺失表示沿用旧默认值；已存储的 true/false 都属于用户明确选择。
-  if (!Object.hasOwn(source, 'trailAlways'))
-  {
-    patch.trailAlways = DEFAULT_SETTINGS.trailAlways;
-  }
-
-  return patch;
 }
 
 export function getSettingsMigrationPatch(value)
 {
   const source = value && typeof value === 'object' ? value : {};
-  const classicPatch = getClassicDefaultsMigrationPatch(source);
-  const migratedSource = { ...source, ...classicPatch };
   const compositingPatch = {};
   const hasCompositingContract = [
     'outputCompositing',
@@ -484,9 +335,7 @@ export function getSettingsMigrationPatch(value)
   }
 
   return {
-    ...classicPatch,
     ...compositingPatch,
-    ...getRenderDefaultsMigrationPatch(migratedSource),
   };
 }
 
@@ -545,25 +394,20 @@ export function normalizeSettings(value = {})
   const color = typeof source.color === 'string' && HEX_COLOR_PATTERN.test(source.color)
     ? source.color.toLowerCase()
     : DEFAULT_SETTINGS.color;
-  const requestedQuality = normalizeQuality(source.quality);
-  const fallbackProfile = getQualityProfile(requestedQuality);
   const appearance =
   {
     color,
     opacity: clamp(source.opacity, 0, 1, DEFAULT_SETTINGS.opacity),
     scale: clamp(source.scale, 0.01, 5, DEFAULT_SETTINGS.scale),
   };
-  const requestedRenderMode = Object.hasOwn(RENDER_MODE_PROFILES, source.renderMode)
+  const renderMode = Object.hasOwn(RENDER_MODE_PROFILES, source.renderMode)
     ? source.renderMode
-    : fallbackProfile.renderMode;
-  const maxDpr = clamp(source.maxDpr, 1, 3, fallbackProfile.maxDpr);
-  const renderMode = requestedRenderMode;
-  const quality = detectQualityProfile(renderMode, maxDpr);
+    : DEFAULT_SETTINGS.renderMode;
+  const maxDpr = clamp(source.maxDpr, 1, 3, DEFAULT_SETTINGS.maxDpr);
   const compositing = normalizeCompositingSettings(source);
   const preset = detectAppearancePreset(
   {
     ...appearance,
-    quality,
     renderMode,
     maxDpr,
     ...compositing,
@@ -581,7 +425,6 @@ export function normalizeSettings(value = {})
       ? DEFAULT_SETTINGS.trailAlways
       : source.trailAlways === true,
     ...appearance,
-    quality,
     renderMode,
     maxDpr,
     ...normalizeWebGPUHdrSettings(source),
