@@ -449,6 +449,11 @@ select
   min-width: 110px;
 }
 
+#preset
+{
+  min-width: 122px;
+}
+
 .actions
 {
   display: grid;
