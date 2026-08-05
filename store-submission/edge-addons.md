@@ -4,7 +4,7 @@
 
 - Extension version: `1.1.14`
 - Package: `release/ba-click-fx-extension-v1.1.14-chromium.zip`
-- SHA-256: `87C91249939A34B84397D54AE847B6B534A2E8857EA305EF1C1AF455456D41CE`
+- SHA-256: `DB62BB37600B75C86FF4EF85CCCB31FC83251B1A1348BA34907C8838AAA228B0`
 - Core dependency: `ba-click-fx 1.2.23`
 - Submission status: Prepared; not yet uploaded
 - Website: https://ba-click-fx.cialloking.top/
