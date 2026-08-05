@@ -217,7 +217,7 @@ test('读取时忽略旧 quality 并保留显式渲染配置', async () =>
       quality: 'balanced',
       renderMode: 'native-bloom',
       maxDpr: 2,
-      fxParamSchemaVersion: 1,
+      fxParamSchemaVersion: 2,
     },
     local:
     {
@@ -262,8 +262,9 @@ test('参数 Schema 0 迁移与拒绝报告在一次同步写入中完成', asyn
     'bloom.diffusion': 7,
     'bloom.trailEmissionAlpha': 0.5,
     'bloom.trailAlpha': 0.09,
+    'shards.roundness': 0,
   });
-  assert.equal(migrated.settings.fxParamSchemaVersion, 1);
+  assert.equal(migrated.settings.fxParamSchemaVersion, 2);
   assert.equal(
     migrated.fxParamMigrationReport.normalized.some(({ reason }) => reason === 'renamed'),
     true,
@@ -281,12 +282,113 @@ test('参数 Schema 0 迁移与拒绝报告在一次同步写入中完成', asyn
       'bloom.diffusion': 7,
       'bloom.trailEmissionAlpha': 0.5,
       'bloom.trailAlpha': 0.09,
+      'shards.roundness': 0,
     },
-    fxParamSchemaVersion: 1,
+    fxParamSchemaVersion: 2,
   }]);
 
   await loadStorageState(mock.chromeApi);
   assert.equal(mock.setCalls.sync.length, 1);
+});
+
+test('参数 Schema 1 到 2 保留用户值并补齐圆角默认值且幂等', async () =>
+{
+  const mock = createStorageMock(
+  {
+    sync:
+    {
+      fxParams:
+      {
+        'rings.radiusMin': 80,
+        'bloom.trailAlpha': 0.18,
+      },
+      fxParamSchemaVersion: 1,
+    },
+    local:
+    {
+      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
+    },
+  });
+
+  const first = await loadStorageState(mock.chromeApi);
+
+  assert.deepEqual(first.settings.fxParams,
+  {
+    'rings.radiusMin': 80,
+    'bloom.trailAlpha': 0.18,
+    'shards.roundness': 0,
+  });
+  assert.equal(first.settings.fxParamSchemaVersion, 2);
+  assert.equal(mock.records.sync.fxParamSchemaVersion, 2);
+  assert.deepEqual(mock.records.sync.fxParams,
+  {
+    'rings.radiusMin': 80,
+    'bloom.trailAlpha': 0.18,
+    'shards.roundness': 0,
+  });
+  assert.equal(mock.setCalls.sync.length, 1);
+
+  const second = await loadStorageState(mock.chromeApi);
+
+  assert.deepEqual(second.settings, first.settings);
+  assert.equal(mock.setCalls.sync.length, 1);
+});
+
+test('未来参数 Schema 版本拒绝写回并保留原始记录', async () =>
+{
+  const mock = createStorageMock(
+  {
+    sync:
+    {
+      fxParams:
+      {
+        'rings.radiusMin': 80,
+        'shards.roundness': 0.4,
+        'future.path': 1,
+      },
+      fxParamSchemaVersion: 99,
+    },
+    local:
+    {
+      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
+    },
+  });
+
+  const state = await loadStorageState(mock.chromeApi);
+
+  assert.equal(mock.setCalls.sync.length, 0);
+  assert.equal(mock.records.sync.fxParamSchemaVersion, 99);
+  assert.equal(state.fxParamMigrationReport.committed, false);
+  assert.deepEqual(state.settings.fxParams,
+  {
+    'rings.radiusMin': 80,
+    'shards.roundness': 0.4,
+  });
+  assert.deepEqual(state.fxParamMigrationReport.rejected,
+  [{
+    path: 'fxParamSchemaVersion',
+    value: 99,
+    reason: 'unsupported-schema-version',
+  }]);
+});
+
+test('设置写入拒绝显式未来参数 Schema 版本', async () =>
+{
+  const mock = createStorageMock();
+
+  await assert.rejects(
+    writeSettingsPatch(
+    {
+      fxParams:
+      {
+        'rings.radiusMin': 80,
+      },
+      fxParamSchemaVersion: 99,
+    }, mock.chromeApi),
+    /Schema 版本不受支持：99/,
+  );
+
+  assert.equal(mock.setCalls.sync.length, 0);
 });
 
 test('schema v5 不改写用户自定义外观与渲染参数', async () =>
@@ -301,7 +403,7 @@ test('schema v5 不改写用户自定义外观与渲染参数', async () =>
       scale: 1.1,
       renderMode: 'legacy',
       maxDpr: 1,
-      fxParamSchemaVersion: 1,
+      fxParamSchemaVersion: 2,
     },
     local:
     {
@@ -326,7 +428,7 @@ test('schema v5 同步迁移失败时不会提前推进本机版本', async () =
     sync:
     {
       outputCompositing: 'transparent-overlay',
-      fxParamSchemaVersion: 1,
+      fxParamSchemaVersion: 2,
     },
     local:
     {
@@ -470,7 +572,7 @@ test('高级特效参数与 Schema 版本原子写入 sync', async () =>
     'rings.radiusMin': 80,
     'hit.enabled': true,
   });
-  assert.equal(mock.records.sync.fxParamSchemaVersion, 1);
+  assert.equal(mock.records.sync.fxParamSchemaVersion, 2);
   assert.deepEqual(mock.setCalls.sync,
   [{
     fxParams:
@@ -478,7 +580,7 @@ test('高级特效参数与 Schema 版本原子写入 sync', async () =>
       'rings.radiusMin': 80,
       'hit.enabled': true,
     },
-    fxParamSchemaVersion: 1,
+    fxParamSchemaVersion: 2,
   }]);
 });
 
@@ -561,7 +663,7 @@ test('旧 quality 记录与增量事件均被忽略', async () =>
     sync:
     {
       quality: 'balanced',
-      fxParamSchemaVersion: 1,
+      fxParamSchemaVersion: 2,
     },
     local:
     {
@@ -587,12 +689,44 @@ test('旧 quality 记录与增量事件均被忽略', async () =>
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
+test('未来参数 Schema 的增量事件不会覆盖当前设置', () =>
+{
+  const current = normalizeSettings(
+  {
+    fxParams:
+    {
+      'rings.radiusMin': 80,
+    },
+  });
+  const changed = applyStorageChanges(current,
+  {
+    fxParams:
+    {
+      newValue:
+      {
+        'rings.radiusMin': 90,
+        'shards.roundness': 0.5,
+      },
+    },
+    fxParamSchemaVersion: { newValue: 99 },
+  }, 'sync');
+
+  assert.equal(changed, current);
+
+  const versionOnly = applyStorageChanges(current,
+  {
+    fxParamSchemaVersion: { newValue: 99 },
+  }, 'sync');
+
+  assert.equal(versionOnly, current);
+});
+
 test('参数增量事件只在可证明为旧 Schema 时迁移', () =>
 {
   const current = normalizeSettings(
   {
     fxParams: {},
-    fxParamSchemaVersion: 1,
+    fxParamSchemaVersion: 2,
   });
   const ambiguous = applyStorageChanges(current,
   {

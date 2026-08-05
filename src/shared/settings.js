@@ -188,6 +188,20 @@ function clamp(value, min, max, fallback)
   return Math.max(min, Math.min(max, number));
 }
 
+function getFxParamSchemaVersion(value)
+{
+  const version = Number(value);
+
+  if (!Number.isInteger(version) || version < 0)
+  {
+    return 0;
+  }
+
+  // 存储层会拒绝把未来版本写回；运行时仍可安全使用当前核心认识的
+  // 参数，避免一次跨设备同步让整套特效退回空配置。
+  return Math.min(version, FX_PARAM_SCHEMA_VERSION);
+}
+
 function normalizeWebGPUHdrSettings(source)
 {
   const webgpuHdrWhiteStart = clamp(
@@ -430,9 +444,9 @@ export function normalizeSettings(value = {})
     ...normalizeWebGPUHdrSettings(source),
     fxParams: normalizeFxParams(source.fxParams,
     {
-      schemaVersion: source.fxParamSchemaVersion === 0
-        ? 0
-        : FX_PARAM_SCHEMA_VERSION,
+      // 让核心按持久化记录的原始版本逐段迁移；未来版本会被拒绝，
+      // 不把未知参数静默当成当前版本写回。
+      schemaVersion: getFxParamSchemaVersion(source.fxParamSchemaVersion),
     }),
     fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
     clickTimeScale: clamp(
