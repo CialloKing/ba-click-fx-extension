@@ -220,7 +220,7 @@ export function getFxParamDefault(path, renderMode = 'enhanced')
   return definition ? getModeDefault(definition, renderMode) : undefined;
 }
 
-// 保留调用层的旧函数名；Schema v1 已不再声明隐式联动参数。
+// 保留调用层的旧函数名；当前公开 Schema 不再声明隐式联动参数。
 export function expandFxParams(value = {}, options = {})
 {
   return normalizeFxParams(value, options);

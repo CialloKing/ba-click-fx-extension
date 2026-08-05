@@ -23,7 +23,7 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Global enable/disable applies immediately.
 - [ ] Click and trail switches work independently.
 - [ ] “Always show while moving” works as described.
-- [ ] The popup switches the four effect presets immediately; Close to original uses Full WebGL2, Light background uses the transparent-overlay visual-maximum contract, Soft and Power-saving use Legacy.
+- [ ] The popup switches the four effect presets immediately; Close to original uses Full WebGL2, Light background uses the browser-overlay visual-maximum contract, Soft and Power-saving use Legacy.
 - [ ] The popup switches System, Simplified Chinese, and English immediately and keeps the selected language after reopening.
 - [ ] Close to original, Light background, Soft, and Power-saving presets apply their appearance, render, DPR, and compositing values immediately.
 - [ ] Full settings exposes experimental WebGPU HDR, Full WebGL2, explicit Software Bloom, other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 66 public Schema parameters; each applies after releasing the control and survives reopening the page.
