@@ -9,7 +9,7 @@
 - 点击特效与光标拖尾可分别开关。
 - 可按网站持久禁用，不影响其他页面。
 - 工具栏弹窗与完整设置页共用同一组效果预设：贴近原版、浅色背景优化、柔和和省电。预设会原子设置外观、渲染模式、DPR 与合成方式；完整设置仍可精确选择 WebGPU HDR、完整 WebGL2、兼容渲染模式和 DPR，手动调整后显示为自定义。弹窗也可切换界面语言。
-- 独立设置页从上游参数 Schema 生成完整的 65 项特效面板，可管理主题颜色、透明度、缩放、实验性 WebGPU HDR、完整 WebGL2 与兼容渲染模式、DPR、输出合成、浅色背景对比、点击/轨迹时间倍率，以及语言、动态偏好和网站规则。WebGPU HDR 的六项展示校准仅作用于 Extended 输出，不改写 Unity 特效参数；只有运行时 `resolvedWebGPUOutputMode === 'extended'` 才表示浏览器侧 HDR 已就绪。
+- 独立设置页从上游参数 Schema 生成完整的 66 项特效面板，可管理主题颜色、透明度、缩放、实验性 WebGPU HDR、完整 WebGL2 与兼容渲染模式、DPR、输出合成、浅色背景对比、点击/轨迹时间倍率，以及语言、动态偏好和网站规则。WebGPU HDR 的六项展示校准仅作用于 Extended 输出，不改写 Unity 特效参数；只有运行时 `resolvedWebGPUOutputMode === 'extended'` 才表示浏览器侧 HDR 已就绪。
 - 视觉偏好通过浏览器提供的同步存储保存；站点禁用规则仅保存在本机扩展存储。
 - 默认跟随系统语言：中文环境使用简体中文，非中文环境使用英文，检测失败回退中文；也可手动指定。
 - 支持跟随系统的“减少动态效果”偏好，并允许手动选择完整或减少持续动态。
@@ -107,7 +107,7 @@ Chrome 和 Edge 可复用 Chromium ZIP；Firefox 必须使用独立 Firefox ZIP�
 
 ## 核心依赖与更新
 
-项目通过 npm 精确依赖 `ba-click-fx 1.2.21`，不在仓库内维护核心源码副本。esbuild 会在构建阶段把依赖打进 `dist/content.js`，因此发布后的插件不依赖 npm、CDN 或网络运行。
+项目通过 npm 精确依赖 `ba-click-fx 1.2.23`，不在仓库内维护核心源码副本。esbuild 会在构建阶段把依赖打进 `dist/content.js`，因此发布后的插件不依赖 npm、CDN 或网络运行。
 
 `package.json` 与 `package-lock.json` 固定实际构建版本，保证依赖私有状态的适配代码不会被静默升级破坏；`.github/dependabot.yml` 每周检查 npm 新版本并创建带测试的升级 PR。也可以手动更新：
 

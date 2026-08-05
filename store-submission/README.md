@@ -36,9 +36,9 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - Four English screenshots: `store-assets/en/`
 - Four Simplified Chinese screenshots: `store-assets/zh_CN/`
 
-`metadata.json` 的扩展版本、核心版本、包名和 SHA-256 共同描述同一组已准备发布物。开发分支可以先升级核心依赖，但必须等下一扩展版本完成确定性打包后再同步这些字段；`npm run check:release` 会在创建标签前强制检查该合同。
+`metadata.json` 的扩展版本、核心版本、包名和 SHA-256 共同描述同一组已准备发布物。核心依赖升级后，应重新生成确定性发布包并同步核心版本与全部哈希；`npm run check:release` 会在创建标签前强制检查该合同。
 
-The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.14`, regenerate the localized screenshots from the final build: the effect screenshot must show the current GPU-capable runtime, and the settings screenshot must show the WebGPU HDR presentation controls, complete 65-parameter upstream Schema panel, and host controls.
+The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.14`, regenerate the localized screenshots from the final build: the effect screenshot must show the current GPU-capable runtime, and the settings screenshot must show the WebGPU HDR presentation controls, complete 66-parameter upstream Schema panel, and host controls.
 
 ## Important disclosure decision
 
