@@ -12,10 +12,12 @@
 } from './settings.js';
 import {
   FX_PARAM_SCHEMA_VERSION,
+  getFxParamDefault,
   prepareFxParams,
 } from './fx-settings.js';
 
 const LOCAL_SITE_RULES_SCHEMA_VERSION = 2;
+const ROUNDNESS_PARAM_PATH = 'shards.roundness';
 
 function getStorageArea(chromeApi, areaName)
 {
@@ -87,6 +89,13 @@ function getStoredFxParamSchemaVersion(values)
   return Number.isInteger(version) && version >= 0 ? version : 0;
 }
 
+function hasUnsupportedFxParamSchemaVersion(value)
+{
+  const version = Number(value);
+
+  return Number.isInteger(version) && version > FX_PARAM_SCHEMA_VERSION;
+}
+
 function hasLegacyFxParamPath(value)
 {
   const params = value && typeof value === 'object' ? value : {};
@@ -103,6 +112,52 @@ function haveSameEntries(left, right)
 
   return leftEntries.length === rightEntries.length &&
     leftEntries.every(([key, value]) => right?.[key] === value);
+}
+
+function isFxParamPatch(value)
+{
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? value
+    : null;
+}
+
+function addSchemaDefaults(source, schemaVersion, report)
+{
+  const sourceParams = isFxParamPatch(source.fxParams);
+
+  // Schema 2 新增圆角参数；旧记录没有该路径时沿用核心默认值，
+  // 但不为从未保存过特效参数的新用户制造一项“用户覆盖”。
+  if (
+    schemaVersion >= FX_PARAM_SCHEMA_VERSION ||
+    !Object.hasOwn(source, 'fxParams') ||
+    !sourceParams ||
+    Object.keys(sourceParams).length === 0 ||
+    !report.committed ||
+    Object.hasOwn(report.params, ROUNDNESS_PARAM_PATH)
+  )
+  {
+    return report;
+  }
+
+  const defaultValue = getFxParamDefault(ROUNDNESS_PARAM_PATH);
+
+  return {
+    ...report,
+    params:
+    {
+      ...report.params,
+      [ROUNDNESS_PARAM_PATH]: defaultValue,
+    },
+    normalized: [
+      ...report.normalized,
+      {
+        path: ROUNDNESS_PARAM_PATH,
+        from: undefined,
+        to: defaultValue,
+        reason: 'defaulted',
+      },
+    ],
+  };
 }
 
 export function getFxParamsMigration(values = {})
@@ -131,11 +186,12 @@ export function getFxParamsMigration(values = {})
     };
   }
 
-  const report = prepareFxParams(source.fxParams,
+  const preparedReport = prepareFxParams(source.fxParams,
   {
     schemaVersion,
     strict: false,
   });
+  const report = addSchemaDefaults(source, schemaVersion, preparedReport);
   const needsWrite = schemaVersion !== FX_PARAM_SCHEMA_VERSION ||
     !haveSameEntries(source.fxParams, report.params);
 
@@ -216,6 +272,16 @@ export async function readSettings(chromeApi = globalThis.chrome)
 export async function writeSettingsPatch(patch, chromeApi = globalThis.chrome)
 {
   let expandedPatch = { ...patch };
+
+  if (
+    Object.hasOwn(expandedPatch, 'fxParamSchemaVersion') &&
+    hasUnsupportedFxParamSchemaVersion(expandedPatch.fxParamSchemaVersion)
+  )
+  {
+    throw new Error(
+      `特效参数 Schema 版本不受支持：${expandedPatch.fxParamSchemaVersion}`,
+    );
+  }
 
   if (Object.hasOwn(expandedPatch, 'fxParams'))
   {
@@ -302,6 +368,16 @@ export function applyStorageChanges(settings, changes, areaName)
     return settings;
   }
 
+  if (
+    areaName === 'sync' &&
+    Object.hasOwn(patch, 'fxParamSchemaVersion') &&
+    hasUnsupportedFxParamSchemaVersion(patch.fxParamSchemaVersion)
+  )
+  {
+    // 版本键可能与参数键分开到达；同样不能把当前状态降级或清空。
+    return settings;
+  }
+
   const expandedPatch = patch;
 
   if (areaName === 'sync' && Object.hasOwn(expandedPatch, 'fxParams'))
@@ -317,7 +393,21 @@ export function applyStorageChanges(settings, changes, areaName)
       strict: false,
     });
 
-    expandedPatch.fxParams = result.params;
+    if (result.rejected.some(({ reason }) => reason === 'unsupported-schema-version'))
+    {
+      // 其他设备可能已经使用更新的核心；当前版本无法安全解释其参数，
+      // 忽略这次事件并等待扩展自身升级，不能把版本号降回当前值。
+      return settings;
+    }
+
+    const migrated = addSchemaDefaults(
+    {
+      fxParams: expandedPatch.fxParams,
+    },
+    incomingVersion,
+    result);
+
+    expandedPatch.fxParams = migrated.params;
     expandedPatch.fxParamSchemaVersion = FX_PARAM_SCHEMA_VERSION;
   }
 
