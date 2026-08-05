@@ -33,7 +33,7 @@ test('扩展缺省设置使用 DOM Add 而不是上游展示页合成', () =>
   assert.equal(settings.webgpuHdrWhiteStart, 1);
   assert.equal(settings.webgpuHdrWhiteEnd, 5);
   assert.deepEqual(settings.fxParams, {});
-  assert.equal(settings.fxParamSchemaVersion, 1);
+  assert.equal(settings.fxParamSchemaVersion, 2);
   assert.equal(settings.clickTimeScale, 1);
   assert.equal(settings.trailTimeScale, 1);
   assert.equal(settings.outputCompositing, 'browser-overlay');
