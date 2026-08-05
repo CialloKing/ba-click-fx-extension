@@ -16,8 +16,8 @@
 - Data collection or transmission: `None`
 - Firefox package: `ba-click-fx-extension-v1.1.15-firefox.zip`
 - Firefox source package: `ba-click-fx-extension-v1.1.15-firefox-source.zip`
-- Firefox SHA-256: `39141658D511FE413D47790D60F3F81754A8C74E4CCB923AACCCE4CBE5C4FC0B`
-- Source SHA-256: `DE5E5D1BEB836868553A6DA3FB187E199D3159B0C7F9968038141EB55A8681B1`
+- Firefox SHA-256: `A8CCB1A37DA97921C0C5773165BD684EE23B11AA251FC3AF5BAD87A9A63DD305`
+- Source SHA-256: `C256CC542FA9535233D34178463A376735B0F844E5B983311C26B5863701CE3B`
 - No test account, credentials, payment, hardware, or external service required
 
 Do not upload the Chromium ZIP to AMO. The Firefox ZIP removes `minimum_chrome_version`, adds the stable Gecko identity, and declares the current built-in data collection permission.
