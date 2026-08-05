@@ -728,6 +728,10 @@
   {
     "message": "Maximum click shard speed"
   },
+  "fxParam_shards_roundness":
+  {
+    "message": "Shard roundness"
+  },
   "fxParam_shards_trailLifetimeMinMs":
   {
     "message": "Minimum trail shard lifetime"

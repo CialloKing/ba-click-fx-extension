@@ -19,11 +19,15 @@ const LEGACY_TRAIL_ALPHA_FACTOR = 0.18;
 const UNIT_I18N_KEYS = Object.freeze(
 {
   count: 'unitCount',
+  'gamma-hdr': 'unitGammaHdr',
+  'linear-hdr': 'unitLinearHdr',
   ms: 'unitMilliseconds',
   multiplier: 'unitMultiplier',
   px: 'unitPixels',
   'px-per-second': 'unitPixelsPerSecond',
+  ratio: 'unitRatio',
   samples: 'unitSamples',
+  scalar: 'unitScalar',
 });
 
 function toIdentifier(value)
