@@ -1,9 +1,9 @@
 ﻿# Reviewer Notes
 
-## English — prepared for the v1.1.14 update
+## English — prepared for the v1.1.15 update
 
-- Extension version: `1.1.14`
-- Review package: `ba-click-fx-extension-v1.1.14-chromium.zip`
+- Extension version: `1.1.15`
+- Review package: `ba-click-fx-extension-v1.1.15-chromium.zip`
 - Core dependency: `ba-click-fx 1.2.23`
 - No test account or credentials required
 
@@ -38,7 +38,7 @@ Expected restrictions:
 Testing on file:// pages is optional and is not required to verify the extension's primary functionality.
 ```
 
-## 简体中文——v1.1.14 内部参考
+## 简体中文——v1.1.15 内部参考
 
 ```text
 BA Click FX 为普通网页添加可配置的点击特效和鼠标光标拖尾。
