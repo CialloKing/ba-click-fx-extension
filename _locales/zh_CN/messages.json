@@ -728,6 +728,10 @@
   {
     "message": "点击碎片最大速度"
   },
+  "fxParam_shards_roundness":
+  {
+    "message": "碎片圆角"
+  },
   "fxParam_shards_trailLifetimeMinMs":
   {
     "message": "轨迹碎片最短寿命"

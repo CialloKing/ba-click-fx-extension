@@ -150,14 +150,14 @@ test('中英文消息键保持一致且高级设置文案完整', () =>
 test('全部 Schema 控件都有中英文名称', () =>
 {
   assert.equal(FX_CONTROL_GROUPS.length, 7);
-  assert.equal(FX_CONTROL_DEFINITIONS.length, 65);
+  assert.equal(FX_CONTROL_DEFINITIONS.length, 66);
 
   const schemaKeys = [
     ...FX_CONTROL_GROUPS.map(({ i18nKey }) => i18nKey),
     ...FX_CONTROL_DEFINITIONS.map(({ i18nKey }) => i18nKey),
   ];
 
-  assert.equal(new Set(schemaKeys).size, 72);
+  assert.equal(new Set(schemaKeys).size, 73);
 
   for (const [locale, url] of Object.entries(LOCALE_FILES))
   {

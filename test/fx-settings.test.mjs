@@ -16,12 +16,12 @@ import {
   prepareFxParams,
 } from '../src/shared/fx-settings.js';
 
-test('完整设置页从上游 Schema 派生全部 65 个公开参数', () =>
+test('完整设置页从上游 Schema 派生全部 66 个公开参数', () =>
 {
-  assert.equal(FX_PARAM_SCHEMA_VERSION, 1);
-  assert.equal(FX_CONTROL_DEFINITIONS.length, 65);
+  assert.equal(FX_PARAM_SCHEMA_VERSION, 2);
+  assert.equal(FX_CONTROL_DEFINITIONS.length, 66);
   assert.equal(FX_CONTROL_DEFINITIONS.length, FX_PARAM_SCHEMA.length);
-  assert.equal(new Set(FX_CONTROL_DEFINITIONS.map(({ path }) => path)).size, 65);
+  assert.equal(new Set(FX_CONTROL_DEFINITIONS.map(({ path }) => path)).size, 66);
   assert.deepEqual(FX_CONTROL_GROUPS.map(({ id }) => id),
   [
     'hit',
@@ -52,6 +52,31 @@ test('完整设置页从上游 Schema 派生全部 65 个公开参数', () =>
     assert.equal(definition.group, descriptor.group);
     assert.match(definition.i18nKey, /^fxParam_/);
   }
+
+  const roundness = FX_CONTROL_DEFINITIONS.find(
+    ({ path }) => path === 'shards.roundness',
+  );
+
+  assert.deepEqual(roundness,
+  {
+    id: 'fx-shards-roundness',
+    path: 'shards.roundness',
+    defaultValue: 0,
+    min: 0,
+    max: 1,
+    step: 0.01,
+    hardMin: 0,
+    hardMax: 1,
+    group: 'shards',
+    groupOrder: 50,
+    order: 295,
+    type: 'number',
+    unit: 'ratio',
+    unitKey: 'unitRatio',
+    i18nKey: 'fxParam_shards_roundness',
+    linkedParams: [],
+    modeDefaults: { enhanced: 0, legacy: 0 },
+  });
 });
 
 test('参数校验使用硬边界且不会按推荐滑块步长量化', () =>
