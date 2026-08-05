@@ -4,6 +4,8 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.1.15] - 2026-08-05
+
 ### Added
 
 - Added a Light background effect preset using Full WebGL2, browser-overlay output, legacy visual-maximum Alpha, no color compensation, an `0.85` Alpha limit, Source-over host compositing, and the extension's implicit unknown-background reference.
