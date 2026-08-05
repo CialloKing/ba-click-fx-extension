@@ -156,7 +156,7 @@ const APPEARANCE_PRESET_OVERRIDES = Object.freeze(
   {
     outputCompositing: 'browser-overlay',
     overlayAlphaPolicy: 'visual-max',
-    overlayColorCompensation: 'none',
+    overlayColorCompensation: 'bright-core',
     overlayAlphaLimit: 0.85,
     hostCompositing: 'source-over',
   }),

@@ -256,7 +256,7 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
   {
     outputCompositing: 'browser-overlay',
     overlayAlphaPolicy: 'visual-max',
-    overlayColorCompensation: 'none',
+    overlayColorCompensation: 'bright-core',
     overlayAlphaLimit: 0.85,
     hostCompositing: 'source-over',
     isolatedCompositing: false,
