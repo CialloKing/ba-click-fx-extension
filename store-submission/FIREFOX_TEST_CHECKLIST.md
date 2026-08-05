@@ -27,13 +27,13 @@ Complete this checklist before creating the `v1.1.14` Tag and GitHub Release.
 - [ ] Test Close to original, Light background, Soft, Power-saving, and Custom effect-preset states in both the popup and Full settings.
 - [ ] Test the four effect presets and confirm their render mode, DPR, and compositing values persist in the popup and Full settings.
 - [ ] Select experimental WebGPU HDR and confirm its six presentation controls become enabled and persist; confirm they are disabled in other modes. Treat Standard output as SDR and do not require HDR hardware for this test.
-- [ ] Test Full WebGL2, explicit Software Bloom, and the other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public upstream Schema controls.
+- [ ] Test Full WebGL2, explicit Software Bloom, and the other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 66 public upstream Schema controls.
 - [ ] Reset visual settings and confirm every advanced value returns to the extension defaults while website rules remain intact.
 - [ ] Test system, Simplified Chinese, and English language modes.
 - [ ] Test system, full, and reduced continuous-motion modes.
 - [ ] Disable `https://example.com`, confirm the Canvas is removed, then restore the site rule.
 - [ ] Confirm visual settings persist through a Firefox restart when installed through a persistent test profile or signed build.
-- [ ] Confirm local website rules remain in `storage.local`, storage schema v5 does not duplicate or delete rules, and effect-parameter Schema 0 migrates atomically to Schema 1.
+- [ ] Confirm local website rules remain in `storage.local`, storage schema v5 does not duplicate or delete rules, and effect-parameter Schema 0 or Schema 1 migrates atomically to Schema 2.
 - [ ] Confirm the repository, privacy, support, and demo links open the expected HTTPS pages.
 
 ## Restrictions and optional checks

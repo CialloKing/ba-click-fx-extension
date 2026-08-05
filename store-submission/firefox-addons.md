@@ -3,7 +3,7 @@
 ## Prepared release
 
 - Extension version: `1.1.14`
-- Core dependency: `ba-click-fx 1.2.21`
+- Core dependency: `ba-click-fx 1.2.23`
 - Manifest version: `3`
 - Gecko ID: `ba-click-fx-extension@cialloking.top`
 - Minimum Firefox Desktop version: `140.0`
@@ -48,7 +48,7 @@ Add configurable click rings, particles, and cursor trails to ordinary webpages.
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for ordinary webpages.
 
-It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D, WebGL2, or WebGPU. Quick controls are available in the toolbar popup, while full settings also manages experimental WebGPU HDR, Full WebGL2 and explicit compatibility render modes, maximum DPR, compositing, timing, and all 65 public upstream effect parameters.
+It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail. Effects are rendered locally with Canvas 2D, WebGL2, or WebGPU. Quick controls are available in the toolbar popup, while full settings also manages experimental WebGPU HDR, Full WebGL2 and explicit compatibility render modes, maximum DPR, compositing, timing, and all 66 public upstream effect parameters.
 
 Features:
 • Enable or disable click effects and cursor trails independently
@@ -56,7 +56,7 @@ Features:
 • Choose Close to original, Light background, Soft, or Power-saving effect presets
 • Apply appearance, render mode, DPR, and compositing together through one preset; precise render controls remain available in Full settings
 • Explicitly select experimental WebGPU HDR in Full settings; real HDR requires an Extended output, while Standard output remains SDR
-• Adjust theme color, opacity, effect size, six HDR presentation controls, Full WebGL2 or explicit compatibility render modes, maximum DPR, output compositing, light-background contrast, timing, and all 65 public effect parameters
+• Adjust theme color, opacity, effect size, six HDR presentation controls, Full WebGL2 or explicit compatibility render modes, maximum DPR, output compositing, light-background contrast, timing, and all 66 public effect parameters
 • Follow the system language or choose Simplified Chinese or English
 • Follow the system reduced-motion preference or choose full/reduced continuous motion
 • Search, remove, or clear locally saved website rules
@@ -96,7 +96,7 @@ BA Click FX is not affiliated with or endorsed by Nexon, NEXON Games, Yostar, or
 ```text
 BA Click FX 是一个非官方的网页视觉特效扩展。
 
-安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D、WebGL2 或 WebGPU 在本地渲染。工具栏弹窗提供常用开关，完整设置页还可管理实验性 WebGPU HDR、完整 WebGL2 与显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率，以及上游参数 Schema 中全部 65 个公开特效参数。
+安装后，普通网页会显示游戏风格的鼠标点击圆环、粒子碎片和主题色光标拖尾。所有特效均使用 Canvas 2D、WebGL2 或 WebGPU 在本地渲染。工具栏弹窗提供常用开关，完整设置页还可管理实验性 WebGPU HDR、完整 WebGL2 与显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率，以及上游参数 Schema 中全部 66 个公开特效参数。
 
 主要功能：
 • 点击特效与光标拖尾可分别开关
@@ -104,7 +104,7 @@ BA Click FX 是一个非官方的网页视觉特效扩展。
 • 可选择贴近原版、浅色背景优化、柔和或省电效果预设
 • 一个预设统一应用外观、渲染模式、DPR 与合成方式；完整设置仍可精确调整渲染参数
 • 可在完整设置中显式选择实验性 WebGPU HDR；只有 Extended 输出代表真实 HDR，Standard 输出仍是 SDR
-• 可调整主题颜色、不透明度、特效大小、六项 HDR 展示参数、完整 WebGL2 或显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 65 个公开特效参数
+• 可调整主题颜色、不透明度、特效大小、六项 HDR 展示参数、完整 WebGL2 或显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 66 个公开特效参数
 • 可跟随系统语言，或指定简体中文/英文
 • 可跟随系统减少动态偏好，或指定完整/减少持续动态
 • 可搜索、移除或清空本机网站规则

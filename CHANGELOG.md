@@ -10,6 +10,7 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ### Changed
 
+- Upgraded `ba-click-fx` from `1.2.21` to `1.2.23`; the extension now follows the versioned Schema 2 with 66 public effect parameters, including the `shards.roundness` control.
 - Unified the toolbar popup and Full settings around one Effect preset selector. The duplicated visible quality selector and its underlying storage field were removed; render mode and DPR are now the single rendering source of truth.
 - Renamed the default visible preset from Classic to Close to original without changing its compatible `classic` storage identifier.
 - Effect preset state is now derived from the actual appearance, render, DPR, and compositing values, so partial sync updates cannot leave a stale preset label.

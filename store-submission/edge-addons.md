@@ -5,7 +5,7 @@
 - Extension version: `1.1.14`
 - Package: `release/ba-click-fx-extension-v1.1.14-chromium.zip`
 - SHA-256: `87C91249939A34B84397D54AE847B6B534A2E8857EA305EF1C1AF455456D41CE`
-- Core dependency: `ba-click-fx 1.2.21`
+- Core dependency: `ba-click-fx 1.2.23`
 - Submission status: Prepared; not yet uploaded
 - Website: https://ba-click-fx.cialloking.top/
 - Microsoft Edge privacy policy: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
@@ -15,7 +15,7 @@
 - Markets: all markets
 - Mature content: no
 
-The prepared build uses `ba-click-fx 1.2.21`, adds experimental WebGPU HDR and Full WebGL2 rendering, and exposes the complete 65-parameter upstream Schema without changing permissions or network behavior.
+The prepared build uses `ba-click-fx 1.2.23`, adds experimental WebGPU HDR and Full WebGL2 rendering, and exposes the complete 66-parameter upstream Schema without changing permissions or network behavior.
 
 ## English listing (`en-US`)
 
@@ -38,7 +38,7 @@ Add game-inspired click rings, particles, and cursor trails to ordinary websites
 ```text
 BA Click FX is an unofficial, fan-made visual-effects extension for Microsoft Edge. It adds game-inspired click rings, particle fragments, and a theme-colored cursor light trail to ordinary webpages. All effects are rendered locally with Canvas 2D, WebGL2, or WebGPU.
 
-Use the toolbar popup for quick effect-preset, current-website, and language controls. Close to original, Light background, Soft, and Power-saving presets apply appearance, render mode, DPR, and compositing together. Full settings provides experimental WebGPU HDR with six presentation controls, Full WebGL2 and explicit compatibility render modes, maximum DPR, precise compositing, light-background contrast, timing, all 65 public upstream effect parameters, reduced-motion preferences, and searchable local website-rule management. Real HDR requires an Extended WebGPU output; Standard output remains SDR. The extension releases rendering resources while tabs are in the background and works offline without a developer server.
+Use the toolbar popup for quick effect-preset, current-website, and language controls. Close to original, Light background, Soft, and Power-saving presets apply appearance, render mode, DPR, and compositing together. Full settings provides experimental WebGPU HDR with six presentation controls, Full WebGL2 and explicit compatibility render modes, maximum DPR, precise compositing, light-background contrast, timing, all 66 public upstream effect parameters, reduced-motion preferences, and searchable local website-rule management. Real HDR requires an Extended WebGPU output; Standard output remains SDR. The extension releases rendering resources while tabs are in the background and works offline without a developer server.
 
 Pointer coordinates are processed temporarily in memory only to draw visible effects. The current website origin is processed locally for the site switch, and an origin is saved only when the user explicitly disables that website. Visual, interface, and motion preferences use Microsoft Edge browser sync storage; current website rules use local extension storage. The developer cannot access pointer data, browsing activity, or saved preferences.
 
@@ -72,7 +72,7 @@ BA Click FX
 ```text
 BA Click FX 是一个适用于 Microsoft Edge 的非官方网页视觉特效扩展。它会为普通网页添加游戏风格的点击圆环、粒子碎片和主题色鼠标光标拖尾，所有效果均使用 Canvas 2D、WebGL2 或 WebGPU 在本地渲染。
 
-用户可以通过工具栏弹窗快速控制效果预设、点击特效、拖尾、当前网站和语言。贴近原版、浅色背景优化、柔和与省电预设会统一应用外观、渲染模式、DPR 和合成方式。完整设置页提供带六项展示参数的实验性 WebGPU HDR、完整 WebGL2 与显式兼容渲染模式、最大 DPR、精确输出合成、浅色背景对比、时间倍率、上游全部 65 个公开特效参数、减少动态偏好和可搜索的本机网站规则管理。只有 WebGPU Extended 输出代表真实 HDR，Standard 输出仍是 SDR。标签页进入后台时会释放渲染资源；扩展无需开发者服务器，离线也能使用。
+用户可以通过工具栏弹窗快速控制效果预设、点击特效、拖尾、当前网站和语言。贴近原版、浅色背景优化、柔和与省电预设会统一应用外观、渲染模式、DPR 和合成方式。完整设置页提供带六项展示参数的实验性 WebGPU HDR、完整 WebGL2 与显式兼容渲染模式、最大 DPR、精确输出合成、浅色背景对比、时间倍率、上游全部 66 个公开特效参数、减少动态偏好和可搜索的本机网站规则管理。只有 WebGPU Extended 输出代表真实 HDR，Standard 输出仍是 SDR。标签页进入后台时会释放渲染资源；扩展无需开发者服务器，离线也能使用。
 
 鼠标坐标只在内存中临时处理，用于绘制用户可见的特效。当前网站 origin 只在本地用于站点开关，只有当用户主动关闭某个网站时才会保存。视觉、界面和动态偏好使用 Microsoft Edge 浏览器同步存储，当前网站规则使用本机扩展存储；开发者无法访问鼠标数据、浏览活动或保存的设置。
 

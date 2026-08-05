@@ -26,7 +26,7 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] The popup switches the four effect presets immediately; Close to original uses Full WebGL2, Light background uses the transparent-overlay visual-maximum contract, Soft and Power-saving use Legacy.
 - [ ] The popup switches System, Simplified Chinese, and English immediately and keeps the selected language after reopening.
 - [ ] Close to original, Light background, Soft, and Power-saving presets apply their appearance, render, DPR, and compositing values immediately.
-- [ ] Full settings exposes experimental WebGPU HDR, Full WebGL2, explicit Software Bloom, other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 65 public Schema parameters; each applies after releasing the control and survives reopening the page.
+- [ ] Full settings exposes experimental WebGPU HDR, Full WebGL2, explicit Software Bloom, other compatibility render modes, maximum DPR, output/isolated compositing, light-background contrast, click/trail timing, and all 66 public Schema parameters; each applies after releasing the control and survives reopening the page.
 - [ ] The six WebGPU HDR presentation controls are enabled only in WebGPU mode and use the extension defaults `3 / 1 / 0 / 0.6 / 1 / 5`; Standard output is treated as SDR and HDR hardware is optional for this test.
 - [ ] Reset visual settings restores every advanced effect parameter, including Hit and Flare values, without clearing local website rules.
 - [ ] Current-site disable removes effects only for that origin.
@@ -42,7 +42,7 @@ Record browser version, operating system, extension version, date, and tester fo
 - [ ] Existing local and legacy rules are merged without losing either set.
 - [ ] The legacy sync copy remains until “Delete legacy sync copy” is explicitly confirmed.
 - [ ] Deleting the legacy sync copy does not remove the migrated local rules.
-- [ ] A Schema 0 `bloom.scatter` override migrates once to Schema 1 without losing other valid overrides; rejected legacy values remain reportable while the accepted migration is written in one batch.
+- [ ] Schema 0 or Schema 1 effect-parameter overrides migrate once to Schema 2 without losing other valid overrides; the new `shards.roundness` value defaults to `0`, rejected legacy values remain reportable, and the accepted migration is written in one batch.
 
 ## Lifecycle and performance
 
