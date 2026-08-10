@@ -4,6 +4,12 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.1.16] - 2026-08-11
+
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.23` to `1.2.24` (patch-level upstream update).
+
 ## [1.1.15] - 2026-08-05
 
 ### Added
