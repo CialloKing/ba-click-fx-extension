@@ -4,6 +4,10 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.24` to `1.2.29`, inheriting its fullscreen Canvas geometry and mobile pointer/touch lifecycle fixes. The extension keeps its explicit preset DPR values and the upstream effect-parameter Schema remains at version 2 with 66 parameters.
+
 ## [1.1.16] - 2026-08-11
 
 ### Changed
