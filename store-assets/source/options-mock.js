@@ -87,7 +87,7 @@
       lastError: null,
       getManifest()
       {
-        return { version: '1.1.16' };
+        return { version: '1.1.17' };
       },
     },
     storage:
