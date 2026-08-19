@@ -117,7 +117,7 @@ test('WebGPU HDR 使用扩展固定基线并保持有效白核区间', () =>
   assert.equal(settings.webgpuHdrWhiteEnd, 16);
 });
 
-test('1.2.17 透明合同拆分并兼容旧覆盖层值', () =>
+test('合成合同字段校验，非法值回退默认', () =>
 {
   const migrated = normalizeSettings(
   {

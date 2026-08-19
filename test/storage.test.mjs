@@ -5,7 +5,6 @@ import {
   applyStorageChanges,
   createSettingsWriteQueue,
   loadStorageState,
-  removeLegacyDisabledSites,
   writeSettingsPatch,
 } from '../src/shared/storage.js';
 import {
@@ -169,7 +168,7 @@ test('设置写入队列在前一项失败后继续执行下一项', async () =>
   assert.deepEqual(started, [1, 2]);
 });
 
-test('旧同步站点规则幂等合并到本机且保留旧副本', async () =>
+test('旧同步站点规则被忽略，只使用本机规则', async () =>
 {
   const mock = createStorageMock(
   {
@@ -191,21 +190,16 @@ test('旧同步站点规则幂等合并到本机且保留旧副本', async () =>
     },
   });
 
-  const first = await loadStorageState(mock.chromeApi);
-  const second = await loadStorageState(mock.chromeApi);
+  const state = await loadStorageState(mock.chromeApi);
 
-  assert.deepEqual(first.settings.disabledSites,
+  assert.deepEqual(state.settings.disabledSites,
   {
     'https://local.example': true,
-    'https://sync.example': true,
   });
-  assert.deepEqual(second.settings.disabledSites, first.settings.disabledSites);
-  assert.equal(first.hasLegacyDisabledSites, true);
+  assert.equal(state.settings.color, '#8edcff');
+  // 破坏性版本不做合并；版本标记一次性提升到当前值。
   assert.equal(mock.records.local.storageSchemaVersion, STORAGE_SCHEMA_VERSION);
-  assert.deepEqual(mock.records.sync.disabledSites,
-  {
-    'https://sync.example': true,
-  });
+  assert.equal(mock.setCalls.sync.length, 0);
 });
 
 test('读取时忽略旧 quality 并保留显式渲染配置', async () =>
@@ -234,7 +228,7 @@ test('读取时忽略旧 quality 并保留显式渲染配置', async () =>
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
-test('参数 Schema 0 迁移与拒绝报告在一次同步写入中完成', async () =>
+test('旧 Schema 参数路径加载时直接丢弃，不再迁移写回', async () =>
 {
   const mock = createStorageMock(
   {
@@ -255,43 +249,19 @@ test('参数 Schema 0 迁移与拒绝报告在一次同步写入中完成', asyn
     },
   });
 
-  const migrated = await loadStorageState(mock.chromeApi);
+  const state = await loadStorageState(mock.chromeApi);
 
-  assert.deepEqual(migrated.settings.fxParams,
+  // scatter 与 rootDurationMs 已非当前 Schema 路径；trailEmissionAlpha 保留。
+  assert.deepEqual(state.settings.fxParams,
   {
-    'bloom.diffusion': 7,
     'bloom.trailEmissionAlpha': 0.5,
-    'bloom.trailAlpha': 0.09,
-    'shards.roundness': 0,
   });
-  assert.equal(migrated.settings.fxParamSchemaVersion, 2);
-  assert.equal(
-    migrated.fxParamMigrationReport.normalized.some(({ reason }) => reason === 'renamed'),
-    true,
-  );
-  assert.deepEqual(migrated.fxParamMigrationReport.rejected,
-  [{
-    path: 'rootDurationMs',
-    value: 1500,
-    reason: 'deprecated-path',
-  }]);
-  assert.deepEqual(mock.setCalls.sync,
-  [{
-    fxParams:
-    {
-      'bloom.diffusion': 7,
-      'bloom.trailEmissionAlpha': 0.5,
-      'bloom.trailAlpha': 0.09,
-      'shards.roundness': 0,
-    },
-    fxParamSchemaVersion: 2,
-  }]);
-
-  await loadStorageState(mock.chromeApi);
-  assert.equal(mock.setCalls.sync.length, 1);
+  assert.equal(state.settings.fxParamSchemaVersion, 2);
+  // 破坏性版本不做迁移写回。
+  assert.equal(mock.setCalls.sync.length, 0);
 });
 
-test('参数 Schema 1 到 2 保留用户值并补齐圆角默认值且幂等', async () =>
+test('已保存的有效参数原样读取，不再补齐圆角或写回', async () =>
 {
   const mock = createStorageMock(
   {
@@ -310,31 +280,19 @@ test('参数 Schema 1 到 2 保留用户值并补齐圆角默认值且幂等', a
     },
   });
 
-  const first = await loadStorageState(mock.chromeApi);
+  const state = await loadStorageState(mock.chromeApi);
 
-  assert.deepEqual(first.settings.fxParams,
+  assert.deepEqual(state.settings.fxParams,
   {
     'rings.radiusMin': 80,
     'bloom.trailAlpha': 0.18,
-    'shards.roundness': 0,
   });
-  assert.equal(first.settings.fxParamSchemaVersion, 2);
-  assert.equal(mock.records.sync.fxParamSchemaVersion, 2);
-  assert.deepEqual(mock.records.sync.fxParams,
-  {
-    'rings.radiusMin': 80,
-    'bloom.trailAlpha': 0.18,
-    'shards.roundness': 0,
-  });
-  assert.equal(mock.setCalls.sync.length, 1);
-
-  const second = await loadStorageState(mock.chromeApi);
-
-  assert.deepEqual(second.settings, first.settings);
-  assert.equal(mock.setCalls.sync.length, 1);
+  assert.equal(state.settings.fxParamSchemaVersion, 2);
+  // 破坏性版本不迁移、不写回。
+  assert.equal(mock.setCalls.sync.length, 0);
 });
 
-test('未来参数 Schema 版本拒绝写回并保留原始记录', async () =>
+test('存储的未来 Schema 版本被忽略，仅保留当前有效参数', async () =>
 {
   const mock = createStorageMock(
   {
@@ -357,41 +315,36 @@ test('未来参数 Schema 版本拒绝写回并保留原始记录', async () =>
   const state = await loadStorageState(mock.chromeApi);
 
   assert.equal(mock.setCalls.sync.length, 0);
-  assert.equal(mock.records.sync.fxParamSchemaVersion, 99);
-  assert.equal(state.fxParamMigrationReport.committed, false);
+  // 未来版本与未知路径被丢弃，有效参数保留，版本号归一到当前。
+  assert.equal(state.settings.fxParamSchemaVersion, 2);
   assert.deepEqual(state.settings.fxParams,
   {
     'rings.radiusMin': 80,
     'shards.roundness': 0.4,
   });
-  assert.deepEqual(state.fxParamMigrationReport.rejected,
-  [{
-    path: 'fxParamSchemaVersion',
-    value: 99,
-    reason: 'unsupported-schema-version',
-  }]);
 });
 
-test('设置写入拒绝显式未来参数 Schema 版本', async () =>
+test('写入时显式未来参数 Schema 版本被归一到当前版本', async () =>
 {
   const mock = createStorageMock();
 
-  await assert.rejects(
-    writeSettingsPatch(
+  await writeSettingsPatch(
+  {
+    fxParams:
     {
-      fxParams:
-      {
-        'rings.radiusMin': 80,
-      },
-      fxParamSchemaVersion: 99,
-    }, mock.chromeApi),
-    /Schema 版本不受支持：99/,
-  );
+      'rings.radiusMin': 80,
+    },
+    fxParamSchemaVersion: 99,
+  }, mock.chromeApi);
 
-  assert.equal(mock.setCalls.sync.length, 0);
+  assert.equal(mock.records.sync.fxParamSchemaVersion, 2);
+  assert.deepEqual(mock.records.sync.fxParams,
+  {
+    'rings.radiusMin': 80,
+  });
 });
 
-test('schema v5 不改写用户自定义外观与渲染参数', async () =>
+test('存储升级不改写用户自定义外观与渲染参数', async () =>
 {
   const mock = createStorageMock(
   {
@@ -421,29 +374,28 @@ test('schema v5 不改写用户自定义外观与渲染参数', async () =>
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
-test('schema v5 同步迁移失败时不会提前推进本机版本', async () =>
+test('本机版本标记写入失败时读取失败且不推进版本', async () =>
 {
   const mock = createStorageMock(
   {
     sync:
     {
-      outputCompositing: 'transparent-overlay',
+      outputCompositing: 'browser-overlay',
       fxParamSchemaVersion: 2,
     },
     local:
     {
       storageSchemaVersion: 2,
     },
-  }, { failSetArea: 'sync' });
+  }, { failSetArea: 'local' });
 
   await assert.rejects(
     loadStorageState(mock.chromeApi),
-    /sync 写入失败/,
+    /local 写入失败/,
   );
 
-  assert.equal(mock.records.sync.outputCompositing, 'transparent-overlay');
   assert.equal(mock.records.local.storageSchemaVersion, 2);
-  assert.equal(mock.setCalls.local.length, 0);
+  assert.equal(mock.setCalls.sync.length, 0);
 });
 
 test('视觉偏好写入 sync，网站规则只写入 local', async () =>
@@ -584,36 +536,6 @@ test('高级特效参数与 Schema 版本原子写入 sync', async () =>
   }]);
 });
 
-test('显式清理只删除旧同步副本，不影响已经迁移的本机规则', async () =>
-{
-  const mock = createStorageMock(
-  {
-    sync:
-    {
-      disabledSites:
-      {
-        'https://example.com': true,
-      },
-    },
-    local:
-    {
-      disabledSites:
-      {
-        'https://example.com': true,
-      },
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
-    },
-  });
-
-  await removeLegacyDisabledSites(mock.chromeApi);
-
-  assert.equal(Object.hasOwn(mock.records.sync, 'disabledSites'), false);
-  assert.deepEqual(mock.records.local.disabledSites,
-  {
-    'https://example.com': true,
-  });
-});
-
 test('500 条本机规则可读取，sync 与 local 变更分别应用', async () =>
 {
   const disabledSites = Object.fromEntries(
@@ -689,7 +611,7 @@ test('旧 quality 记录与增量事件均被忽略', async () =>
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
-test('未来参数 Schema 的增量事件不会覆盖当前设置', () =>
+test('参数增量事件统一按当前 Schema 归一化', () =>
 {
   const current = normalizeSettings(
   {
@@ -706,78 +628,17 @@ test('未来参数 Schema 的增量事件不会覆盖当前设置', () =>
       {
         'rings.radiusMin': 90,
         'shards.roundness': 0.5,
-      },
-    },
-    fxParamSchemaVersion: { newValue: 99 },
-  }, 'sync');
-
-  assert.equal(changed, current);
-
-  const versionOnly = applyStorageChanges(current,
-  {
-    fxParamSchemaVersion: { newValue: 99 },
-  }, 'sync');
-
-  assert.equal(versionOnly, current);
-});
-
-test('参数增量事件只在可证明为旧 Schema 时迁移', () =>
-{
-  const current = normalizeSettings(
-  {
-    fxParams: {},
-    fxParamSchemaVersion: 2,
-  });
-  const ambiguous = applyStorageChanges(current,
-  {
-    fxParams:
-    {
-      newValue:
-      {
-        'bloom.trailEmissionAlpha': 0.5,
-      },
-    },
-  }, 'sync');
-  const legacyByScatter = applyStorageChanges(current,
-  {
-    fxParams:
-    {
-      newValue:
-      {
         'bloom.scatter': 0.35,
-        'bloom.trailEmissionAlpha': 0.5,
       },
     },
-  }, 'sync');
-  const legacyByMetadata = applyStorageChanges(current,
-  {
-    fxParams:
-    {
-      newValue:
-      {
-        rootDurationMs: 1500,
-        'bloom.trailEmissionAlpha': 0.5,
-      },
-    },
-  }, 'sync');
-  const explicitLegacy = applyStorageChanges(current,
-  {
-    fxParams:
-    {
-      newValue:
-      {
-        'bloom.trailEmissionAlpha': 0.5,
-      },
-    },
-    fxParamSchemaVersion: { newValue: 0 },
+    fxParamSchemaVersion: { newValue: 99 },
   }, 'sync');
 
-  assert.deepEqual(ambiguous.fxParams,
+  // scatter 非法被丢弃；有效路径应用；未来版本号归一到当前。
+  assert.deepEqual(changed.fxParams,
   {
-    'bloom.trailEmissionAlpha': 0.5,
+    'rings.radiusMin': 90,
+    'shards.roundness': 0.5,
   });
-  assert.equal(legacyByScatter.fxParams['bloom.diffusion'], 7);
-  assert.equal(legacyByScatter.fxParams['bloom.trailAlpha'], 0.09);
-  assert.equal(legacyByMetadata.fxParams['bloom.trailAlpha'], 0.09);
-  assert.equal(explicitLegacy.fxParams['bloom.trailAlpha'], 0.09);
+  assert.equal(changed.fxParamSchemaVersion, 2);
 });

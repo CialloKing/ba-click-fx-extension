@@ -8,10 +8,8 @@ import {
 import {
   FX_CONTROL_DEFINITIONS,
   FX_CONTROL_GROUPS,
-  expandFxParams,
   flattenFxParams,
   getFxParamDefault,
-  mergeFxParams,
   normalizeFxParams,
   prepareFxParams,
 } from '../src/shared/fx-settings.js';
@@ -98,11 +96,9 @@ test('参数校验使用硬边界且不会按推荐滑块步长量化', () =>
   {
     'rings.radiusMin': 2000,
   });
-  assert.deepEqual(mergeFxParams(
+  assert.deepEqual(normalizeFxParams(
   {
     'rings.radiusMin': 80,
-  },
-  {
     'rings.radiusMax': 90,
   }),
   {
@@ -111,37 +107,28 @@ test('参数校验使用硬边界且不会按推荐滑块步长量化', () =>
   });
 });
 
-test('Schema 0 参数迁移旧 Scatter、拖尾联动和废弃元数据', () =>
+test('旧 Schema 路径不再迁移，直接按未知路径拒绝', () =>
 {
   const result = prepareFxParams(
   {
     'bloom.scatter': 0.35,
     'bloom.trailEmissionAlpha': 0.5,
     rootDurationMs: 1500,
-  },
-  {
-    schemaVersion: 0,
   });
 
-  assert.equal(result.committed, true);
+  // trailEmissionAlpha 仍是有效路径被保留，但不再自动联动计算 trailAlpha。
   assert.deepEqual(result.params,
   {
-    'bloom.diffusion': 7,
     'bloom.trailEmissionAlpha': 0.5,
-    'bloom.trailAlpha': 0.09,
   });
-  assert.equal(result.normalized.some(({ reason }) => reason === 'renamed'), true);
-  assert.deepEqual(result.rejected,
-  [{
-    path: 'rootDurationMs',
-    value: 1500,
-    reason: 'deprecated-path',
-  }]);
+  const rejectedPaths = result.rejected.map(({ path }) => path);
+  assert.equal(rejectedPaths.includes('bloom.scatter'), true);
+  assert.equal(rejectedPaths.includes('rootDurationMs'), true);
 });
 
 test('当前 Schema 不再隐式联动两个拖尾 Alpha 参数', () =>
 {
-  assert.deepEqual(expandFxParams(
+  assert.deepEqual(normalizeFxParams(
   {
     'bloom.trailEmissionAlpha': 0.5,
   }),

@@ -489,14 +489,9 @@ const handleMotionPreferenceChange = () =>
   }
 };
 
-if (typeof reducedMotionQuery?.addEventListener === 'function')
+if (reducedMotionQuery)
 {
   reducedMotionQuery.addEventListener('change', handleMotionPreferenceChange);
-}
-else if (typeof reducedMotionQuery?.addListener === 'function')
-{
-  // Chrome 102 之前的兼容 API 仍可能出现在部分 Chromium 分支中。
-  reducedMotionQuery.addListener(handleMotionPreferenceChange);
 }
 
 readSettings()
