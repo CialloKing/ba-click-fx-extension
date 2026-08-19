@@ -18,37 +18,26 @@ export const RENDER_MODE_PROFILES = Object.freeze(
   'full-webgpu': Object.freeze(
   {
     effectBackend: 'webgpu',
-    renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   }),
   'full-webgl2': Object.freeze(
   {
     effectBackend: 'webgl2',
-    renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   }),
   'software-bloom': Object.freeze(
   {
     effectBackend: 'canvas2d',
-    renderingMode: 'enhanced',
     bloomBackend: 'software',
   }),
   'webgl2-bloom': Object.freeze(
   {
     effectBackend: 'canvas2d',
-    renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   }),
   'native-bloom': Object.freeze(
   {
     effectBackend: 'canvas2d',
-    renderingMode: 'enhanced',
-    bloomBackend: 'native',
-  }),
-  legacy: Object.freeze(
-  {
-    effectBackend: 'canvas2d',
-    renderingMode: 'legacy',
     bloomBackend: 'native',
   }),
 });
@@ -126,7 +115,7 @@ export const APPEARANCE_PRESETS = Object.freeze(
     color: '#8edcff',
     opacity: 0.35,
     scale: 0.9,
-    renderMode: 'legacy',
+    renderMode: 'native-bloom',
     maxDpr: 1,
   }),
   performance: Object.freeze(
@@ -134,7 +123,7 @@ export const APPEARANCE_PRESETS = Object.freeze(
     color: DEFAULT_THEME_COLOR,
     opacity: 0.45,
     scale: 1,
-    renderMode: 'legacy',
+    renderMode: 'native-bloom',
     maxDpr: 1,
   }),
 });

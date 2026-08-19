@@ -236,7 +236,6 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
       themeColor: '#4ca7ff',
       trailAlways: true,
       effectBackend: 'canvas2d',
-      renderingMode: 'enhanced',
       bloomBackend: 'webgl2',
       maxDpr: 1,
     });
@@ -246,9 +245,7 @@ test('npm 核心包可在插件专属 Canvas 上实例化并销毁', () =>
     assert.equal(config.trailAlways, true);
     assert.equal(config.themeColor, '#4ca7ff');
     assert.equal(config.effectBackend, 'canvas2d');
-    assert.equal(config.renderingMode, 'enhanced');
     assert.equal(config.bloomBackend, 'webgl2');
-    assert.equal(config.softwareBloomEnabled, false);
     // 当前核心只在显式请求时使用 Software Bloom，GPU 不可用时回退原生辉光。
     assert.equal(config.resolvedBloomBackend, 'native');
     assert.equal(config.maxDpr, 1);
@@ -418,7 +415,7 @@ test('公开事件路径下关闭拖尾会跳过移动输入且保留点击', ()
   }
 });
 
-test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应用', () =>
+test('完整设置可按重置、后端和稀疏覆盖的顺序实时应用', () =>
 {
   const environment = installDomMock();
   const effect = new BAClickFX({ target: new MockHTMLElement() });
@@ -435,24 +432,19 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
 
     effect.updateConfig(
     {
-      renderingMode: 'legacy',
       bloomBackend: 'native',
       maxDpr: 1,
     });
-    const legacyResult = effect.setFxParams(fxParams,
+    const nativeResult = effect.setFxParams(fxParams,
     {
       reset: true,
       strict: true,
       schemaVersion: FX_PARAM_SCHEMA_VERSION,
     });
 
-    assert.equal(legacyResult.committed, true);
-    assert.equal(effect.getConfig().renderingMode, 'legacy');
+    assert.equal(nativeResult.committed, true);
     assert.equal(effect.getConfig().maxDpr, 1);
     assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);
-    // 未覆盖参数必须恢复上游公开的 Legacy 模式基线。
-    assert.equal(effect.getFxConfig().rings.widthStart, 1);
-    assert.equal(effect.getFxConfig().trail.width, 4);
     assert.equal(effect.getFxConfig().bloom.trailEmissionAlpha, 0.5);
     assert.equal(effect.getFxConfig().bloom.trailAlpha, 0.09);
     assert.equal(effect.getFxConfig().hit.enabled, true);
@@ -461,7 +453,6 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
 
     effect.updateConfig(
     {
-      renderingMode: 'enhanced',
       bloomBackend: 'webgl2',
       maxDpr: 2,
     });
@@ -473,7 +464,6 @@ test('完整设置可按重置、渲染模式和稀疏覆盖的顺序实时应�
     });
 
     assert.equal(enhancedResult.committed, true);
-    assert.equal(effect.getConfig().renderingMode, 'enhanced');
     assert.equal(effect.getConfig().bloomBackend, 'webgl2');
     assert.equal(effect.getConfig().maxDpr, 2);
     assert.equal(effect.getFxConfig().rings.hdrIntensity, 7);

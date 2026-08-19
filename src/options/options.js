@@ -328,7 +328,7 @@ function buildFxControls()
 
 function renderFxControls()
 {
-  const values = flattenFxParams(settings.fxParams, settings.renderMode);
+  const values = flattenFxParams(settings.fxParams);
 
   for (const [path, control] of fxControls)
   {
@@ -690,7 +690,7 @@ function bindEvents()
       : Number(input.value);
     const path = input.dataset.fxPath;
     const fxParams = { ...settings.fxParams };
-    const baseline = getDefaultFxParam(path, settings.renderMode);
+    const baseline = getDefaultFxParam(path);
 
     if (Object.is(value, baseline))
     {
