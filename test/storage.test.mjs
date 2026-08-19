@@ -9,7 +9,6 @@ import {
 } from '../src/shared/storage.js';
 import {
   DEFAULT_SETTINGS,
-  STORAGE_SCHEMA_VERSION,
   normalizeSettings,
 } from '../src/shared/settings.js';
 
@@ -186,7 +185,6 @@ test('旧同步站点规则被忽略，只使用本机规则', async () =>
       {
         'https://local.example': true,
       },
-      storageSchemaVersion: 1,
     },
   });
 
@@ -197,8 +195,8 @@ test('旧同步站点规则被忽略，只使用本机规则', async () =>
     'https://local.example': true,
   });
   assert.equal(state.settings.color, '#8edcff');
-  // 破坏性版本不做合并；版本标记一次性提升到当前值。
-  assert.equal(mock.records.local.storageSchemaVersion, STORAGE_SCHEMA_VERSION);
+  // 破坏性版本不做合并，也不写入版本标记。
+  assert.equal(mock.setCalls.local.length, 0);
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
@@ -211,11 +209,6 @@ test('读取时忽略旧 quality 并保留显式渲染配置', async () =>
       quality: 'balanced',
       renderMode: 'native-bloom',
       maxDpr: 2,
-      fxParamSchemaVersion: 2,
-    },
-    local:
-    {
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
     },
   });
 
@@ -243,10 +236,6 @@ test('旧 Schema 参数路径加载时直接丢弃，不再迁移写回', async 
         rootDurationMs: 1500,
       },
     },
-    local:
-    {
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
-    },
   });
 
   const state = await loadStorageState(mock.chromeApi);
@@ -256,7 +245,6 @@ test('旧 Schema 参数路径加载时直接丢弃，不再迁移写回', async 
   {
     'bloom.trailEmissionAlpha': 0.5,
   });
-  assert.equal(state.settings.fxParamSchemaVersion, 2);
   // 破坏性版本不做迁移写回。
   assert.equal(mock.setCalls.sync.length, 0);
 });
@@ -272,11 +260,6 @@ test('已保存的有效参数原样读取，不再补齐圆角或写回', async
         'rings.radiusMin': 80,
         'bloom.trailAlpha': 0.18,
       },
-      fxParamSchemaVersion: 1,
-    },
-    local:
-    {
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
     },
   });
 
@@ -287,12 +270,11 @@ test('已保存的有效参数原样读取，不再补齐圆角或写回', async
     'rings.radiusMin': 80,
     'bloom.trailAlpha': 0.18,
   });
-  assert.equal(state.settings.fxParamSchemaVersion, 2);
   // 破坏性版本不迁移、不写回。
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
-test('存储的未来 Schema 版本被忽略，仅保留当前有效参数', async () =>
+test('旧参数 Schema 版本键被忽略，仅保留当前有效参数', async () =>
 {
   const mock = createStorageMock(
   {
@@ -306,17 +288,13 @@ test('存储的未来 Schema 版本被忽略，仅保留当前有效参数', asy
       },
       fxParamSchemaVersion: 99,
     },
-    local:
-    {
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
-    },
   });
 
   const state = await loadStorageState(mock.chromeApi);
 
   assert.equal(mock.setCalls.sync.length, 0);
-  // 未来版本与未知路径被丢弃，有效参数保留，版本号归一到当前。
-  assert.equal(state.settings.fxParamSchemaVersion, 2);
+  // 旧版本键与未知路径均被丢弃，有效参数保留。
+  assert.equal(Object.hasOwn(state.settings, 'fxParamSchemaVersion'), false);
   assert.deepEqual(state.settings.fxParams,
   {
     'rings.radiusMin': 80,
@@ -324,7 +302,7 @@ test('存储的未来 Schema 版本被忽略，仅保留当前有效参数', asy
   });
 });
 
-test('写入时显式未来参数 Schema 版本被归一到当前版本', async () =>
+test('写入高级参数时不再持久化 Schema 版本键', async () =>
 {
   const mock = createStorageMock();
 
@@ -337,7 +315,7 @@ test('写入时显式未来参数 Schema 版本被归一到当前版本', async 
     fxParamSchemaVersion: 99,
   }, mock.chromeApi);
 
-  assert.equal(mock.records.sync.fxParamSchemaVersion, 2);
+  assert.equal(Object.hasOwn(mock.records.sync, 'fxParamSchemaVersion'), false);
   assert.deepEqual(mock.records.sync.fxParams,
   {
     'rings.radiusMin': 80,
@@ -356,11 +334,6 @@ test('存储升级不改写用户自定义外观与渲染参数', async () =>
       scale: 1.1,
       renderMode: 'software-bloom',
       maxDpr: 1,
-      fxParamSchemaVersion: 2,
-    },
-    local:
-    {
-      storageSchemaVersion: 2,
     },
   });
 
@@ -371,30 +344,6 @@ test('存储升级不改写用户自定义外观与渲染参数', async () =>
   assert.equal(state.settings.renderMode, 'software-bloom');
   assert.equal(state.settings.maxDpr, 1);
   assert.equal(state.settings.preset, 'custom');
-  assert.equal(mock.setCalls.sync.length, 0);
-});
-
-test('本机版本标记写入失败时读取失败且不推进版本', async () =>
-{
-  const mock = createStorageMock(
-  {
-    sync:
-    {
-      outputCompositing: 'browser-overlay',
-      fxParamSchemaVersion: 2,
-    },
-    local:
-    {
-      storageSchemaVersion: 2,
-    },
-  }, { failSetArea: 'local' });
-
-  await assert.rejects(
-    loadStorageState(mock.chromeApi),
-    /local 写入失败/,
-  );
-
-  assert.equal(mock.records.local.storageSchemaVersion, 2);
   assert.equal(mock.setCalls.sync.length, 0);
 });
 
@@ -474,7 +423,7 @@ test('WebGPU HDR 展示设置原子写入并使用核心有效范围', async () 
   assert.equal(state.settings.webgpuHdrWhiteEnd, 6.01);
 });
 
-test('自定义渲染组合将模式、DPR 与预设状态原子写入 sync', async () =>
+test('自定义渲染组合只写入模式与 DPR，不持久化派生预设', async () =>
 {
   const mock = createStorageMock();
 
@@ -489,11 +438,10 @@ test('自定义渲染组合将模式、DPR 与预设状态原子写入 sync', as
   [{
     renderMode: 'software-bloom',
     maxDpr: 3,
-    preset: 'custom',
   }]);
 });
 
-test('高级特效参数与 Schema 版本原子写入 sync', async () =>
+test('高级特效参数原子写入 sync 且不保存 Schema 版本', async () =>
 {
   const mock = createStorageMock();
 
@@ -524,7 +472,7 @@ test('高级特效参数与 Schema 版本原子写入 sync', async () =>
     'rings.radiusMin': 80,
     'hit.enabled': true,
   });
-  assert.equal(mock.records.sync.fxParamSchemaVersion, 2);
+  assert.equal(Object.hasOwn(mock.records.sync, 'fxParamSchemaVersion'), false);
   assert.deepEqual(mock.setCalls.sync,
   [{
     fxParams:
@@ -532,7 +480,6 @@ test('高级特效参数与 Schema 版本原子写入 sync', async () =>
       'rings.radiusMin': 80,
       'hit.enabled': true,
     },
-    fxParamSchemaVersion: 2,
   }]);
 });
 
@@ -546,7 +493,6 @@ test('500 条本机规则可读取，sync 与 local 变更分别应用', async (
     local:
     {
       disabledSites,
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
     },
   });
   const state = await loadStorageState(mock.chromeApi);
@@ -585,11 +531,6 @@ test('旧 quality 记录与增量事件均被忽略', async () =>
     sync:
     {
       quality: 'balanced',
-      fxParamSchemaVersion: 2,
-    },
-    local:
-    {
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
     },
   });
   const changes =
@@ -634,11 +575,11 @@ test('参数增量事件统一按当前 Schema 归一化', () =>
     fxParamSchemaVersion: { newValue: 99 },
   }, 'sync');
 
-  // scatter 非法被丢弃；有效路径应用；未来版本号归一到当前。
+  // scatter 非法被丢弃；有效路径应用；旧版本键被忽略。
   assert.deepEqual(changed.fxParams,
   {
     'rings.radiusMin': 90,
     'shards.roundness': 0.5,
   });
-  assert.equal(changed.fxParamSchemaVersion, 2);
+  assert.equal(Object.hasOwn(changed, 'fxParamSchemaVersion'), false);
 });

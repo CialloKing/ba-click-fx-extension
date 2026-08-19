@@ -9,7 +9,6 @@ import {
   normalizeFxParams,
 } from './fx-settings.js';
 
-export const STORAGE_SCHEMA_VERSION = 6;
 const MIN_TIME_SCALE = 0.01;
 
 export const RENDER_MODE_PROFILES = Object.freeze(
@@ -60,7 +59,6 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   webgpuHdrWhiteStart: 1,
   webgpuHdrWhiteEnd: 5,
   fxParams: Object.freeze({}),
-  fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
   clickTimeScale: 1,
   trailTimeScale: 1,
   // 扩展面对的是无法逐像素采样的任意网页；DOM Add 用 Screen 在亮底上收敛增量。
@@ -73,13 +71,11 @@ export const DEFAULT_SYNC_SETTINGS = Object.freeze(
   lightBackgroundContrastAlpha: 0,
   languageMode: 'system',
   motionMode: 'system',
-  preset: 'classic',
 });
 
 export const DEFAULT_LOCAL_SETTINGS = Object.freeze(
 {
   disabledSites: Object.freeze({}),
-  storageSchemaVersion: STORAGE_SCHEMA_VERSION,
 });
 
 export const DEFAULT_SETTINGS = Object.freeze(
@@ -364,7 +360,6 @@ export function normalizeSettings(value = {})
     maxDpr,
     ...normalizeWebGPUHdrSettings(source),
     fxParams: normalizeFxParams(source.fxParams),
-    fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
     clickTimeScale: clamp(
       source.clickTimeScale,
       MIN_TIME_SCALE,

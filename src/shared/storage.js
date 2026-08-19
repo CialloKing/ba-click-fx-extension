@@ -2,13 +2,11 @@
   DEFAULT_LOCAL_SETTINGS,
   DEFAULT_SETTINGS,
   LOCAL_SETTING_KEYS,
-  STORAGE_SCHEMA_VERSION,
   SYNC_SETTING_KEYS,
   normalizeDisabledSites,
   normalizeSettings,
 } from './settings.js';
 import {
-  FX_PARAM_SCHEMA_VERSION,
   prepareFxParams,
 } from './fx-settings.js';
 
@@ -74,17 +72,8 @@ export async function loadStorageState(chromeApi = globalThis.chrome)
 {
   const [syncValues, localValues] = await Promise.all([
     storageGet(chromeApi, 'sync', SYNC_SETTING_KEYS),
-    storageGet(chromeApi, 'local', [...LOCAL_SETTING_KEYS, 'storageSchemaVersion']),
+    storageGet(chromeApi, 'local', LOCAL_SETTING_KEYS),
   ]);
-
-  // 版本标记只作为未来迁移的基线；破坏性版本不做任何数据迁移。
-  if (Number(localValues?.storageSchemaVersion) !== STORAGE_SCHEMA_VERSION)
-  {
-    await storageSet(chromeApi, 'local',
-    {
-      storageSchemaVersion: STORAGE_SCHEMA_VERSION,
-    });
-  }
 
   return {
     settings: normalizeSettings(
@@ -92,7 +81,6 @@ export async function loadStorageState(chromeApi = globalThis.chrome)
       ...(syncValues || {}),
       disabledSites: normalizeDisabledSites(localValues?.disabledSites),
     }),
-    storageSchemaVersion: STORAGE_SCHEMA_VERSION,
   };
 }
 
@@ -127,7 +115,6 @@ export async function writeSettingsPatch(patch, chromeApi = globalThis.chrome)
     {
       ...expandedPatch,
       fxParams: result.params,
-      fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
     };
   }
 
