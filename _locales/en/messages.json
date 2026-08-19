@@ -284,25 +284,9 @@
   {
     "message": "Remove"
   },
-  "legacyRulesTitle":
-  {
-    "message": "Legacy sync rules were migrated safely"
-  },
-  "legacyRulesDescription":
-  {
-    "message": "Local rules are ready. After other devices update, you may delete the legacy synced copy."
-  },
-  "removeLegacyRules":
-  {
-    "message": "Delete legacy sync copy"
-  },
   "confirmClearSiteRules":
   {
     "message": "Clear every local website rule?"
-  },
-  "confirmRemoveLegacyRules":
-  {
-    "message": "Have your other devices updated, and should the legacy synced website-rule copy be deleted?"
   },
   "statusPresetApplied":
   {
@@ -319,10 +303,6 @@
   "statusSiteRulesCleared":
   {
     "message": "Local website rules cleared"
-  },
-  "statusLegacyRulesRemoved":
-  {
-    "message": "Legacy sync copy deleted"
   },
   "aboutTitle":
   {

@@ -449,38 +449,6 @@ button:disabled
   text-align: center;
 }
 
-.legacy-card
-{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 16px;
-  padding: 14px;
-  border: 1px solid rgba(255, 205, 111, 0.2);
-  border-radius: 12px;
-  background: rgba(94, 70, 24, 0.2);
-}
-
-.legacy-card[hidden]
-{
-  display: none;
-}
-
-.legacy-card strong
-{
-  color: #ffe1a3;
-  font-size: 12px;
-}
-
-.legacy-card p
-{
-  margin: 4px 0 0;
-  color: #a89775;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
 .about-section
 {
   display: flex;
@@ -562,8 +530,7 @@ a:hover
   }
 
   .section-heading,
-  .about-section,
-  .legacy-card
+  .about-section
   {
     align-items: stretch;
     flex-direction: column;

@@ -4,6 +4,16 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-08-20
+
+### Changed
+
+- Breaking: removed all backward-compatibility migrations now that the install base is small. Storage schema advances to version 6 as a clean baseline; existing records are read through the current schema without migration.
+- Removed the legacy synced `disabledSites` merge and its settings-page cleanup card, along with the related localization strings. Only local site rules are read.
+- Removed the effect-parameter schema 0/1 migrations; saved parameters on retired paths (for example `bloom.scatter`, `rootDurationMs`) are dropped instead of being rewritten, and incoming future schema versions are normalized to the current one.
+- Removed the compositing-contract backfill migration and the `transparent-overlay` compatibility branch; unrecognized values fall back to defaults.
+- Removed the deprecated `MediaQueryList.addListener` fallback and dead code (`expandFxParams`, `mergeFxParams`), shrinking the bundled content script.
+
 ## [1.2.0] - 2026-08-20
 
 ### Changed

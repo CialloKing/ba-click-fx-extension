@@ -9,8 +9,7 @@ import {
   normalizeFxParams,
 } from './fx-settings.js';
 
-export const STORAGE_SCHEMA_VERSION = 5;
-export const LEGACY_DISABLED_SITES_KEY = 'disabledSites';
+export const STORAGE_SCHEMA_VERSION = 6;
 const MIN_TIME_SCALE = 0.01;
 
 export const RENDER_MODE_PROFILES = Object.freeze(
@@ -156,7 +155,6 @@ const MOTION_MODES = new Set(['system', 'full', 'reduced']);
 const OUTPUT_COMPOSITING_MODES = new Set(['scene', 'browser-overlay']);
 const OVERLAY_ALPHA_POLICIES = new Set(['coverage', 'visual-max']);
 const OVERLAY_COLOR_COMPENSATIONS = new Set(['none', 'bright-core']);
-// 核心 v1.2.19 提供 screen；保留它可避免有效的同步设置被降级为默认混合模式。
 const HOST_COMPOSITING_MODES = new Set([
   'source-over',
   'screen',
@@ -175,20 +173,6 @@ function clamp(value, min, max, fallback)
   }
 
   return Math.max(min, Math.min(max, number));
-}
-
-function getFxParamSchemaVersion(value)
-{
-  const version = Number(value);
-
-  if (!Number.isInteger(version) || version < 0)
-  {
-    return 0;
-  }
-
-  // 存储层会拒绝把未来版本写回；运行时仍可安全使用当前核心认识的
-  // 参数，避免一次跨设备同步让整套特效退回空配置。
-  return Math.min(version, FX_PARAM_SCHEMA_VERSION);
 }
 
 function normalizeWebGPUHdrSettings(source)
@@ -240,11 +224,9 @@ function normalizeWebGPUHdrSettings(source)
 function normalizeCompositingSettings(source)
 {
   return {
-    outputCompositing: source.outputCompositing === 'transparent-overlay'
-      ? 'browser-overlay'
-      : OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
-        ? source.outputCompositing
-        : DEFAULT_SETTINGS.outputCompositing,
+    outputCompositing: OUTPUT_COMPOSITING_MODES.has(source.outputCompositing)
+      ? source.outputCompositing
+      : DEFAULT_SETTINGS.outputCompositing,
     overlayAlphaPolicy: OVERLAY_ALPHA_POLICIES.has(source.overlayAlphaPolicy)
       ? source.overlayAlphaPolicy
       : DEFAULT_SETTINGS.overlayAlphaPolicy,
@@ -298,50 +280,6 @@ export function getAppearancePresetPatch(name)
   };
 }
 
-export function getSettingsMigrationPatch(value)
-{
-  const source = value && typeof value === 'object' ? value : {};
-  const compositingPatch = {};
-  const hasCompositingContract = [
-    'outputCompositing',
-    'overlayAlphaPolicy',
-    'overlayColorCompensation',
-    'overlayAlphaLimit',
-    'hostCompositing',
-  ].some((key) => Object.hasOwn(source, key));
-
-  // 1.2.17 将透明覆盖层拆成独立合同；旧值只在读取迁移时转换，
-  // 避免后续同步设备继续写回已删除的 transparent-overlay 名称。
-  if (hasCompositingContract && source.outputCompositing === 'transparent-overlay')
-  {
-    compositingPatch.outputCompositing = 'browser-overlay';
-  }
-  else if (hasCompositingContract && !Object.hasOwn(source, 'outputCompositing'))
-  {
-    compositingPatch.outputCompositing = DEFAULT_SETTINGS.outputCompositing;
-  }
-
-  if (hasCompositingContract)
-  {
-    for (const [key, fallback] of [
-      ['overlayAlphaPolicy', DEFAULT_SETTINGS.overlayAlphaPolicy],
-      ['overlayColorCompensation', DEFAULT_SETTINGS.overlayColorCompensation],
-      ['overlayAlphaLimit', DEFAULT_SETTINGS.overlayAlphaLimit],
-      ['hostCompositing', DEFAULT_SETTINGS.hostCompositing],
-    ])
-    {
-      if (!Object.hasOwn(source, key))
-      {
-        compositingPatch[key] = fallback;
-      }
-    }
-  }
-
-  return {
-    ...compositingPatch,
-  };
-}
-
 export function normalizeDisabledSites(value)
 {
   const sites = {};
@@ -368,11 +306,6 @@ export function normalizeDisabledSites(value)
   return sites;
 }
 
-export function mergeDisabledSites(...values)
-{
-  return normalizeDisabledSites(Object.assign({}, ...values));
-}
-
 export function detectAppearancePreset(value)
 {
   for (const name of Object.keys(APPEARANCE_PRESETS))
@@ -392,8 +325,7 @@ export function detectAppearancePreset(value)
 
 export function normalizeSettings(value = {})
 {
-  const original = value && typeof value === 'object' ? value : {};
-  const source = { ...original, ...getSettingsMigrationPatch(original) };
+  const source = value && typeof value === 'object' ? value : {};
   const color = typeof source.color === 'string' && HEX_COLOR_PATTERN.test(source.color)
     ? source.color.toLowerCase()
     : DEFAULT_SETTINGS.color;
@@ -431,12 +363,7 @@ export function normalizeSettings(value = {})
     renderMode,
     maxDpr,
     ...normalizeWebGPUHdrSettings(source),
-    fxParams: normalizeFxParams(source.fxParams,
-    {
-      // 让核心按持久化记录的原始版本逐段迁移；未来版本会被拒绝，
-      // 不把未知参数静默当成当前版本写回。
-      schemaVersion: getFxParamSchemaVersion(source.fxParamSchemaVersion),
-    }),
+    fxParams: normalizeFxParams(source.fxParams),
     fxParamSchemaVersion: FX_PARAM_SCHEMA_VERSION,
     clickTimeScale: clamp(
       source.clickTimeScale,

@@ -284,25 +284,9 @@
   {
     "message": "移除"
   },
-  "legacyRulesTitle":
-  {
-    "message": "旧版同步规则已安全迁移"
-  },
-  "legacyRulesDescription":
-  {
-    "message": "本机规则已可使用；确认其他设备完成升级后，可删除旧同步副本。"
-  },
-  "removeLegacyRules":
-  {
-    "message": "删除旧同步副本"
-  },
   "confirmClearSiteRules":
   {
     "message": "确定清空全部本机网站规则吗？"
-  },
-  "confirmRemoveLegacyRules":
-  {
-    "message": "确认其他设备已完成升级，并删除旧版同步站点规则副本吗？"
   },
   "statusPresetApplied":
   {
@@ -319,10 +303,6 @@
   "statusSiteRulesCleared":
   {
     "message": "本机网站规则已清空"
-  },
-  "statusLegacyRulesRemoved":
-  {
-    "message": "旧同步副本已删除"
   },
   "aboutTitle":
   {

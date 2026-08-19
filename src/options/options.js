@@ -19,7 +19,6 @@ import {
   applyStorageChanges,
   createSettingsWriteQueue,
   loadStorageState,
-  removeLegacyDisabledSites,
 } from '../shared/storage.js';
 
 const CLICK_GROUP_NAMES = new Set([
@@ -95,8 +94,6 @@ const elements =
   siteList: document.querySelector('#site-list'),
   emptySites: document.querySelector('#empty-sites'),
   clearSites: document.querySelector('#clear-sites'),
-  legacyCard: document.querySelector('#legacy-card'),
-  removeLegacy: document.querySelector('#remove-legacy'),
   version: document.querySelector('#version'),
   status: document.querySelector('#status'),
 };
@@ -115,7 +112,6 @@ const WEBGPU_HDR_THRESHOLD_KEYS = new Set([
 ]);
 
 let settings = DEFAULT_SETTINGS;
-let hasLegacyDisabledSites = false;
 let i18n = createI18n(settings.languageMode);
 let statusTimer = 0;
 let updateRevision = 0;
@@ -396,7 +392,6 @@ function renderSites()
   elements.siteCount.textContent = String(sites.length);
   elements.emptySites.hidden = visibleSites.length > 0;
   elements.clearSites.disabled = sites.length === 0;
-  elements.legacyCard.hidden = !hasLegacyDisabledSites;
 }
 
 function render()
@@ -757,26 +752,6 @@ function bindEvents()
 
     void savePatch({ disabledSites: {} }, 'statusSiteRulesCleared');
   });
-
-  elements.removeLegacy.addEventListener('click', async () =>
-  {
-    if (!window.confirm(i18n.getMessage('confirmRemoveLegacyRules')))
-    {
-      return;
-    }
-
-    try
-    {
-      await removeLegacyDisabledSites();
-      hasLegacyDisabledSites = false;
-      renderSites();
-      showStatus('statusLegacyRulesRemoved', 'success');
-    }
-    catch (error)
-    {
-      showStatus('statusSaveFailed', 'error', [error.message]);
-    }
-  });
 }
 
 function bindStorageChanges()
@@ -821,7 +796,6 @@ async function initialize()
     const state = await loadStorageState();
 
     settings = state.settings;
-    hasLegacyDisabledSites = state.hasLegacyDisabledSites;
     localize();
     render();
   }
