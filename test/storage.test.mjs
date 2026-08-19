@@ -401,7 +401,7 @@ test('schema v5 不改写用户自定义外观与渲染参数', async () =>
       color: '#69a1ff',
       opacity: 0.5,
       scale: 1.1,
-      renderMode: 'legacy',
+      renderMode: 'software-bloom',
       maxDpr: 1,
       fxParamSchemaVersion: 2,
     },
@@ -415,7 +415,7 @@ test('schema v5 不改写用户自定义外观与渲染参数', async () =>
 
   assert.equal(state.settings.opacity, 0.5);
   assert.equal(state.settings.scale, 1.1);
-  assert.equal(state.settings.renderMode, 'legacy');
+  assert.equal(state.settings.renderMode, 'software-bloom');
   assert.equal(state.settings.maxDpr, 1);
   assert.equal(state.settings.preset, 'custom');
   assert.equal(mock.setCalls.sync.length, 0);

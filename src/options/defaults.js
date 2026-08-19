@@ -14,9 +14,9 @@ export const DEFAULT_EFFECT_SETTINGS = Object.freeze(
     !NON_EFFECT_SETTING_KEYS.has(key))),
 );
 
-export function getDefaultFxParam(path, renderMode = DEFAULT_SETTINGS.renderMode)
+export function getDefaultFxParam(path)
 {
-  return flattenFxParams(DEFAULT_EFFECT_SETTINGS.fxParams, renderMode)[path];
+  return flattenFxParams(DEFAULT_EFFECT_SETTINGS.fxParams)[path];
 }
 
 export function getCompositingControlState(value = DEFAULT_SETTINGS)

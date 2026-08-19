@@ -4,6 +4,15 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-20
+
+### Changed
+
+- Upgraded `ba-click-fx` from `1.2.29` to `1.3.1`.
+- Removed the Legacy rendering mode profile and its options-page entry, following upstream's removal of Legacy rendering. Saved `renderMode` values of `legacy` now fall back to the default `full-webgl2`; the Soft and Power-saving appearance presets use `native-bloom`, which keeps the Canvas2D + native glow backend combination.
+- Effect-parameter defaults are now single-valued per parameter; the per-mode default machinery was removed along with upstream's mode defaults.
+- Theme color mapping follows the new upstream default `relative-oklch`, preserving chroma and perceived lightness instead of shifting hue only.
+
 ## [1.1.17] - 2026-08-14
 
 ### Changed

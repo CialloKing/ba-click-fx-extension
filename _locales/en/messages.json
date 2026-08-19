@@ -368,10 +368,6 @@
   {
     "message": "Native glow"
   },
-  "renderLegacy":
-  {
-    "message": "Legacy"
-  },
   "webgpuHdrSettingsTitle":
   {
     "message": "WebGPU HDR presentation"

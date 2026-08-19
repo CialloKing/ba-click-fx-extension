@@ -75,7 +75,6 @@ test('完整设置页从上游 Schema 派生全部 66 个公开参数', () =>
     unitKey: 'unitRatio',
     i18nKey: 'fxParam_shards_roundness',
     linkedParams: [],
-    modeDefaults: { enhanced: 0, legacy: 0 },
   });
 });
 
@@ -169,25 +168,22 @@ test('非严格模式报告拒绝项，严格模式整批回滚', () =>
   assert.equal(strict.rejected[0]?.reason, 'unknown-path');
 });
 
-test('模式默认值来自 Schema 且显式默认覆盖不会在切换模式时丢失', () =>
+test('默认值来自 Schema 且显式覆盖优先于默认', () =>
 {
-  const enhanced = flattenFxParams({}, 'webgl2-bloom');
-  const legacy = flattenFxParams({}, 'legacy');
+  const flattened = flattenFxParams({});
   const explicit = normalizeFxParams(
   {
     'trail.width': 2.7,
     'bloom.trailAlpha': 0.18,
   });
 
-  assert.equal(enhanced['trail.width'], 2.7);
-  assert.equal(enhanced['bloom.trailAlpha'], 0.18);
-  assert.equal(legacy['trail.width'], 4);
-  assert.equal(legacy['bloom.trailAlpha'], 0);
-  assert.equal(getFxParamDefault('trail.width', 'legacy'), 4);
+  assert.equal(flattened['trail.width'], 2.7);
+  assert.equal(flattened['bloom.trailAlpha'], 0.18);
+  assert.equal(getFxParamDefault('trail.width'), 2.7);
   assert.deepEqual(explicit,
   {
     'trail.width': 2.7,
     'bloom.trailAlpha': 0.18,
   });
-  assert.equal(flattenFxParams(explicit, 'legacy')['trail.width'], 2.7);
+  assert.equal(flattenFxParams(explicit)['trail.width'], 2.7);
 });

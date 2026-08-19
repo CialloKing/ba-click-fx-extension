@@ -192,19 +192,16 @@ test('渲染模式映射公开后端并允许自定义 DPR', () =>
   assert.deepEqual(getRenderModeProfile('software-bloom'),
   {
     effectBackend: 'canvas2d',
-    renderingMode: 'enhanced',
     bloomBackend: 'software',
   });
   assert.deepEqual(getRenderModeProfile('full-webgl2'),
   {
     effectBackend: 'webgl2',
-    renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   });
   assert.deepEqual(getRenderModeProfile('full-webgpu'),
   {
     effectBackend: 'webgpu',
-    renderingMode: 'enhanced',
     bloomBackend: 'webgl2',
   });
   assert.equal(normalizeSettings(
@@ -248,7 +245,7 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
     color: '#8edcff',
     opacity: 0.35,
     scale: 0.9,
-    renderMode: 'legacy',
+    renderMode: 'native-bloom',
     maxDpr: 1,
     preset: 'soft',
   });
@@ -291,7 +288,7 @@ test('外观预设可识别，手动外观保持自定义状态', () =>
   assert.equal(normalizeSettings(
   {
     ...getAppearancePresetPatch('classic'),
-    renderMode: 'legacy',
+    renderMode: 'native-bloom',
     maxDpr: 1,
     preset: 'classic',
   }).preset, 'custom');

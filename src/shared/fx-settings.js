@@ -40,16 +40,6 @@ function toMessageKey(prefix, value)
   return `${prefix}_${value.replace(/[^a-zA-Z0-9]+/g, '_')}`;
 }
 
-function getModeName(renderMode)
-{
-  return renderMode === 'legacy' ? 'legacy' : 'enhanced';
-}
-
-function getModeDefault(definition, renderMode)
-{
-  return definition.modeDefaults?.[getModeName(renderMode)] ?? definition.defaultValue;
-}
-
 function toPatchObject(value)
 {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -84,7 +74,6 @@ function createControlDefinition(descriptor)
     unitKey: UNIT_I18N_KEYS[descriptor.unit] || null,
     i18nKey: toMessageKey('fxParam', descriptor.path),
     linkedParams: descriptor.linkedParams,
-    modeDefaults: descriptor.modeDefaults,
   });
 }
 
@@ -194,11 +183,10 @@ export function mergeFxParams(base = {}, patch = {}, options = {})
   }, options);
 }
 
-export function flattenFxParams(value = {}, renderMode = 'enhanced')
+export function flattenFxParams(value = {})
 {
   const overrides = normalizeFxParams(value,
   {
-    renderMode,
     schemaVersion: FX_PARAM_SCHEMA_VERSION,
   });
   const flattened = {};
@@ -207,17 +195,17 @@ export function flattenFxParams(value = {}, renderMode = 'enhanced')
   {
     flattened[definition.path] = Object.hasOwn(overrides, definition.path)
       ? overrides[definition.path]
-      : getModeDefault(definition, renderMode);
+      : definition.defaultValue;
   }
 
   return flattened;
 }
 
-export function getFxParamDefault(path, renderMode = 'enhanced')
+export function getFxParamDefault(path)
 {
   const definition = FX_DEFINITION_BY_PATH.get(path);
 
-  return definition ? getModeDefault(definition, renderMode) : undefined;
+  return definition ? definition.defaultValue : undefined;
 }
 
 // 保留调用层的旧函数名；当前公开 Schema 不再声明隐式联动参数。

@@ -368,10 +368,6 @@
   {
     "message": "原生辉光"
   },
-  "renderLegacy":
-  {
-    "message": "Legacy"
-  },
   "webgpuHdrSettingsTitle":
   {
     "message": "WebGPU HDR 显示"
