@@ -4,6 +4,14 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-08-20
+
+### Changed
+
+- Breaking: removed persisted `fxParamSchemaVersion` and `storageSchemaVersion` fields. The pinned core Schema remains a compile-time contract, and old version keys are ignored without migration or write-back.
+- Stopped persisting the derived `preset` field; preset selection is reconstructed from the actual appearance, rendering, and compositing settings.
+- Removed the remaining storage reads, writes, and fixture data for those redundant compatibility markers.
+
 ## [1.2.1] - 2026-08-20
 
 ### Changed
