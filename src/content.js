@@ -10,6 +10,7 @@ import {
   getSiteKey,
   shouldReduceMotion,
 } from './shared/settings.js';
+import { FX_PARAM_SCHEMA_VERSION } from './shared/fx-settings.js';
 import { getSurfaceBlendMode } from './shared/compositing.js';
 import {
   applyStorageChanges,
@@ -161,7 +162,7 @@ function applyFxParams(settings)
   {
     reset: true,
     strict: true,
-    schemaVersion: settings.fxParamSchemaVersion,
+    schemaVersion: FX_PARAM_SCHEMA_VERSION,
   });
 
   if (!result.committed)
@@ -267,7 +268,6 @@ function applySettings(settings)
   const fxParamsMustBeApplied = Boolean(
     !appliedSettings ||
     appliedSettings.renderMode !== settings.renderMode ||
-    appliedSettings.fxParamSchemaVersion !== settings.fxParamSchemaVersion ||
     !hasSameFxParams(appliedSettings, settings),
   );
 
