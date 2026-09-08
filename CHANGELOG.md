@@ -4,6 +4,10 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded `ba-click-fx` from `1.3.1` to `1.3.2`, inheriting the Unity material-queue draw order across Canvas, WebGL2, and WebGPU backends.
+
 ## [1.2.2] - 2026-08-20
 
 ### Changed
