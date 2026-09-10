@@ -1,0 +1,75 @@
+﻿name: Star History
+
+on:
+  schedule:
+    # GitHub cron 使用 UTC，对应北京时间次日 03:17。
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: star-history
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # 只从主分支执行脚本，数据分支不承载可执行代码。
+      - name: 检出采集代码
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: source
+          persist-credentials: false
+
+      - name: 检出历史数据
+        uses: actions/checkout@v4
+        with:
+          ref: star-history
+          path: history
+          fetch-depth: 0
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: 同步历史分支
+        working-directory: history
+        run: git pull --rebase origin star-history
+
+      - name: 验证采集脚本
+        working-directory: source
+        run: npm run test:star-history
+
+      - name: 更新 Star 历史
+        working-directory: source
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/update-star-history.mjs --data-dir ../history
+
+      - name: 提交并推送历史数据
+        working-directory: history
+        shell: bash
+        run: |
+          git add -- README.md stars.csv star-history.svg
+
+          if git diff --cached --quiet
+          then
+            echo "Star history is unchanged."
+            exit 0
+          fi
+
+          record_date="$(tail -n 1 stars.csv | cut -d, -f1)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "记录 ${record_date} Star 数量"
+
+          # 推送前再次同步，遇到并发维护冲突时停止，避免覆盖历史。
+          git pull --rebase origin star-history
+          git push origin HEAD:refs/heads/star-history
