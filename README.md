@@ -91,6 +91,7 @@ npm test
 | `npm run build:firefox` | 将 Firefox 目标构建到 `dist-firefox` |
 | `npm run build:all` | 构建 Chromium 与 Firefox 两个目标 |
 | `npm test` | 构建双目标并执行单元测试、Manifest、商店资源和编码校验 |
+| `npm run test:star-history` | 单独校验 Star 历史采集、CSV 存储和 SVG 生成 |
 | `npm run lint:firefox` | 使用 `web-ext` 校验 Firefox 包且将警告视为错误 |
 | `npm run check:release -- v1.1.15` | 打包后校验标签、版本、三个 ZIP 和全部哈希 |
 | `npm run check:store` | 检查版本、商店文案、链接和全部图片尺寸 |
@@ -181,6 +182,18 @@ manifest.json           两个浏览器共用的 Manifest V3 基础清单
 ## 编码
 
 仓库内所有文本文件和构建出的文本资源统一使用 UTF-8 with BOM 与 LF 换行。PNG、ZIP 等二进制文件不具有文本编码，编码检查会按文件类型排除它们。
+
+## Star 历史
+
+本仓库在独立的 `star-history` 分支维护 Star 数量历史，并由 GitHub Actions 每天更新一次（计划于北京时间 03:17 执行）。
+
+<p align="center">
+  <a href="https://github.com/CialloKing/ba-click-fx-extension/blob/star-history/stars.csv">
+    <img src="https://raw.githubusercontent.com/CialloKing/ba-click-fx-extension/refs/heads/star-history/star-history.svg" alt="ba-click-fx-extension Star 数量历史图" width="960">
+  </a>
+</p>
+
+[查看 CSV 原始数据](https://github.com/CialloKing/ba-click-fx-extension/blob/star-history/stars.csv)。首次回溯根据当前 Star 用户的时间记录生成，无法恢复已取消的 Star；CSV 通过 `reconstructed` 和 `observed` 区分回溯重建与每日实测。漏跑日期保持缺失，不使用插值或伪造快照补齐。
 
 ## 许可证
 
