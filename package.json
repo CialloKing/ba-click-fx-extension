@@ -23,7 +23,8 @@
     "package:firefox": "npm run build:firefox && npm run lint:firefox && node scripts/package.mjs --target firefox",
     "package:firefox-source": "node scripts/package-source.mjs",
     "package:all": "npm run build:all && npm run check:encoding && npm run lint:firefox && node scripts/package.mjs --target chromium && node scripts/package.mjs --target firefox && npm run package:firefox-source && node scripts/write-checksums.mjs",
-    "test": "npm run build:all && npm run check"
+    "test": "npm run build:all && npm run check",
+    "test:star-history": "node --test test/star-history.test.mjs"
   },
   "dependencies": {
     "ba-click-fx": "1.3.2"
