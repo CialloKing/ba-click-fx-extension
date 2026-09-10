@@ -1,0 +1,27 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">CialloKing/ba-click-fx-extension Star History</title>
+  <desc id="desc">Star history through 2026-09-10.</desc>
+  <rect x="0.5" y="0.5" width="719" height="359" rx="8" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="70" y="30" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">CialloKing/ba-click-fx-extension</text>
+  <text x="70" y="61" fill="#24292f" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="26" font-weight="600">Star History</text>
+  <text x="690" y="61" text-anchor="end" fill="#24292f" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" font-weight="600">5 Stars</text>
+  <line x1="70" y1="302" x2="690" y2="302" stroke="#d8dee4" stroke-width="1"/>
+  <text x="58" y="309" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">0</text>
+  <line x1="70" y1="259.2" x2="690" y2="259.2" stroke="#d8dee4" stroke-width="1"/>
+  <text x="58" y="266.2" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">1</text>
+  <line x1="70" y1="216.4" x2="690" y2="216.4" stroke="#d8dee4" stroke-width="1"/>
+  <text x="58" y="223.4" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2</text>
+  <line x1="70" y1="173.6" x2="690" y2="173.6" stroke="#d8dee4" stroke-width="1"/>
+  <text x="58" y="180.6" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">3</text>
+  <line x1="70" y1="130.8" x2="690" y2="130.8" stroke="#d8dee4" stroke-width="1"/>
+  <text x="58" y="137.8" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">4</text>
+  <line x1="70" y1="88" x2="690" y2="88" stroke="#d8dee4" stroke-width="1"/>
+  <text x="58" y="95" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">5</text>
+  <line x1="70" y1="302" x2="690" y2="302" stroke="#8c959f" stroke-width="1"/>
+  <text x="70" y="338" text-anchor="start" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-07-12</text>
+  <text x="276.67" y="338" text-anchor="middle" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-08-01</text>
+  <text x="483.33" y="338" text-anchor="middle" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-08-21</text>
+  <text x="690" y="338" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-09-10</text>
+  <path data-series="stars" d="M 70 259.2 L 80.33 259.2 L 90.67 259.2 L 101 259.2 L 111.33 259.2 L 121.67 259.2 L 132 259.2 L 142.33 259.2 L 152.67 259.2 L 163 259.2 L 173.33 259.2 L 183.67 259.2 L 194 259.2 L 204.33 259.2 L 214.67 259.2 L 225 259.2 L 235.33 259.2 L 245.67 259.2 L 256 259.2 L 266.33 259.2 L 276.67 259.2 L 287 259.2 L 297.33 259.2 L 307.67 259.2 L 318 259.2 L 328.33 259.2 L 338.67 259.2 L 349 259.2 L 359.33 259.2 L 369.67 259.2 L 380 259.2 L 390.33 216.4 L 400.67 216.4 L 411 216.4 L 421.33 216.4 L 431.67 216.4 L 442 173.6 L 452.33 130.8 L 462.67 130.8 L 473 130.8 L 483.33 130.8 L 493.67 130.8 L 504 130.8 L 514.33 130.8 L 524.67 88 L 535 88 L 545.33 88 L 555.67 88 L 566 88 L 576.33 88 L 586.67 88 L 597 88 L 607.33 88 L 617.67 88 L 628 88 L 638.33 88 L 648.67 88 L 659 88 L 669.33 88 L 679.67 88 L 690 88" fill="none" stroke="#0969da" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+  <circle data-series="stars" cx="690" cy="88" r="4.5" fill="#0969da" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke"/>
+</svg>
