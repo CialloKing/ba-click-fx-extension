@@ -1,6 +1,6 @@
 ﻿<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
   <title id="title">CialloKing/ba-click-fx-extension Star History</title>
-  <desc id="desc">Star history through 2026-09-12.</desc>
+  <desc id="desc">Star history through 2026-09-13.</desc>
   <rect x="0.5" y="0.5" width="719" height="359" rx="8" fill="#ffffff" stroke="#d0d7de"/>
   <text x="70" y="30" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">CialloKing/ba-click-fx-extension</text>
   <text x="70" y="61" fill="#24292f" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="26" font-weight="600">Star History</text>
@@ -19,9 +19,9 @@
   <text x="58" y="95" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">5</text>
   <line x1="70" y1="302" x2="690" y2="302" stroke="#8c959f" stroke-width="1"/>
   <text x="70" y="338" text-anchor="start" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-07-12</text>
-  <text x="280" y="338" text-anchor="middle" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-08-02</text>
-  <text x="480" y="338" text-anchor="middle" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-08-22</text>
-  <text x="690" y="338" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-09-12</text>
-  <path data-series="stars" d="M 70 259.2 L 80 259.2 L 90 259.2 L 100 259.2 L 110 259.2 L 120 259.2 L 130 259.2 L 140 259.2 L 150 259.2 L 160 259.2 L 170 259.2 L 180 259.2 L 190 259.2 L 200 259.2 L 210 259.2 L 220 259.2 L 230 259.2 L 240 259.2 L 250 259.2 L 260 259.2 L 270 259.2 L 280 259.2 L 290 259.2 L 300 259.2 L 310 259.2 L 320 259.2 L 330 259.2 L 340 259.2 L 350 259.2 L 360 259.2 L 370 259.2 L 380 216.4 L 390 216.4 L 400 216.4 L 410 216.4 L 420 216.4 L 430 173.6 L 440 130.8 L 450 130.8 L 460 130.8 L 470 130.8 L 480 130.8 L 490 130.8 L 500 130.8 L 510 88 L 520 88 L 530 88 L 540 88 L 550 88 L 560 88 L 570 88 L 580 88 L 590 88 L 600 88 L 610 88 L 620 88 L 630 88 L 640 88 L 650 88 L 660 88 L 670 88 L 680 88 L 690 88" fill="none" stroke="#0969da" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+  <text x="276.67" y="338" text-anchor="middle" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-08-02</text>
+  <text x="483.33" y="338" text-anchor="middle" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-08-23</text>
+  <text x="690" y="338" text-anchor="end" fill="#57606a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20">2026-09-13</text>
+  <path data-series="stars" d="M 70 259.2 L 79.84 259.2 L 89.68 259.2 L 99.52 259.2 L 109.37 259.2 L 119.21 259.2 L 129.05 259.2 L 138.89 259.2 L 148.73 259.2 L 158.57 259.2 L 168.41 259.2 L 178.25 259.2 L 188.1 259.2 L 197.94 259.2 L 207.78 259.2 L 217.62 259.2 L 227.46 259.2 L 237.3 259.2 L 247.14 259.2 L 256.98 259.2 L 266.83 259.2 L 276.67 259.2 L 286.51 259.2 L 296.35 259.2 L 306.19 259.2 L 316.03 259.2 L 325.87 259.2 L 335.71 259.2 L 345.56 259.2 L 355.4 259.2 L 365.24 259.2 L 375.08 216.4 L 384.92 216.4 L 394.76 216.4 L 404.6 216.4 L 414.44 216.4 L 424.29 173.6 L 434.13 130.8 L 443.97 130.8 L 453.81 130.8 L 463.65 130.8 L 473.49 130.8 L 483.33 130.8 L 493.17 130.8 L 503.02 88 L 512.86 88 L 522.7 88 L 532.54 88 L 542.38 88 L 552.22 88 L 562.06 88 L 571.9 88 L 581.75 88 L 591.59 88 L 601.43 88 L 611.27 88 L 621.11 88 L 630.95 88 L 640.79 88 L 650.63 88 L 660.48 88 L 670.32 88 L 680.16 88 L 690 88" fill="none" stroke="#0969da" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
   <circle data-series="stars" cx="690" cy="88" r="4.5" fill="#0969da" stroke="#ffffff" stroke-width="2" vector-effect="non-scaling-stroke"/>
 </svg>
