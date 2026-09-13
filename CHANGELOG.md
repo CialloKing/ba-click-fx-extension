@@ -4,9 +4,16 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-09-14
+
+### Added
+
+- Added a README Star-history chart and daily automated collection, with downloadable CSV data on the dedicated `star-history` branch.
+
 ### Changed
 
 - Upgraded `ba-click-fx` from `1.3.2` to `1.3.3`, inheriting its native click-glow diffusion improvements and native trail width/blur calibration. The public API and Schema 2 with 66 parameters remain compatible with the existing extension settings.
+- Documented the shared appearance presets and their core API parameters in the README.
 
 ## [1.2.3] - 2026-09-08
 
