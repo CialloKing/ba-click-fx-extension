@@ -27,7 +27,7 @@
     "test:star-history": "node --test test/star-history.test.mjs"
   },
   "dependencies": {
-    "ba-click-fx": "1.3.2"
+    "ba-click-fx": "1.3.3"
   },
   "devDependencies": {
     "esbuild": "0.28.1",
