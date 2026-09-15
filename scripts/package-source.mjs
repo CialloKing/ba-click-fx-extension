@@ -20,6 +20,8 @@ const ARCHIVE_MTIME = new Date(1980, 0, 1, 0, 0, 0);
 const SOURCE_DIRECTORIES = [
   '_locales',
   'assets',
+  // README 的双语专题链接随源码一起提供，方便审核员离线阅读构建与参数说明。
+  'docs',
   'icons',
   'manifests',
   'scripts',
@@ -34,6 +36,7 @@ const SOURCE_FILES = [
   'package.json',
   'PRIVACY.md',
   'README.md',
+  'README.en.md',
   'SECURITY.md',
   'SOURCE_BUILD.md',
   'THIRD_PARTY_NOTICES.md',

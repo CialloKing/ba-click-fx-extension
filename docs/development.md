@@ -1,6 +1,6 @@
 ﻿# 开发与发布指南
 
-[返回 README](../README.md)
+[返回 README](../README.md) · [English](./development.en.md)
 
 ## 环境与构建
 

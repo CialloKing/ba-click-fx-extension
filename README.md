@@ -2,7 +2,7 @@
 
 为普通网页添加蔚蓝档案风格的点击圆环、粒子碎片和光标拖尾。基于 [ba-click-fx](https://github.com/CialloKing/ba-click-fx) 的 Manifest V3 浏览器扩展，支持 Chrome、Edge 和 Firefox。
 
-[下载安装](#安装) · [使用说明](#使用) · [核心效果演示](https://ba-click-fx.cialloking.top/) · [更新记录](./CHANGELOG.md) · [反馈问题](https://github.com/CialloKing/ba-click-fx-extension/issues)
+[English](./README.en.md) · [下载安装](#安装) · [使用说明](#使用) · [核心效果演示](https://ba-click-fx.cialloking.top/) · [更新记录](./CHANGELOG.md) · [反馈问题](https://github.com/CialloKing/ba-click-fx-extension/issues)
 
 ![BA Click FX 效果宣传截图](./store-assets/zh_CN/screenshot-1-effects-1280x800.png)
 

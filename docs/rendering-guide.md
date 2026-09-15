@@ -1,6 +1,6 @@
 ﻿# 预设、渲染与核心参数
 
-[返回 README](../README.md)
+[返回 README](../README.md) · [English](./rendering-guide.en.md)
 
 ## 预设与核心 API 的映射
 
