@@ -1,23 +1,20 @@
 ﻿# Firefox Add-ons Submission
 
-## Prepared release
+## Package and release references
 
-- Extension version: `1.1.15`
-- Core dependency: `ba-click-fx 1.2.23`
+- Extension and core versions: `extensionVersion`, `corePackage`, and `coreVersion` in [metadata.json](./metadata.json)
 - Manifest version: `3`
 - Gecko ID: `ba-click-fx-extension@cialloking.top`
 - Minimum Firefox Desktop version: `140.0`
 - Minimum Firefox for Android version declared for manifest validation: `142.0`
 - Submission platform: Firefox Desktop only
-- Submission status: Prepared; awaiting GitHub Release and AMO submission
-- GitHub Release: https://github.com/CialloKing/ba-click-fx-extension/releases/tag/v1.1.15
-- Distribution: `On this site` / listed on AMO
+- GitHub packages: [Releases](https://github.com/CialloKing/ba-click-fx-extension/releases); choose the release matching the metadata
+- AMO status and public install URL: record the actual dashboard result after submission; GitHub publication alone does not establish AMO availability
+- Intended distribution: `On this site` / listed on AMO
 - Remote code: `No`
 - Data collection or transmission: `None`
-- Firefox package: `ba-click-fx-extension-v1.1.15-firefox.zip`
-- Firefox source package: `ba-click-fx-extension-v1.1.15-firefox-source.zip`
-- Firefox SHA-256: `A8CCB1A37DA97921C0C5773165BD684EE23B11AA251FC3AF5BAD87A9A63DD305`
-- Source SHA-256: `C256CC542FA9535233D34178463A376735B0F844E5B983311C26B5863701CE3B`
+- Firefox package and SHA-256: `firefoxPackage` and `firefoxSha256` in [metadata.json](./metadata.json)
+- Firefox source package and SHA-256: `firefoxSourcePackage` and `firefoxSourceSha256` in [metadata.json](./metadata.json)
 - No test account, credentials, payment, hardware, or external service required
 
 Do not upload the Chromium ZIP to AMO. The Firefox ZIP removes `minimum_chrome_version`, adds the stable Gecko identity, and declares the current built-in data collection permission.
@@ -57,7 +54,7 @@ Features:
 • Apply appearance, render mode, DPR, and compositing together through one preset; precise render controls remain available in Full settings
 • Explicitly select experimental WebGPU HDR in Full settings; real HDR requires an Extended output, while Standard output remains SDR
 • Adjust theme color, opacity, effect size, six HDR presentation controls, Full WebGL2 or explicit compatibility render modes, maximum DPR, output compositing, light-background contrast, timing, and all 66 public effect parameters
-• Follow the system language or choose Simplified Chinese or English
+• Automatically use the browser language or choose Simplified Chinese or English
 • Follow the system reduced-motion preference or choose full/reduced continuous motion
 • Search, remove, or clear locally saved website rules
 • Release rendering resources while a tab is in the background
@@ -66,7 +63,7 @@ Features:
 How to use:
 1. Install the extension and open or refresh an ordinary HTTP/HTTPS webpage.
 2. Click the webpage to display rings and particle fragments.
-3. Move or drag the pointer to display the cursor trail.
+3. Hold a mouse button and move to display the cursor trail, or enable “Always show while moving” in the popup.
 4. Open the toolbar popup for quick controls, or select Full settings for all preferences and website rules.
 
 Privacy and local processing:
@@ -105,7 +102,7 @@ BA Click FX 是一个非官方的网页视觉特效扩展。
 • 一个预设统一应用外观、渲染模式、DPR 与合成方式；完整设置仍可精确调整渲染参数
 • 可在完整设置中显式选择实验性 WebGPU HDR；只有 Extended 输出代表真实 HDR，Standard 输出仍是 SDR
 • 可调整主题颜色、不透明度、特效大小、六项 HDR 展示参数、完整 WebGL2 或显式兼容渲染模式、最大 DPR、输出合成、浅色背景对比、时间倍率及全部 66 个公开特效参数
-• 可跟随系统语言，或指定简体中文/英文
+• 可自动跟随浏览器语言，或指定简体中文/英文
 • 可跟随系统减少动态偏好，或指定完整/减少持续动态
 • 可搜索、移除或清空本机网站规则
 • 标签页进入后台时会释放渲染资源
@@ -114,7 +111,7 @@ BA Click FX 是一个非官方的网页视觉特效扩展。
 使用方法：
 1. 安装扩展，然后打开或刷新普通 HTTP/HTTPS 网页。
 2. 点击网页，显示圆环和粒子碎片。
-3. 移动或拖动鼠标，显示光标拖尾。
+3. 按住鼠标并移动，显示光标拖尾；也可在弹窗开启“移动时始终显示”。
 4. 打开工具栏弹窗使用常用开关，或进入“完整设置”管理全部偏好和网站规则。
 
 隐私与本地处理：
@@ -183,7 +180,7 @@ Testing steps:
 1. Install the extension.
 2. Open https://example.com/ or another ordinary HTTP/HTTPS webpage. If the page was already open before installation, refresh it once.
 3. Click the page to see a ring and particle effect.
-4. Move the pointer to see the cursor trail.
+4. Hold a mouse button and move to see the cursor trail; also test the popup's “Always show while moving” option.
 5. Open the toolbar popup. Verify the global, current-website, click-effect, trail, and preview controls.
 6. Select “Full settings”. Change the effect preset, color, opacity, size, render mode, maximum DPR, compositing, or an advanced ring/shard/Bloom/Hit/Flare/trail parameter and verify the webpage updates.
 7. Select “Reduce continuous motion”. Verify click effects remain available while the always-moving trail is suppressed.
@@ -206,17 +203,17 @@ Testing on file:// pages is optional and is not required to verify the extension
 
 ## Manual submission checklist
 
-1. Complete the Firefox runtime checklist before tagging `v1.1.15`.
+1. Complete the [Firefox runtime checklist](./FIREFOX_TEST_CHECKLIST.md) for the target version before creating its tag.
 2. Confirm the GitHub Release contains both Firefox archives and `SHA256SUMS.txt`.
-3. Log in to https://addons.mozilla.org/developers/ with a Mozilla Account.
-4. Choose **Submit a New Add-on** and **On this site**.
-5. Upload `ba-click-fx-extension-v1.1.15-firefox.zip`.
+3. Log in to the [AMO developer dashboard](https://addons.mozilla.org/developers/) with a Mozilla Account.
+4. For an initial listing, choose **Submit a New Add-on** and **On this site**; for an update, open the existing add-on and submit a new version.
+5. Upload the Firefox ZIP identified by `firefoxPackage` in [metadata.json](./metadata.json).
 6. Stop and fix the package if AMO reports an error or a security/privacy warning.
 7. Select Firefox Desktop as the compatible platform.
-8. Answer **Yes** to the source-code question and upload `ba-click-fx-extension-v1.1.15-firefox-source.zip`.
+8. Answer **Yes** to the source-code question and upload the archive identified by `firefoxSourcePackage` in the same metadata.
 9. Fill the listing fields from this document and add English and Simplified Chinese localizations.
 10. Upload the 128×128 icon and the current localized 1280×800 screenshots.
 11. Paste the English reviewer notes and submit the version.
 12. Record the AMO item URL, submission time, status, and final dashboard text after submission.
 
-Do not replace a submitted `v1.1.15` archive. Listing-only corrections may be made in AMO; code or package corrections require a new extension version.
+Keep submitted archives unchanged. Listing-only corrections may be made in AMO; code or package corrections require a new extension version.

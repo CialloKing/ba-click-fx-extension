@@ -1,14 +1,14 @@
 ﻿# Store Submission Kit
 
-This directory preserves the historical Chrome Web Store records and contains the current Chrome, Edge, and Firefox submission materials for BA Click FX `1.1.15`.
+This directory contains reusable Chrome, Edge, and Firefox submission materials and historical submission records for BA Click FX. Use [metadata.json](./metadata.json) for the last prepared release's version, package names, and SHA-256 values. See the [development and release guide](../docs/development.en.md) for build commands.
 
 ## Canonical public URLs
 
-- Homepage and live demo: https://ba-click-fx.cialloking.top/
-- Chrome privacy policy: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
-- Microsoft Edge privacy policy: https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md
-- Support: https://github.com/CialloKing/ba-click-fx-extension/issues
-- Source and issues: https://github.com/CialloKing/ba-click-fx-extension
+- [Homepage and core effects demo](https://ba-click-fx.cialloking.top/)
+- [Privacy policy for Chrome and Edge](https://github.com/CialloKing/ba-click-fx-extension/blob/main/PRIVACY.md)
+- [Support and issues](https://github.com/CialloKing/ba-click-fx-extension/issues)
+- [Source repository](https://github.com/CialloKing/ba-click-fx-extension)
+- [GitHub Releases](https://github.com/CialloKing/ba-click-fx-extension/releases)
 
 This repository does not use GitHub Pages. The public demo is hosted separately, while the privacy policy and support entry remain available through the public GitHub repository.
 
@@ -19,16 +19,19 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - [reviewer-notes.md](./reviewer-notes.md): concise certification instructions for both stores.
 - [data-inventory.md](./data-inventory.md): code-to-disclosure inventory explaining every locally processed or stored value.
 - [LOCAL_TEST_CHECKLIST.md](./LOCAL_TEST_CHECKLIST.md): Chrome/Edge manual loading and regression steps.
-- [release-checklist.md](./release-checklist.md): ordered release and submission checklist.
-- [firefox-addons.md](./firefox-addons.md): prepared Firefox `1.1.15` package details, AMO listing copy, privacy answers, reviewer notes, and manual submission steps.
-- [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md): required Firefox runtime verification before creating the `v1.1.15` Tag.
+- [release-checklist.md](./release-checklist.md): reusable release and submission checklist; complete it for the target build.
+- [firefox-addons.md](./firefox-addons.md): Firefox package references, AMO listing copy, privacy answers, reviewer notes, and manual submission steps.
+- [FIREFOX_TEST_CHECKLIST.md](./FIREFOX_TEST_CHECKLIST.md): Firefox runtime verification for the target release.
+- [history/release-1.0.6.md](./history/release-1.0.6.md): preserved release checklist and runtime report for that historical version.
 - [metadata.json](./metadata.json): machine-readable version, URL, locale, package, and asset inventory.
 
 ## Required upload files
 
-- Chromium ZIP: `release/ba-click-fx-extension-v1.1.15-chromium.zip`
-- Firefox ZIP: `release/ba-click-fx-extension-v1.1.15-firefox.zip`
-- Firefox source ZIP: `release/ba-click-fx-extension-v1.1.15-firefox-source.zip`
+Read exact package filenames from [metadata.json](./metadata.json). The following patterns use `<version>` from `package.json`:
+
+- Chromium ZIP: `release/ba-click-fx-extension-v<version>-chromium.zip`
+- Firefox ZIP: `release/ba-click-fx-extension-v<version>-firefox.zip`
+- Firefox source ZIP: `release/ba-click-fx-extension-v<version>-firefox-source.zip`
 - SHA-256 inventory: `release/SHA256SUMS.txt`
 - Logo: `store-assets/common/logo-300.png`
 - Small promotional tile: `store-assets/common/promo-small-440x280.png`
@@ -36,9 +39,9 @@ This repository does not use GitHub Pages. The public demo is hosted separately,
 - Four English screenshots: `store-assets/en/`
 - Four Simplified Chinese screenshots: `store-assets/zh_CN/`
 
-`metadata.json` 的扩展版本、核心版本、包名和 SHA-256 共同描述同一组已准备发布物。核心依赖升级后，应重新生成确定性发布包并同步核心版本与全部哈希；`npm run check:release` 会在创建标签前强制检查该合同。
+The extension version, core version, filenames, and SHA-256 fields in `metadata.json` describe one prepared set of release artifacts. Synchronize them when preparing a new release, then run `npm run check:release -- <tag>` with the intended tag. Documentation changes can alter a rebuilt source ZIP; preserve the metadata of already published artifacts until the next release is prepared.
 
-The store images use original project artwork and the extension UI/runtime. They do not use official Blue Archive logos, characters, screenshots, or game assets. Before submitting `v1.1.15`, regenerate the localized screenshots from the final build: the effect screenshot must show the current GPU-capable runtime, and the settings screenshot must show the WebGPU HDR presentation controls, complete 66-parameter upstream Schema panel, and host controls.
+The store images use original project artwork and the extension UI/runtime, without official Blue Archive logos, characters, screenshots, or game assets. Existing PNGs include historical Canvas 2D promotional images. Before submitting a new release, review or regenerate the localized screenshots from the final build: show the current runtime and settings, including the HDR presentation controls, public Schema panel, and host controls. Passing the image-dimension check alone does not confirm that a screenshot is current.
 
 ## Important disclosure decision
 

@@ -1,6 +1,6 @@
-﻿# Firefox v1.1.15 Runtime Checklist
+﻿# Firefox Runtime Checklist
 
-Complete this checklist before creating the `v1.1.15` Tag and GitHub Release.
+Complete this checklist for the target build before creating its tag and GitHub Release. Read the target version from `package.json` and record the actual browser, OS, date, and result for that build.
 
 ## Temporary installation
 
@@ -8,14 +8,14 @@ Complete this checklist before creating the `v1.1.15` Tag and GitHub Release.
 - [ ] Run `npm ci`, `npm test`, and `npm run package:all`.
 - [ ] Open `about:debugging#/runtime/this-firefox`.
 - [ ] Select **Load Temporary Add-on** and choose `dist-firefox/manifest.json`.
-- [ ] Confirm Firefox shows version `1.1.15` and Gecko ID `ba-click-fx-extension@cialloking.top`.
+- [ ] Confirm Firefox shows the version from `package.json` and Gecko ID `ba-click-fx-extension@cialloking.top`.
 - [ ] Confirm the extension console has no uncaught startup errors.
 
 ## Ordinary webpage behavior
 
 - [ ] Open `https://example.com/`; refresh once if it was open before installation.
 - [ ] Click the page and confirm the ring and particle effect appears.
-- [ ] Move and drag the pointer and confirm the cursor trail appears.
+- [ ] Hold a mouse button and move to verify the default trail; then enable “Always show while moving” and test ordinary pointer movement.
 - [ ] Confirm the overlay does not block links, text selection, scrolling, or page buttons.
 - [ ] Confirm only one `data-ba-click-fx-extension-root` host exists in the top-level document.
 - [ ] Switch the tab to the background and back; confirm rendering resources are restored without duplicate hosts.
