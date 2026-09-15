@@ -4,10 +4,6 @@ Add Blue Archive-inspired click rings, particle fragments, and cursor trails to 
 
 [简体中文](./README.md) · [Install](#install) · [Usage](#usage) · [Core effects demo](https://ba-click-fx.cialloking.top/) · [Changelog](./CHANGELOG.md) · [Report an issue](https://github.com/CialloKing/ba-click-fx-extension/issues)
 
-![BA Click FX promotional screenshot](./store-assets/en/screenshot-1-effects-1280x800.png)
-
-*Historical store screenshot showing Canvas 2D effects. The current default uses Full WebGL2.*
-
 ## Features
 
 - Enabled after installation, with separate click/trail controls and a per-site switch.

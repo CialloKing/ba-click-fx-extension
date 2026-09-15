@@ -36,12 +36,12 @@ Read exact package filenames from [metadata.json](./metadata.json). The followin
 - Logo: `store-assets/common/logo-300.png`
 - Small promotional tile: `store-assets/common/promo-small-440x280.png`
 - Marquee/large promotional tile: `store-assets/common/promo-marquee-1400x560.png`
-- Four English screenshots: `store-assets/en/`
-- Four Simplified Chinese screenshots: `store-assets/zh_CN/`
+- Four English screenshots, prepared locally: `store-assets/en/`
+- Four Simplified Chinese screenshots, prepared locally: `store-assets/zh_CN/`
 
 The extension version, core version, filenames, and SHA-256 fields in `metadata.json` describe one prepared set of release artifacts. Synchronize them when preparing a new release, then run `npm run check:release -- <tag>` with the intended tag. Documentation changes can alter a rebuilt source ZIP; preserve the metadata of already published artifacts until the next release is prepared.
 
-The store images use original project artwork and the extension UI/runtime, without official Blue Archive logos, characters, screenshots, or game assets. Existing PNGs include historical Canvas 2D promotional images. Before submitting a new release, review or regenerate the localized screenshots from the final build: show the current runtime and settings, including the HDR presentation controls, public Schema panel, and host controls. Passing the image-dimension check alone does not confirm that a screenshot is current.
+Screenshot PNGs are local outputs excluded from Git; the showcase sources remain in [store-assets/source](../store-assets/source/). Before submitting a release, generate the localized screenshots from the final build at the paths listed in `metadata.json`, then run `npm run check:store -- --require-screenshots`. Show the current runtime and settings, including the HDR presentation controls, public Schema panel, and host controls. Use original project artwork and the extension UI/runtime, without official Blue Archive logos, characters, screenshots, or game assets. Passing the image-dimension check alone does not confirm that a screenshot is current.
 
 ## Important disclosure decision
 

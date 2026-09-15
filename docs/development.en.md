@@ -21,7 +21,8 @@ npm test
 | `npm test` | Build both targets and run automated checks |
 | `npm run test:star-history` | Check Star collection, CSV storage, and SVG generation separately |
 | `npm run lint:firefox` | Validate the Firefox build with `web-ext`, treating warnings as errors |
-| `npm run check:store` | Check store metadata, required files, URL formats, and image dimensions |
+| `npm run check:store` | Check store metadata, required files, URL formats, and dimensions of local images that exist |
+| `npm run check:store -- --require-screenshots` | Require all screenshots and validate their dimensions before store submission |
 | `npm run package` | Build and package Chromium |
 | `npm run package:firefox` | Build, lint, and package Firefox |
 | `npm run package:all` | Generate both browser packages, Firefox sources, and SHA-256 checksums |
@@ -61,7 +62,7 @@ Metadata describes the last prepared set of release artifacts. Documentation edi
 
 Follow the [store release checklist](../store-submission/release-checklist.md), including the [Chrome/Edge runtime checklist](../store-submission/LOCAL_TEST_CHECKLIST.md) and [Firefox runtime checklist](../store-submission/FIREFOX_TEST_CHECKLIST.md). Pushing a `v*` tag triggers the GitHub Release workflow to build, package, validate, and upload assets. Store submission is a separate step.
 
-Store images live in [store-assets](../store-assets/), with showcase sources in [store-assets/source](../store-assets/source/). Existing PNGs may come from earlier builds. Run the current build and review or regenerate screenshots before submission.
+Icons, promotional assets, and showcase sources live in [store-assets](../store-assets/). Use the [showcase pages](../store-assets/source/) to prepare screenshots locally at the paths listed in the store metadata. `store-assets/en/screenshot-*.png` and `store-assets/zh_CN/screenshot-*.png` are excluded from Git. Normal checks allow missing screenshots and validate those present. Before store submission, run `npm run check:store -- --require-screenshots` and verify that the screenshots show the target build.
 
 ## Updating the core dependency
 

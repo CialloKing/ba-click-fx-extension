@@ -50,6 +50,7 @@ Tester:
 
 ## 5. Submit to stores
 
+- [ ] Prepare the local screenshots listed in `metadata.json` and run `npm run check:store -- --require-screenshots`.
 - [ ] Use the Chromium ZIP for Chrome/Edge and the Firefox ZIP for AMO.
 - [ ] Follow [Chrome](./chrome-web-store.md), [Edge](./edge-addons.md), or [Firefox](./firefox-addons.md) submission instructions for each intended store.
 - [ ] Provide the Firefox source ZIP when AMO requests source code.

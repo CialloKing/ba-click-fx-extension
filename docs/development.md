@@ -21,7 +21,8 @@ npm test
 | `npm test` | 构建双目标并执行自动检查 |
 | `npm run test:star-history` | 单独验证 Star 历史采集、CSV 与 SVG 生成 |
 | `npm run lint:firefox` | 使用 `web-ext` 校验 Firefox 构建，警告视为错误 |
-| `npm run check:store` | 校验商店元数据、必要文件、URL 格式与图片尺寸 |
+| `npm run check:store` | 校验商店元数据、必要文件、URL 格式与已有本机图片尺寸 |
+| `npm run check:store -- --require-screenshots` | 商店提交前要求全部截图存在，并校验尺寸 |
 | `npm run package` | 构建并打包 Chromium |
 | `npm run package:firefox` | 构建、lint 并打包 Firefox |
 | `npm run package:all` | 生成双浏览器包、Firefox 源码包和 SHA-256 清单 |
@@ -61,7 +62,7 @@ npm run check:release -- $releaseTag
 
 实际发布流程见[商店发布清单](../store-submission/release-checklist.md)，浏览器验证分别使用 [Chrome/Edge 清单](../store-submission/LOCAL_TEST_CHECKLIST.md)和 [Firefox 清单](../store-submission/FIREFOX_TEST_CHECKLIST.md)。GitHub Release 工作流在推送 `v*` 标签后构建、打包、验证并上传附件；商店提交需另行完成。
 
-商店图片位于 [store-assets](../store-assets/)，展示页源文件位于 [store-assets/source](../store-assets/source/)。现有 PNG 可能来自历史构建，提交前应运行当前构建并重新核对或生成截图。
+图标、宣传素材与展示页源文件保存在 [store-assets](../store-assets/)，其中[展示页](../store-assets/source/)用于本机生成截图。`store-assets/en/screenshot-*.png` 和 `store-assets/zh_CN/screenshot-*.png` 不纳入 Git，需按上架元数据中的路径在本机准备。普通检查允许截图缺失，但会校验已有图片；商店提交前运行 `npm run check:store -- --require-screenshots`，并核对截图展示的是目标构建。
 
 ## 核心依赖更新
 

@@ -4,10 +4,6 @@
 
 [English](./README.en.md) · [下载安装](#安装) · [使用说明](#使用) · [核心效果演示](https://ba-click-fx.cialloking.top/) · [更新记录](./CHANGELOG.md) · [反馈问题](https://github.com/CialloKing/ba-click-fx-extension/issues)
 
-![BA Click FX 效果宣传截图](./store-assets/zh_CN/screenshot-1-effects-1280x800.png)
-
-*历史商店宣传截图，展示 Canvas 2D 效果；当前默认使用完整 WebGL2。*
-
 ## 功能
 
 - 安装后默认启用，点击特效和拖尾可分别开关，也可按网站禁用。

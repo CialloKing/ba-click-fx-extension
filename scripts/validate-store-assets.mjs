@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const requireScreenshots = process.argv.includes('--require-screenshots');
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 function readJson(path)
@@ -158,12 +159,23 @@ assertPng(metadata.assets.logo, 300, 300);
 assertPng(metadata.assets.smallPromo, 440, 280);
 assertPng(metadata.assets.marqueePromo, 1400, 560);
 
-for (const screenshot of [
+const screenshots = [
   ...metadata.assets.englishScreenshots,
   ...metadata.assets.chineseScreenshots,
-])
+];
+let checkedScreenshots = 0;
+
+for (const screenshot of screenshots)
 {
+  // 截图不纳入 Git；普通 CI 允许缺失，商店提交前可显式要求全部截图齐备。
+  if (!requireScreenshots && !existsSync(join(rootDir, screenshot)))
+  {
+    continue;
+  }
+
   assertPng(screenshot, 1280, 800);
+  checkedScreenshots++;
 }
 
-console.log('商店文案、公开页面与图片资源校验通过。');
+console.log(`已校验 ${checkedScreenshots} 张本机截图，跳过 ${screenshots.length - checkedScreenshots} 张未生成的截图。`);
+console.log('商店元数据与仓库资源校验通过。');
