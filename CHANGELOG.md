@@ -4,6 +4,11 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Upgraded the pinned npm core `ba-click-fx` from `1.3.3` to `1.3.9`, inheriting its runtime allocation and GPU upload optimizations, trail lifetime fixes, drawing-area coordinate handling, and initialization cleanup fixes.
+- Kept the extension compatible with Schema 2 and all 66 public parameters. The settings page follows upstream's ring sampling defaults (`rings.arcSamples: 64`, `rings.radialSamples: 1`) while retaining saved overrides.
+
 ## [1.2.4] - 2026-09-14
 
 ### Added
