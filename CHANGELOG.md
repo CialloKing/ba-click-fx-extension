@@ -6,7 +6,9 @@ All notable changes to BA Click FX Extension are documented in this file.
 
 ### Changed
 
-- Upgraded the pinned npm core `ba-click-fx` from `1.3.3` to `1.3.9`, inheriting its runtime allocation and GPU upload optimizations, trail lifetime fixes, drawing-area coordinate handling, and initialization cleanup fixes.
+- Upgraded the pinned npm core `ba-click-fx` from `1.3.3` to `1.3.13`, inheriting its runtime allocation and GPU upload optimizations, trail lifetime fixes, drawing-area coordinate handling, and initialization cleanup fixes.
+- Bundled upstream's lossless texture and geometry compression with synchronous decoding, zero-intensity Bloom optimizations, and idle working-cache reclamation. Public exports, types, defaults, and Schema remain unchanged from core `1.3.9`.
+- Included the full fflate MIT license in the extension packages because the core now embeds its runtime decoder.
 - Kept the extension compatible with Schema 2 and all 66 public parameters. The settings page follows upstream's ring sampling defaults (`rings.arcSamples: 64`, `rings.radialSamples: 1`) while retaining saved overrides.
 
 ## [1.2.4] - 2026-09-14
